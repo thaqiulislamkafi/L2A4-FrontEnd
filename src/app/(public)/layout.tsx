@@ -1,0 +1,26 @@
+
+import Navbar from '@/components/navbar';
+import React from 'react';
+
+const PublicLayout = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
+    return (
+
+        <div className='dark:bg-gray-900'>
+            <header className='font-sans sticky top-0 z-10'>
+                <Navbar />
+            </header>
+            <main className='font-sans'>
+                {children}
+            </main>
+            <footer className='max-w-6xl mx-auto font-sans'>
+                {/* <Footer /> */}
+            </footer>
+        </div>
+    );
+};
+
+export default PublicLayout;
