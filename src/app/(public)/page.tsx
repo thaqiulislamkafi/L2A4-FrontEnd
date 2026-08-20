@@ -2,6 +2,7 @@ import HomeFaqSection from '@/components/HomeFaqSection';
 import HomeHero from '@/components/HomeHero';
 import HomeStatistics from '@/components/HomeStatistics';
 import HowFoodHubWorks from '@/components/HowFoodHubWorks';
+import ShowMeals from '@/components/ShowMeals';
 import ShowReviews from '@/components/ShowReviews';
 import { Geist } from 'next/font/google';
 import React from 'react';
@@ -13,6 +14,7 @@ const page = () => {
         <div className={geist.className}>
 
             <HomeHero/>
+            <ShowMeals/>
             <HowFoodHubWorks/>
             <ShowReviews/>
             <HomeFaqSection/>
