@@ -1,6 +1,9 @@
 
 import Navbar from '@/components/navbar';
+import { Geist } from 'next/font/google';
 import React from 'react';
+
+const geist = Geist({ subsets: ["latin"] });
 
 const PublicLayout = ({
     children,
@@ -9,7 +12,7 @@ const PublicLayout = ({
 }) => {
     return (
 
-        <div className='dark:bg-gray-900'>
+        <div className={`${geist.className} dark:bg-gray-900`}>
             <header className='font-sans sticky top-0 z-10'>
                 <Navbar />
             </header>

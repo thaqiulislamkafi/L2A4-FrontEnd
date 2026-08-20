@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getDashboardStats } from "@/lib/api/dashboardStats";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "./ui/skeleton";
 
@@ -180,14 +180,10 @@ export default function HomeStatistics() {
         >
           {/* Badge */}
 
-          <Badge
-            variant="outline"
-            className="gap-2 rounded-full border-orange-200 bg-orange-50 px-4 py-2 text-sm font-medium text-orange-700 dark:border-orange-800 dark:bg-orange-950/30 dark:text-orange-400"
-          >
+          <HeaderBadge>
             <span className="size-2 animate-pulse rounded-full bg-orange-500" />
-
             FoodHub Statistics
-          </Badge>
+          </HeaderBadge>
 
           {/* Heading */}
 

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {Utensils,} from "lucide-react";
+import { Utensils, } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -46,7 +46,7 @@ const workCards = [
 const HowFoodHubWorks = () => {
   return (
     <section className="py-30 bg-orange-50/60 transition-colors">
-        
+
       <div className="mx-auto max-w-6xl px-6">
         {/* ================= HEADER ================= */}
 
@@ -57,13 +57,10 @@ const HowFoodHubWorks = () => {
           className="mx-auto max-w-3xl text-center"
         >
           <div className="mb-6 flex justify-center">
-            <Badge
-              variant="outline"
-              className="h-auto rounded-full border-orange-200 bg-orange-100 px-4 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100"
-            >
+            <HeaderBadge>
               <Utensils className="h-4 w-4" />
               Simple Process
-            </Badge>
+            </HeaderBadge>
           </div>
 
           <h2 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
