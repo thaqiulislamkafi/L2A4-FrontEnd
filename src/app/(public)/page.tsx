@@ -1,4 +1,6 @@
+import HomeFaqSection from '@/components/HomeFaqSection';
 import HomeHero from '@/components/HomeHero';
+import HomeStatistics from '@/components/HomeStatistics';
 import HowFoodHubWorks from '@/components/HowFoodHubWorks';
 import ShowReviews from '@/components/ShowReviews';
 import { Geist } from 'next/font/google';
@@ -13,6 +15,8 @@ const page = () => {
             <HomeHero/>
             <HowFoodHubWorks/>
             <ShowReviews/>
+            <HomeFaqSection/>
+            <HomeStatistics/>
         </div>
     );
 };
