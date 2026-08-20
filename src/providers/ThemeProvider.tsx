@@ -8,7 +8,7 @@ const ThemeProviders = ({children}:{children : React.ReactNode}) => {
         <ThemeProvider
         attribute="class"
         storageKey='foodhub-theme'
-        defaultTheme='system'
+        defaultTheme='light'
         enableSystem
         enableColorScheme
         disableTransitionOnChange
