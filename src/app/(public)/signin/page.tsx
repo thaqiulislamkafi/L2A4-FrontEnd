@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import {Field,FieldContent,FieldError,FieldLabel,
 } from "@/components/ui/field";
 
-export default function LoginPage() {
+export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({

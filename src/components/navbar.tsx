@@ -54,7 +54,7 @@ export default function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link href="/login">
+          <Link href="/signin">
             <Button
               variant="ghost"
               className="px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
@@ -99,7 +99,7 @@ export default function Navbar() {
               ))}
 
               <DropdownMenuItem className="text-slate-700 focus:bg-orange-100 focus:text-orange-600">
-                <Link href="/login" className="w-full">
+                <Link href="/signin" className="w-full">
                   Sign In
                 </Link>
               </DropdownMenuItem>
