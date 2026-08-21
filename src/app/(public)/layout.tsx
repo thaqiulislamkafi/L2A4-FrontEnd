@@ -1,4 +1,5 @@
 
+import Footer from '@/components/Footer';
 import Navbar from '@/components/navbar';
 import { Geist } from 'next/font/google';
 import React from 'react';
@@ -20,7 +21,7 @@ const PublicLayout = ({
                 {children}
             </main>
             <footer className='max-w-6xl mx-auto font-sans'>
-                {/* <Footer /> */}
+                <Footer />
             </footer>
         </div>
     );
