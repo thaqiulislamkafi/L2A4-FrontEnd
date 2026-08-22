@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { getHeroMeal } from "@/lib/api/meal";
-import { Spinner } from "./ui/spinner";
+import { PrimaryMealSpinner, Spinner } from "./ui/spinner";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -45,21 +45,7 @@ export default function HomeHero() {
 
   const meal = data?.data;
 
-if (isLoading) {
-  return (
-    <section className="relative overflow-hidden bg-linear-to-br from-orange-50 via-white to-orange-100">
-      <div className="mx-auto flex min-h-162.5 max-w-7xl items-center justify-center px-4">
-        <div className="flex flex-col items-center gap-4">
-          <Spinner className="size-10 text-orange-600" />
-
-          <p className="text-sm font-medium text-orange-700">
-            Preparing something delicious...
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
+if (isLoading) return <PrimaryMealSpinner/>
 
   if (isError || !meal) {
     return (

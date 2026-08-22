@@ -26,27 +26,38 @@ import { Meal } from "@/types/meal.type";
 import MealCard from "@/components/MealCard";
 import ExploreMealsLoader from "./loading";
 import ExploreMealsError from "./error";
+import MealFilters from "./MealFilters";
+import { PrimaryMealSpinner, Spinner } from "@/components/ui/spinner";
 
 const ExploreMeals = () => {
+
   const [currentPage, setCurrentPage] = React.useState(1);
+   const [page, setPage] = React.useState(1);
+
+  const [search, setSearch] = React.useState("");
+
+  const [category, setCategory] = React.useState("ALL");
 
   const limit = 9;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["explore-meals", currentPage],
+    queryKey: ["explore-meals", currentPage,search],
     queryFn: () =>
       getPublishedMeals({
         page: currentPage,
         limit,
+        search
       }),
   });
 
   const meals: Meal[] = data?.data ?? [];
   const totalPages = data?.meta?.totalPage ?? 1;
 
-  if (isLoading) return <ExploreMealsLoader/>
+  const meta = data?.meta;
 
-  if (isError) return <ExploreMealsError/>
+  // if (isLoading) return <ExploreMealsLoader />
+
+  if (isError) return <ExploreMealsError />
 
   /*
    * --------------------------------
@@ -54,7 +65,7 @@ const ExploreMeals = () => {
    * --------------------------------
    */
 
-  if (meals.length === 0) {
+  if (meals.length === 0 && (!isLoading)) {
     return (
       <section className="relative overflow-hidden bg-orange-50/40 py-24 dark:bg-orange-950/10">
         <div className=" relative mx-auto px-4">
@@ -171,10 +182,22 @@ const ExploreMeals = () => {
           </p>
         </motion.div>
 
+        <MealFilters
+          search={search}
+          category={category}
+          totalMeals={meta?.total ?? 0}
+          onSearchChange={setSearch}
+          onCategoryChange={setCategory}
+          onReset={() => {
+            setSearch("");
+            setCategory("ALL");
+          }}
+        />
+
         {/* --------------------------------
             Meal Grid
         -------------------------------- */}
-
+        {isLoading && <PrimaryMealSpinner/>}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
@@ -227,11 +250,10 @@ const ExploreMeals = () => {
                         handlePageChange(currentPage - 1);
                       }
                     }}
-                    className={`gap-1 rounded-xl border ${
-                      currentPage === 1
+                    className={`gap-1 rounded-xl border ${currentPage === 1
                         ? "pointer-events-none opacity-40"
                         : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
-                    }`}
+                      }`}
                   >
                     <ChevronLeft className="size-4" />
 
@@ -281,11 +303,10 @@ const ExploreMeals = () => {
                         handlePageChange(currentPage + 1);
                       }
                     }}
-                    className={`gap-1 rounded-xl border ${
-                      currentPage === totalPages
+                    className={`gap-1 rounded-xl border ${currentPage === totalPages
                         ? "pointer-events-none opacity-40"
                         : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
-                    }`}
+                      }`}
                   >
                     <span className="hidden sm:block">
                       Next

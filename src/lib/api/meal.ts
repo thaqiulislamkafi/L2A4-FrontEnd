@@ -18,14 +18,16 @@ export const getHeroMeal = async (): Promise<HeroMealResponse> => {
 interface GetMealsParams {
   page?: number;
   limit?: number;
+  search ?: string;
 }
 
 export const getPublishedMeals = async ({
   page = 1,
   limit = 6,
+  search=''
 }: GetMealsParams): Promise<PublishedMealsResponse> => {
   const { data } = await axiosInstance.get<PublishedMealsResponse>(
-    "/meals/published",
+    `/meals/published?search=${search}`,
     {
       params: {
         page,
