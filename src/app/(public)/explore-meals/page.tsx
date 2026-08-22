@@ -130,6 +130,10 @@ const ExploreMeals = () => {
     });
   };
 
+  const handleCategoryChange = (value: string | null) => {
+    setCategory(value ?? "ALL");
+  };
+
   return (
     <section className="relative overflow-hidden  bg-orange-50/40 py-24 dark:bg-orange-950/10">
       {/* --------------------------------
@@ -187,7 +191,7 @@ const ExploreMeals = () => {
           category={category}
           totalMeals={meta?.total ?? 0}
           onSearchChange={setSearch}
-          onCategoryChange={setCategory}
+          onCategoryChange={handleCategoryChange}
           onReset={() => {
             setSearch("");
             setCategory("ALL");

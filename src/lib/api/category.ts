@@ -8,7 +8,7 @@ interface Category {
 export interface CategoryResponse {
   success: boolean;
   message: string;
-  data: Category;
+  data: Category[];
 }
 
 export const getCategories = async (): Promise<CategoryResponse> => {

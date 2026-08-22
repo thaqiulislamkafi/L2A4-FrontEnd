@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import { motion } from "framer-motion";
-import {CalendarDays,MessageSquareQuote,Star,Quote,UserRound,ArrowRight,} from "lucide-react";
+import { CalendarDays, MessageSquareQuote, Star, Quote, UserRound, ArrowRight, Link, PenLine, Sparkles, Heart, Utensils, } from "lucide-react";
 
 import { getGlobalReviews } from "@/lib/api/global-reviews";
 import {
@@ -21,8 +21,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { useState } from "react";
+import AddGlobalReview from "./AddGlobalReview";
 
 const ShowReviews = () => {
+
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+
   const { data, isLoading, isError } = useQuery<GlobalReviewResponse>({
     queryKey: ["global-reviews"],
     queryFn: () =>
@@ -154,36 +159,192 @@ const ShowReviews = () => {
             ))}
           </Marquee>
         </div>
+      </div>
 
-        {/* ================= BOTTOM ================= */}
+      {/* ================= ADD REVIEW CTA ================= */}
+
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 30,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+        }}
+        transition={{
+          duration: 0.6,
+          delay: 0.15,
+        }}
+        className="relative mx-auto mt-28 max-w-5xl"
+      >
+        {/* Floating Decorative Icons */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
+          animate={{
+            y: [0, -8, 0],
+            rotate: [0, 6, 0],
           }}
           transition={{
-            delay: 0.3,
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
           }}
-          className="mt-12 flex justify-center"
+          className="absolute -left-4 -top-5 hidden h-12 w-12 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 text-orange-500 shadow-lg shadow-orange-100/50 sm:flex"
         >
-          <Button
-            variant="outline"
-            className="group rounded-xl border-orange-200 bg-white px-5 py-2.5 text-orange-700 hover:bg-orange-50 hover:text-orange-700"
-          >
-            See More Reviews
-
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Button>
+          <Utensils className="h-5 w-5" />
         </motion.div>
-      </div>
+
+        <motion.div
+          animate={{
+            y: [0, 10, 0],
+            rotate: [0, -8, 0],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -right-4 -top-6 hidden h-12 w-12 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 text-orange-500 shadow-lg shadow-orange-100/50 sm:flex"
+        >
+          <Heart className="h-5 w-5" />
+        </motion.div>
+
+        {/* Main CTA */}
+
+        <div className="relative overflow-hidden rounded-3xl border border-orange-200 bg-linear-to-br from-orange-100 via-orange-50 to-white p-8 shadow-xl shadow-orange-100/40 dark:border-orange-900/50 dark:from-orange-950/40 dark:via-orange-950/20 dark:to-background sm:p-10">
+
+          {/* Background Glow */}
+
+          <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-orange-400/15 blur-3xl" />
+
+          <div className="pointer-events-none absolute -bottom-24 -left-16 h-52 w-52 rounded-full bg-orange-300/15 blur-3xl" />
+
+          {/* Decorative Spark */}
+
+          <motion.div
+            animate={{
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.08, 1],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute right-8 top-8 text-orange-300"
+          >
+            <Sparkles className="h-7 w-7" />
+          </motion.div>
+
+          <div className="relative flex flex-col items-center justify-between gap-8 text-center md:flex-row md:text-left">
+
+            {/* Content */}
+
+            <div className="max-w-2xl">
+
+              <Badge
+                variant="outline"
+                className="mb-4 rounded-full border-orange-200 bg-white/70 px-3 py-1.5 text-orange-700 backdrop-blur-sm dark:border-orange-900 dark:bg-orange-950/30 dark:text-orange-400"
+              >
+                <PenLine className="mr-1.5 h-3.5 w-3.5" />
+
+                Share Your Experience
+              </Badge>
+
+              <h3 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+                Enjoyed Your FoodHub Experience?
+              </h3>
+
+              <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
+                Your feedback helps us improve and helps other food lovers discover
+                delicious meals from trusted providers.
+              </p>
+
+              {/* Rating Preview */}
+
+              <div className="mt-5 flex items-center justify-center gap-2 md:justify-start">
+                <div className="flex items-center gap-1 rounded-full border border-orange-200 bg-white/70 px-3 py-1.5 shadow-sm dark:border-orange-900/50 dark:bg-orange-950/30">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className="h-4 w-4 fill-orange-500 text-orange-500"
+                    />
+                  ))}
+                </div>
+
+                <Label className="text-xs font-medium text-orange-700 dark:text-orange-400">
+                  Tell us what you think
+                </Label>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+
+            <div className="">
+              <Button
+                type="button"
+                size="lg"
+                onClick={() => setIsReviewDialogOpen(true)}
+                className=" group flex h-12 items-center gap-2 rounded-xl bg-orange-600 px-6 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30
+  "
+              >
+                <PenLine className="h-4 w-4" />
+
+                <span>Add Your Review</span>
+
+                <ArrowRight
+                  className=" h-4 w-4 transition-transform duration-300 group-hover:translate-x-1
+    "
+                />
+              </Button>
+
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                It only takes a minute
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ================= SEE MORE ================= */}
+
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+        }}
+        transition={{
+          delay: 0.3,
+        }}
+        className="mt-10 flex justify-center"
+      >
+        <Button
+          // asChild
+          variant="outline"
+          className="group rounded-xl border-orange-200 bg-background px-5 py-2.5 text-orange-700 transition-all duration-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 hover:shadow-md hover:shadow-orange-100/50 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
+        >
+          See More Reviews
+
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+
+        </Button>
+      </motion.div>
+
+      <AddGlobalReview
+        open={isReviewDialogOpen}
+        onOpenChange={setIsReviewDialogOpen}
+      />
     </section>
   );
 };
@@ -234,11 +395,10 @@ function ReviewCard({ review, index }: ReviewCardProps) {
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className={`h-4 w-4 ${
-                    star <= review.rating
-                      ? "fill-orange-500 text-orange-500"
-                      : "text-slate-200"
-                  }`}
+                  className={`h-4 w-4 ${star <= review.rating
+                    ? "fill-orange-500 text-orange-500"
+                    : "text-slate-200"
+                    }`}
                 />
               ))}
 
@@ -283,10 +443,10 @@ function ReviewCard({ review, index }: ReviewCardProps) {
             <Label className="text-xs font-medium text-slate-500">
               {review.createdAt
                 ? new Date(review.createdAt).toLocaleDateString("en-BD", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
                 : "Recently"}
             </Label>
           </div>

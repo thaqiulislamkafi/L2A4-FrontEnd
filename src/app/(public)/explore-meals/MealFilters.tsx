@@ -26,7 +26,7 @@ interface MealFiltersProps {
   category: string;
   totalMeals: number;
   onSearchChange: (value: string) => void;
-  onCategoryChange: (value: string) => void;
+  onCategoryChange: (value: string | null) => void;
   onReset: () => void;
 }
 
