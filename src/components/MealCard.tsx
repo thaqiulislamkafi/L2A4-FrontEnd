@@ -151,7 +151,7 @@ const MealCard = ({ meal }: MealCardProps) => {
 
                         className="group/button w-full bg-orange-600 text-white shadow-md shadow-orange-600/20 transition-all hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30"
                     >
-                        <Link href={`/meals/${meal.id}`} className="flex items-center justify-center gap-2">
+                        <Link href={`/explore-meals/${meal.id}`} className="flex items-center justify-center gap-2">
                             <ShoppingBag className="h-4 w-4" />
 
                             View Meal

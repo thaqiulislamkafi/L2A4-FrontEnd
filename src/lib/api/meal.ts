@@ -1,5 +1,6 @@
 import { HeroMeal, PublishedMealsResponse } from "@/types/meal.type";
 import axiosInstance from "../axios";
+import { MealDetailsResponse } from "@/types/meal.type";
 
 export interface HeroMealResponse {
   success: boolean;
@@ -37,4 +38,17 @@ export const getPublishedMeals = async ({
   );
 
   return data;
+};
+
+
+export const getMealById = async (
+  id: string
+): Promise<MealDetailsResponse> => {
+
+  const { data } = await axiosInstance.get<MealDetailsResponse>(
+    `/meals/${id}`
+  );
+
+  return data;
+
 };
