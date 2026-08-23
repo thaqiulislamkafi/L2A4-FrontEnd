@@ -115,7 +115,7 @@ export interface MealProvider {
   name: string;
   email: string;
   emailVerified: boolean;
-  image: string | null;
+  image: string ;
   createdAt: string;
   updatedAt: string;
   contact: string;
@@ -172,4 +172,23 @@ export interface MealDetailsResponse {
   success: boolean;
   message: string;
   data: MealDetailsType;
+}
+
+interface MealProviderData {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  contact: string;
+  age: number;
+  address: string;
+  role: string;
+  status: string;
+}
+
+export interface MealProviderProps {
+  provider: MealProviderData;
 }

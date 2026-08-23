@@ -9,25 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
-interface MealProviderData {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-  contact: string;
-  age: number;
-  address: string;
-  role: string;
-  status: string;
-}
-
-interface MealProviderProps {
-  provider: MealProviderData;
-}
+import { MealProviderProps } from "@/types/meal.type";
 
 const MealProvider = ({
   provider,
