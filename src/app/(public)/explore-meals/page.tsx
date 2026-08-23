@@ -24,10 +24,9 @@ import {
 import { getPublishedMeals } from "@/lib/api/meal";
 import { Meal } from "@/types/meal.type";
 import MealCard from "@/components/MealCard";
-import ExploreMealsLoader from "./loading";
 import ExploreMealsError from "./error";
 import MealFilters from "./MealFilters";
-import { PrimaryMealSpinner, Spinner } from "@/components/ui/spinner";
+import { PrimaryMealSpinner } from "@/components/ui/spinner";
 
 const ExploreMeals = () => {
 
@@ -36,7 +35,7 @@ const ExploreMeals = () => {
 
   const [search, setSearch] = React.useState("");
 
-  const [category, setCategory] = React.useState("ALL");
+  const [category, setCategory] = React.useState("All Categories");
 
   const limit = 9;
 

@@ -48,7 +48,7 @@ export default function MealFilters({
 
   const categories: Category[] = data?.data ?? [];
 
-  const isDefaultFilter = search === "" && category === "ALL";
+  const isDefaultFilter = search === "" && category === "All Categories";
 
   return (
     <motion.section
@@ -92,7 +92,7 @@ export default function MealFilters({
               onSearchChange(event.target.value)
             }
             placeholder="Search meals by name..."
-            className=" h-14 w-full rounded-2xl border-orange-100 bg-background pl-14 pr-5 text-[15px] shadow-sm transition-all duration-300 placeholder:text-muted-foreground hover:border-orange-200 focus-visible:border-orange-500 focus-visible:ring-2 focus-visible:ring-orange-500/10 dark:border-orange-950/50 dark:bg-orange-950/5 dark:hover:border-orange-900
+            className=" h-14 w-full rounded-2xl border-orange-100 pl-14 pr-5 text-[15px] shadow-sm transition-all duration-300 placeholder:text-muted-foreground hover:border-orange-200 focus-visible:border-orange-500 focus-visible:ring-2 focus-visible:ring-orange-500/10 dark:border-orange-950/50 dark:bg-orange-950/5 dark:hover:border-orange-900
             "
           />
         </div>
@@ -119,25 +119,25 @@ export default function MealFilters({
             <SelectTrigger
               size=""
               id="meal-category"
-              className="h-14 w-full rounded-2xl border-orange-100 bg-background pl-14 pr-10 text-[15px] shadow-sm transition-all duration-300 hover:border-orange-200 focus:border-orange-500 focus:ring-orange-500/10 dark:border-orange-950/50 dark:bg-orange-950/5 dark:hover:border-orange-900
+              className="h-14 w-full rounded-2xl border-orange-100 pl-14 pr-10 text-[15px] shadow-sm transition-all duration-300 hover:border-orange-200 focus:border-orange-500 focus:ring-orange-500/10 dark:border-orange-950/50 dark:bg-orange-950/5 dark:hover:border-orange-900
               "
             >
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
 
             <SelectContent className="border-orange-100 dark:border-orange-950/50">
-              <SelectItem value="ALL">
+              <SelectItem value="All Categories" className={`bg-orange-50`}>
                 All Categories
               </SelectItem>
 
               {isCategoryLoading ? (
-                <div className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
+                <div className="flex  items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
                   <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
                   Loading categories...
                 </div>
               ) : (
                 categories.map((item) => (
-                  <SelectItem
+                  <SelectItem className={`bg-orange-50  rounded-none`}
                     key={item.id}
                     value={item.category_name}
                   >
@@ -183,7 +183,7 @@ export default function MealFilters({
             variant="outline"
             onClick={onReset}
             disabled={isDefaultFilter}
-            className=" h-12 rounded-2xl border-orange-200 bg-background px-5 font-semibold text-orange-700 shadow-sm transition-all duration-300 hover:border-orange-500 hover:bg-orange-600 hover:text-white hover:shadow-lg hover:shadow-orange-600/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-900 dark:bg-orange-950/5 dark:text-orange-400 dark:hover:bg-orange-600 dark:hover:text-white
+            className=" h-12 rounded-2xl border-orange-200 px-5 font-semibold text-orange-700 shadow-sm transition-all duration-300 bg-orange-50 hover:border-orange-500 hover:bg-orange-600 hover:text-white hover:shadow-lg hover:shadow-orange-600/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-900 dark:bg-orange-950/5 dark:text-orange-400 dark:hover:bg-orange-600 dark:hover:text-white
             "
           >
             <RotateCcw className="h-4 w-4" />

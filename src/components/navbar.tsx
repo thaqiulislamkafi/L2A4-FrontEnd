@@ -1,13 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu } from "lucide-react";
 import { Geist } from "next/font/google";
 
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList,
+import {
+  NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { useAuthStore } from "@/store/auth.store";
+import { useRouter } from "next/navigation";
+import { userLogout } from "@/lib/api/auth";
+import { toast } from "./ui/toast";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -33,6 +38,34 @@ const navItems = [
 ];
 
 export default function Navbar() {
+
+  const { user, isAuthenticated, clearUser } = useAuthStore();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await userLogout();
+
+      clearUser();
+
+      toast.add({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+        type: "success",
+      });
+
+      router.push("/");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+
+      toast.add({
+        title: "Sign out failed",
+        description: "Unable to sign out. Please try again.",
+        type: "error",
+      });
+    }
+  };
+  
   return (
     <header
       className={`${geist.className} sticky top-0 z-50 border-b border-orange-100 bg-orange-50/90 backdrop-blur-md`}
@@ -82,28 +115,46 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
 
-          {/* Sign In */}
+          {isAuthenticated ? (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  className="gap-2 px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
 
-          <Link href="/signin">
-            <Button
-              variant="outline"
-              className=" border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700
-              "
-            >
-              Sign In
-            </Button>
-          </Link>
+                  Dashboard
+                </Button>
+              </Link>
 
-          {/* Sign Up */}
+              <Button
+                onClick={handleSignOut}
+                className="gap-2 border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700"
+              >
+                <LogOut className="h-4 w-4" />
 
-          <Link href="/signup">
-            <Button
-              className=" border border-orange-600 bg-orange-600 px-5 text-base text-white transition-all duration-300 hover:border-orange-700 hover:bg-orange-700
-              "
-            >
-              Sign Up
-            </Button>
-          </Link>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  className="px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
+                >
+                  Sign In
+                </Button>
+              </Link>
+
+              <Link href="/signup">
+                <Button className="border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
 
         </div>
 
@@ -133,7 +184,7 @@ export default function Navbar() {
             {/* Sheet */}
 
             <SheetContent side="right"
-              className=" w-[85%] border-l border-orange-100 bg-orange-50/95 p-0 backdrop-blur-xl sm:max-w-sm dark:border-orange-950/40 dark:bg-background/95"
+              className="border-l border-orange-100 bg-orange-50/95 p-0 sm:max-w-sm dark:border-orange-950/40 dark:bg-background/95"
             >
 
               {/* =========================
@@ -144,13 +195,13 @@ export default function Navbar() {
                 className=" border-b border-orange-100 bg-orange-100/50 px-6 py-6 dark:border-orange-950/40 dark:bg-orange-950/20"
               >
                 <SheetTitle
-                  className=" text-2xl font-bold tracking-tight text-orange-600"
+                  className="tracking-tight text-orange-600"
                 >
                   FoodHub
                 </SheetTitle>
 
                 <SheetDescription
-                  className=" text-sm text-slate-600 dark:text-slate-400"
+                  className=" text-slate-600 dark:text-slate-400"
                 >
                   Delicious meals, delivered with care.
                 </SheetDescription>

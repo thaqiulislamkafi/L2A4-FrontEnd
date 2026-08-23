@@ -1,21 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
 import { motion } from "framer-motion";
-import {ArrowRight,Eye,EyeOff,LockKeyhole,Mail,Sparkles,ChefHat,Utensils,Salad,CircleUserRound,
+import {
+  ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Sparkles, ChefHat, Utensils, Salad, CircleUserRound,
 } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {Field,FieldContent,FieldError,FieldLabel,
+import {
+  Field, FieldContent, FieldError, FieldLabel,
 } from "@/components/ui/field";
+import { userLoginByEmailAndPassword } from "@/lib/api/auth";
+import { toast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
+  const setUser = useAuthStore((state) => state.setUser);
+  
   const form = useForm({
     defaultValues: {
       email: "",
@@ -23,10 +33,35 @@ export default function SigninPage() {
     },
 
     onSubmit: async ({ value }) => {
-      console.log("Login data:", value);
 
-      // Later:
-      // await loginUser(value);
+      try {
+        const response = await userLoginByEmailAndPassword(value);
+
+        console.log("Login response:", response);
+
+        if (response.success) {
+          toast.add({
+            title: "Login successful",
+            description: `Welcome back, ${response.data.name}.`,
+            type: "success",
+          });
+          setUser(response.data);
+          router.push("/");
+        }
+
+      } catch (error: any) {
+        console.error("Login failed:", error);
+
+        const message =
+          error?.response?.data?.message ||
+          "Invalid email or password.";
+
+        toast.add({
+          title: "Login failed",
+          description: message,
+          type: "error",
+        });
+      }
     },
   });
 
