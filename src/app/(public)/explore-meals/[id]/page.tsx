@@ -109,7 +109,7 @@ const MealDetailsPage = () => {
         />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-6xl px-6">
         {/* Main Meal */}
 
         <MealDetails meal={meal} />

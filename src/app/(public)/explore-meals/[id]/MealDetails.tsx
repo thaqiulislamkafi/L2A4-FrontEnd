@@ -29,22 +29,7 @@ const MealDetails = ({ meal }: MealDetailsProps) => {
     <section className="pt-6">
       {/* Back */}
 
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-      >
-        <Button
-        //   asChild
-          variant="ghost"
-          className="mb-8 gap-2 text-orange-700 hover:bg-orange-100 hover:text-orange-700 dark:text-orange-400 dark:hover:bg-orange-950/30"
-        >
-          <Link href="/meals">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Explore Meals
-          </Link>
-        </Button>
-      </motion.div>
-
+    
       <Card className="overflow-hidden border-orange-100 bg-background/90 p-0 shadow-xl shadow-orange-100/30 dark:border-orange-950/40 dark:shadow-orange-950/20">
         <div className="grid lg:grid-cols-2">
           {/* ================= IMAGE ================= */}
