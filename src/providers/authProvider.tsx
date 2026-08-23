@@ -1,42 +1,44 @@
-// /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 
-// "use client";
+import { ReactNode, useEffect } from "react";
 
-// import { useEffect, ReactNode } from "react";
-// import { verifyAuth } from "@/lib/api/auth";
-// import { useAuthStore } from "@/store/auth.store";
-// import Loading from "@/components/loading";
-// interface Props {
-//   children: ReactNode;
-// }
+import { getMe } from "@/lib/api/auth";
+import { GlobalSpinner, Spinner } from "@/components/ui/spinner";
+import { useAuthStore } from "@/store/auth.store";
 
-// const AuthProvider = ({ children }: Props) => {
-//   const setAuth = useAuthStore((state) => state.setAuth);
-//   const logout = useAuthStore((state) => state.logout);
+interface Props {
+  children: ReactNode;
+}
 
-//   useEffect(() => {
+const AuthProvider = ({ children }: Props) => {
+  const setAuth = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.clearUser);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
-//     const restoreSession = async () => {
+  useEffect(() => {
+    
+    const restoreSession = async () => {
+      try {
+        const response = await getMe();
 
-//       try {
+        if (response?.success && response?.data?.user) {
+          setAuth(response.data.user);
+        } else {
+          logout();
+        }
+      } catch (error) {
+        console.error("Session restoration failed:", error);
 
-//         const data = await verifyAuth();
+        logout();
+      }
+    };
 
-//         if(!data) return <Loading/>
-//         setAuth(data.data, data.accessToken);
+    restoreSession();
+  }, [setAuth, logout]);
 
-//       } catch (error) {
+  if (isLoading) return <GlobalSpinner/>
 
-//         logout();
+  return <>{children}</>;
+};
 
-//       }
-//     };
-
-//     restoreSession();
-
-//   }, [setAuth, logout]);
-
-//   return <>{children}</>;
-// };
-
-// export default AuthProvider;
+export default AuthProvider;

@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import ThemeProviders from "@/providers/ThemeProvider";
 import { Toaster } from "@/components/ui/toast";
+import AuthProvider from "@/providers/authProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +33,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-orange-50/60">
         <QueryProvider>
-          <ThemeProviders>
-            {children}
-            <Toaster/>
-          </ThemeProviders>
+          <AuthProvider>
+            <ThemeProviders>
+              {children}
+              <Toaster />
+            </ThemeProviders>
+          </AuthProvider>
+
         </QueryProvider>
       </body>
     </html>

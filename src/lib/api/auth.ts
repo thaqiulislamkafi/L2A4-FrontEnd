@@ -23,3 +23,9 @@ export const userLogout = async () => {
 
   return data;
 };
+
+export const getMe = async () => {
+  const response = await axiosInstance.post("/auth/get-me");
+
+  return response.data;
+};

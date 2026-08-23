@@ -43,6 +43,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleSignOut = async () => {
+
     try {
       await userLogout();
 
@@ -83,9 +84,9 @@ export default function Navbar() {
           FoodHub
         </Link>
 
-        {/* =====================================================
-                               DESKTOP NAVIGATION
-        ====================================================== */}
+        {/* =======================================
+                      DESKTOP NAVIGATION
+        ============================================ */}
 
         <div className="hidden md:block">
           <NavigationMenu>
@@ -109,13 +110,13 @@ export default function Navbar() {
           </NavigationMenu>
         </div>
 
-        {/* =====================================================
-                               DESKTOP ACTIONS
-        ====================================================== */}
+        {/* ===========================================
+                        DESKTOP ACTIONS
+        ==============================================*/}
 
         <div className="hidden items-center gap-3 md:flex">
 
-          {isAuthenticated ? (
+          {(user) ? (
             <>
               <Link href="/dashboard">
                 <Button
@@ -158,9 +159,9 @@ export default function Navbar() {
 
         </div>
 
-        {/* =====================================================
-                               MOBILE MENU
-            ====================================================== */}
+        {/* =========================================
+                            MOBILE MENU
+            ========================================= */}
 
         <div className="md:hidden">
           <Sheet>
