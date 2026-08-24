@@ -25,13 +25,25 @@ export const userLogout = async () => {
 };
 
 
-interface SignupData {
-  image: File | null;
+export interface SignupData {
+  image?: string | File | null;
   name: string;
   email: string;
   password: string;
   role: string;
+  contact?: string | null;
+  age?: number | null;
+  address?: string | null;
 }
+
+/**
+ * 
+ * @param data role: "provider" as const,
+      contact: "",
+      age: "",
+      address: "",
+ * @returns 
+ */
 
 export const userSignup = async (data: SignupData) => {
   const response = await axiosInstance.post(
@@ -41,7 +53,10 @@ export const userSignup = async (data: SignupData) => {
       email: data.email,
       password: data.password,
       role: data.role,
-      image : data.image
+      contact: data.contact ?? null,
+      age: data.age ?? null,
+      address: data.address ?? null,
+      image: data.image ?? null,
     }
   );
 

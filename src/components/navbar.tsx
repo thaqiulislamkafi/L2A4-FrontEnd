@@ -35,6 +35,10 @@ const navItems = [
     label: "Contact",
     href: "/contact",
   },
+  {
+    label: "Become a provider",
+    href: "/become-provider",
+  },
 ];
 
 export default function Navbar() {
