@@ -141,7 +141,7 @@ export default function SignupPage() {
               LEFT SIDE
           ================================================== */}
 
-          <section className="relative hidden min-h-[720px] overflow-hidden bg-linear-to-br from-orange-500 via-orange-600 to-orange-700 lg:flex">
+          <section className="relative idden min-h-[720px] overflow-hidden bg-linear-to-br from-orange-500 via-orange-600 to-orange-700 lg:flex">
             {/* Decorative circles */}
 
             <motion.div
@@ -181,7 +181,7 @@ export default function SignupPage() {
               <ChefHat className="h-7 w-7" />
             </motion.div>
 
-            <div className="relative z-10 flex w-full flex-col p-10 xl:p-12">
+            <div className="relative  flex w-full flex-col p-10 xl:p-12">
               {/* Brand */}
 
               <motion.div
@@ -439,7 +439,7 @@ export default function SignupPage() {
                         </FieldLabel>
 
                         <div className="relative">
-                          <User className="absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <User className="absolute left-3 top-1/2  h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
                           <Input
                             id={field.name}
@@ -484,7 +484,7 @@ export default function SignupPage() {
                         </FieldLabel>
 
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <Mail className="absolute left-3 top-1/2  h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
                           <Input
                             id={field.name}
@@ -636,7 +636,7 @@ function PasswordInput({ field }: { field: any }) {
 
   return (
     <div className="relative">
-      <LockKeyhole className="absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <LockKeyhole className="absolute left-3 top-1/2  h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
       <Input
         id={field.name}

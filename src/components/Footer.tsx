@@ -62,7 +62,7 @@ export default function Footer() {
 
       <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-orange-500/5 blur-3xl dark:bg-orange-500/10" />
 
-      <div className=" relative mx-auto px-4">
+      <div className="max-w-6xl relative mx-auto px-4">
         {/* =========================
             Main Footer
         ========================= */}

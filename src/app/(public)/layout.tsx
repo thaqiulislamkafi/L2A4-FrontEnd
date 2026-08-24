@@ -20,7 +20,7 @@ const PublicLayout = ({
             <main className='font-sans'>
                 {children}
             </main>
-            <footer className='max-w-6xl mx-auto font-sans'>
+            <footer className='font-sans'>
                 <Footer />
             </footer>
         </div>
