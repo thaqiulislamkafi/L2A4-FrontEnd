@@ -41,6 +41,25 @@ export const userSignup = async (data: SignupData) => {
       email: data.email,
       password: data.password,
       role: data.role,
+      image : data.image
+    }
+  );
+
+  return response.data;
+};
+
+export const uploadUserImage = async (file: File) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  const response = await axiosInstance.post(
+    "/auth/image-upload",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     }
   );
 

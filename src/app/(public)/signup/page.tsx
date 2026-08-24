@@ -16,7 +16,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, } from "@/
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/toast";
-import { userSignup } from "@/lib/api/auth";
+import { uploadUserImage, userSignup } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
@@ -26,6 +26,11 @@ export default function SignupPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const uploadImageMutation = useMutation({
+    mutationFn: uploadUserImage,
+  });
 
   const signupMutation = useMutation({
     mutationFn: userSignup,
@@ -63,7 +68,30 @@ export default function SignupPage() {
     },
 
     onSubmit: async ({ value }) => {
-      signupMutation.mutate(value);
+
+      try {
+
+        if (value.image) {
+          const uploadResponse =
+            await uploadImageMutation.mutateAsync(value.image);
+
+          value.image = uploadResponse.data.imageUrl;
+        }
+
+        console.log(value) ;
+
+        signupMutation.mutate(value);
+      } catch (error: any) {
+        console.error("Image upload failed:", error);
+
+        toast.add({
+          title: "Image upload failed",
+          description:
+            error?.response?.data?.message ||
+            "Unable to upload your profile image.",
+          type: "error",
+        });
+      }
     },
   });
 
@@ -336,9 +364,9 @@ export default function SignupPage() {
                             onClick={() => fileInputRef.current?.click()}
                             className="group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-orange-200 bg-orange-50 transition-all hover:border-orange-400 hover:bg-orange-100 dark:border-orange-900 dark:bg-orange-950/20"
                           >
-                            {field.state.value ? (
+                            {imagePreview ? (
                               <Image
-                                src={URL.createObjectURL(field.state.value)}
+                                src={imagePreview}
                                 alt="Profile preview"
                                 fill
                                 className="object-cover"
@@ -361,9 +389,7 @@ export default function SignupPage() {
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() =>
-                                fileInputRef.current?.click()
-                              }
+                              onClick={() => fileInputRef.current?.click()}
                               className="mt-2 border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
                             >
                               Choose Image
@@ -377,10 +403,16 @@ export default function SignupPage() {
                           accept="image/png,image/jpeg,image/webp"
                           className="hidden"
                           onChange={(event) => {
-                            const file =
-                              event.target.files?.[0] ?? null;
+                            const file = event.target.files?.[0] ?? null;
 
                             field.handleChange(file);
+
+                            if (file) {
+                              const previewUrl = URL.createObjectURL(file);
+                              setImagePreview(previewUrl);
+                            } else {
+                              setImagePreview(null);
+                            }
                           }}
                         />
                       </Field>
