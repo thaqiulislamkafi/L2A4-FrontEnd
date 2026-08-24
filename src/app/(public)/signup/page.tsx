@@ -7,34 +7,51 @@ import { useRef, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
-  Camera,
-  CheckCircle2,
-  ChefHat,
-  Eye,
-  EyeOff,
-  LockKeyhole,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-  User,
-  Utensils,
+  ArrowRight, Camera, CheckCircle2, ChefHat, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck, Sparkles, User, Utensils,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/toast";
+import { userSignup } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function SignupPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const signupMutation = useMutation({
+    mutationFn: userSignup,
+
+    onSuccess: (response) => {
+      toast.add({
+        title: "Account created successfully!",
+        description: `Welcome to FoodHub, ${response.data.name}.`,
+        type: "success",
+      });
+      setUser(response.data);
+      router.push("/");
+    },
+
+    onError: (error: any) => {
+      console.error("Signup failed:", error);
+
+      toast.add({
+        title: "Signup failed",
+        description:
+          error?.response?.data?.message ||
+          "Unable to create your account.",
+        type: "error",
+      });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -42,10 +59,11 @@ export default function SignupPage() {
       name: "",
       email: "",
       password: "",
+      role: "user",
     },
 
     onSubmit: async ({ value }) => {
-      console.log("Signup data:", value);
+      signupMutation.mutate(value);
     },
   });
 
@@ -508,10 +526,20 @@ export default function SignupPage() {
 
                   <Button
                     type="submit"
-                    className="h-11 w-full bg-orange-600 font-semibold text-white shadow-md shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30"
+                    disabled={signupMutation.isPending}
+                    className="h-11 w-full bg-orange-600 font-semibold text-white shadow-md shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30 disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Sign Up
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    {signupMutation.isPending ? (
+                      <>
+                        <Spinner className="mr-2 h-4 w-4" />
+                        Signing up...
+                      </>
+                    ) : (
+                      <>
+                        Sign Up
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300" />
+                      </>
+                    )}
                   </Button>
 
                   {/* Divider */}
