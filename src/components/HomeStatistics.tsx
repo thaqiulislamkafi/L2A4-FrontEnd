@@ -2,19 +2,13 @@
 
 import CountUp from "react-countup";
 import { motion } from "framer-motion";
-import {
-  Users,
-  Utensils,
-  ShoppingBag,
-  Star,
-  Store,
-} from "lucide-react";
+import {Users,Utensils,ShoppingBag,Star,} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getDashboardStats } from "@/lib/api/dashboardStats";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge, HeaderBadge } from "@/components/ui/badge";
+import { HeaderBadge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "./ui/skeleton";
 

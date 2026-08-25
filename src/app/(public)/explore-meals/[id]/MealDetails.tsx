@@ -1,17 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  Clock3,
-  Package,
-  ShoppingBag,
-  Utensils,
-} from "lucide-react";
+import {ArrowRight,CheckCircle2,Clock3,Package,ShoppingBag,Utensils,} from "lucide-react";
 
 import { MealDetailsType } from "@/types/meal.type";
 

@@ -43,7 +43,7 @@ const navItems = [
 
 export default function Navbar() {
 
-  const { user, isAuthenticated, clearUser } = useAuthStore();
+  const { user,clearUser } = useAuthStore();
   const router = useRouter();
 
   const handleSignOut = async () => {

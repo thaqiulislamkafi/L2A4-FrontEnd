@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Bell,
-  ChevronRight,
-  LogOut,
-  Settings,
-  UserCircle,
-} from "lucide-react";
+import {Bell,ChevronRight,LogOut,Settings,UserCircle,} from "lucide-react";
 
 import { useAuthStore } from "@/store/auth.store";
 
 import {
   SidebarTrigger,
-  //   Separator,
 } from "@/components/ui/sidebar";
 
 import { Button } from "@/components/ui/button";
@@ -22,117 +15,15 @@ import { Badge } from "@/components/ui/badge";
 import {DropdownMenu,DropdownMenuContent,DropdownMenuGroup,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Geist } from "next/font/google";
+import { pageMap } from "./_index";
+import { getProfileHref } from "@/utils/dashboard/getProfileHref";
+import { getRoleLabel } from "@/utils/dashboard/getRoleLabel";
 
 
-interface PageInfo {
+export interface PageInfo {
   title: string;
   description?: string;
 }
-
-const pageMap: Record<string, PageInfo> = {
-
-  "/dashboard/admin": {
-    title: "Dashboard",
-    description: "Overview of your FoodHub application.",
-  },
-
-  "/dashboard/admin/users": {
-    title: "All Users",
-    description: "Manage all users of the platform.",
-  },
-
-  "/dashboard/admin/meals": {
-    title: "All Meals",
-    description: "Manage all meals available on FoodHub.",
-  },
-
-  "/dashboard/admin/reviews": {
-    title: "All Reviews",
-    description: "Manage platform reviews.",
-  },
-
-  "/dashboard/admin/meal-reviews": {
-    title: "All Meal Reviews",
-    description: "Manage reviews submitted for meals.",
-  },
-
-  "/dashboard/admin/orders": {
-    title: "All Orders",
-    description: "Manage all customer orders.",
-  },
-
-  "/dashboard/admin/order-items": {
-    title: "All Order Items",
-    description: "View and manage order items.",
-  },
-
-  "/dashboard/admin/settings": {
-    title: "App Settings",
-    description: "Manage application settings.",
-  },
-
-  "/dashboard/admin/profile": {
-    title: "My Profile",
-    description: "Manage your profile information.",
-  },
-
-  "/dashboard/provider": {
-    title: "Dashboard",
-    description: "Overview of your provider account.",
-  },
-
-  "/dashboard/provider/meals": {
-    title: "My Meals",
-    description: "Manage the meals you provide.",
-  },
-
-  "/dashboard/provider/orders": {
-    title: "My Orders",
-    description: "View orders containing your meals.",
-  },
-
-  "/dashboard/provider/order-items": {
-    title: "My Order Items",
-    description: "View your meal order items.",
-  },
-
-  "/dashboard/provider/revenues": {
-    title: "My Revenues",
-    description: "Track your earnings and revenues.",
-  },
-
-  "/dashboard/provider/profile": {
-    title: "My Profile",
-    description: "Manage your profile information.",
-  },
-
-
-  "/dashboard/user": {
-    title: "Dashboard",
-    description: "Overview of your FoodHub account.",
-  },
-
-  "/dashboard/user/orders": {
-    title: "My Orders",
-    description: "View your order history.",
-  },
-
-  "/dashboard/user/order-items": {
-    title: "My Order Items",
-    description: "View items from your orders.",
-  },
-
-  "/dashboard/user/reviews": {
-    title: "My Reviews",
-    description: "Manage your submitted reviews.",
-  },
-
-  "/dashboard/user/profile": {
-    title: "My Profile",
-    description: "Manage your profile information.",
-  },
-};
-
 
 function getPageInfo(pathname: string): PageInfo {
   if (pageMap[pathname]) {
@@ -149,38 +40,6 @@ function getPageInfo(pathname: string): PageInfo {
       description: "Welcome to your FoodHub dashboard.",
     }
   );
-}
-
-function getRoleLabel(role?: string) {
-  switch (role) {
-    case "admin":
-      return "Administrator";
-
-    case "provider":
-      return "Provider";
-
-    case "user":
-      return "User";
-
-    default:
-      return "User";
-  }
-}
-
-function getProfileHref(role?: string) {
-  switch (role) {
-    case "admin":
-      return "/dashboard/admin/profile";
-
-    case "provider":
-      return "/dashboard/provider/profile";
-
-    case "user":
-      return "/dashboard/user/profile";
-
-    default:
-      return "/dashboard";
-  }
 }
 
 const geist = Geist({ subsets: ["latin"] });

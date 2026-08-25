@@ -6,6 +6,7 @@ export interface AuthUser {
   image: string;
   createdAt: string;
   updatedAt: string;
+  contact:string;
   role: string;
   status: string;
 }

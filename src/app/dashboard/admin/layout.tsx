@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
+import { Spinner } from "@/components/ui/spinner";
+import { useEffect } from "react";
 
 
 export default function AdminLayout({
@@ -13,9 +14,9 @@ export default function AdminLayout({
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
 
-//   useEffect(() => {
-//     if (!user)  <Loading/>
-//   }, [router, user]);
+  useEffect(() => {
+    if (!user)  <Spinner/>
+  }, [router, user]);
 
   return <>{children}</>;
 }

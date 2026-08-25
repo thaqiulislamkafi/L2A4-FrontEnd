@@ -31,10 +31,7 @@ import { PrimaryMealSpinner } from "@/components/ui/spinner";
 const ExploreMeals = () => {
 
   const [currentPage, setCurrentPage] = React.useState(1);
-   const [page, setPage] = React.useState(1);
-
   const [search, setSearch] = React.useState("");
-
   const [category, setCategory] = React.useState("All Categories");
 
   const limit = 9;

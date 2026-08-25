@@ -1,12 +1,13 @@
 import { create } from "zustand";
 
 export interface AuthUser {
+  contact: string;
   id: string;
   name: string;
   email: string;
   emailVerified: boolean;
   image: string | null;
-  role: string;
+  role: "user" | "provider" | "admin";
   status: string;
   createdAt: string;
   updatedAt: string;

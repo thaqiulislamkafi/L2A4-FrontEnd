@@ -33,11 +33,25 @@ function GlobalSpinner() {
         <Spinner className="size-10 text-orange-600" />
 
         <p className="text-sm font-medium text-orange-700">
-          Checking your session...
+          Loading...
         </p>
       </div>
     </main>
   );
 }
 
-export { Spinner, PrimaryMealSpinner, GlobalSpinner }
+function DashboardSpinner() {
+  return (
+    <main className={`${geist.className} flex min-h-screen items-center justify-center bg-orange-100/10 backdrop-blur-2xl`}>
+      <div className="flex flex-col items-center gap-4">
+        <Spinner className="size-10 text-orange-600" />
+
+        <p className="text-sm font-medium text-orange-700">
+          Dashboard Loading...
+        </p>
+      </div>
+    </main>
+  );
+}
+
+export { Spinner, PrimaryMealSpinner, GlobalSpinner, DashboardSpinner }

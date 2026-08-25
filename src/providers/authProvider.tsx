@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 
 import { getMe } from "@/lib/api/auth";
-import { GlobalSpinner, Spinner } from "@/components/ui/spinner";
+import { GlobalSpinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/auth.store";
 
 interface Props {

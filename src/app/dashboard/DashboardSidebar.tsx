@@ -3,203 +3,17 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Users,
-  UtensilsCrossed,
-  Star,
-  MessageSquareText,
-  ShoppingCart,
-  ListOrdered,
-  Settings,
-  UserCircle,
-  ChefHat,
-  Wallet,
-} from "lucide-react";
+import {UtensilsCrossed,} from "lucide-react";
 
 import { useAuthStore } from "@/store/auth.store";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
+import {Sidebar,SidebarContent,SidebarFooter,SidebarGroup,SidebarGroupContent,SidebarGroupLabel,SidebarHeader,SidebarMenu,SidebarMenuButton,SidebarMenuItem,SidebarSeparator} from "@/components/ui/sidebar";
 
 import { Badge } from "@/components/ui/badge";
+import { getNavItems } from "@/utils/dashboard/getNavItems";
+import { getRoleLabel } from "@/utils/dashboard/getRoleLabel";
 
-type UserRole = "admin" | "provider" | "user";
-
-interface DashboardNavItem {
-  title: string;
-  href: string;
-  icon: React.ElementType;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Admin Navigation                                                            */
-/* -------------------------------------------------------------------------- */
-
-const adminNavItems: DashboardNavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard/admin",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "All Users",
-    href: "/dashboard/admin/users",
-    icon: Users,
-  },
-  {
-    title: "All Meals",
-    href: "/dashboard/admin/meals",
-    icon: UtensilsCrossed,
-  },
-  {
-    title: "All Reviews",
-    href: "/dashboard/admin/reviews",
-    icon: Star,
-  },
-  {
-    title: "All Meal Reviews",
-    href: "/dashboard/admin/meal-reviews",
-    icon: MessageSquareText,
-  },
-  {
-    title: "All Orders",
-    href: "/dashboard/admin/orders",
-    icon: ShoppingCart,
-  },
-  {
-    title: "All Order Items",
-    href: "/dashboard/admin/order-items",
-    icon: ListOrdered,
-  },
-  {
-    title: "App Settings",
-    href: "/dashboard/admin/settings",
-    icon: Settings,
-  },
-  {
-    title: "My Profile",
-    href: "/dashboard/admin/profile",
-    icon: UserCircle,
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Provider Navigation                                                         */
-/* -------------------------------------------------------------------------- */
-
-const providerNavItems: DashboardNavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard/provider",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "My Meals",
-    href: "/dashboard/provider/meals",
-    icon: ChefHat,
-  },
-  {
-    title: "My Orders",
-    href: "/dashboard/provider/orders",
-    icon: ShoppingCart,
-  },
-  {
-    title: "My Order Items",
-    href: "/dashboard/provider/order-items",
-    icon: ListOrdered,
-  },
-  {
-    title: "My Revenues",
-    href: "/dashboard/provider/revenues",
-    icon: Wallet,
-  },
-  {
-    title: "My Profile",
-    href: "/dashboard/provider/profile",
-    icon: UserCircle,
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* User Navigation                                                             */
-/* -------------------------------------------------------------------------- */
-
-const userNavItems: DashboardNavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard/user",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "My Orders",
-    href: "/dashboard/user/orders",
-    icon: ShoppingCart,
-  },
-  {
-    title: "My Order Items",
-    href: "/dashboard/user/order-items",
-    icon: ListOrdered,
-  },
-  {
-    title: "My Reviews",
-    href: "/dashboard/user/reviews",
-    icon: Star,
-  },
-  {
-    title: "My Profile",
-    href: "/dashboard/user/profile",
-    icon: UserCircle,
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Helper Functions                                                            */
-/* -------------------------------------------------------------------------- */
-
-function getNavItems(role?: UserRole): DashboardNavItem[] {
-  switch (role) {
-    case "admin":
-      return adminNavItems;
-
-    case "provider":
-      return providerNavItems;
-
-    case "user":
-      return userNavItems;
-
-    default:
-      return [];
-  }
-}
-
-function getRoleLabel(role?: UserRole) {
-  switch (role) {
-    case "admin":
-      return "Administrator";
-
-    case "provider":
-      return "Provider";
-
-    case "user":
-      return "User";
-
-    default:
-      return "";
-  }
-}
+export type UserRole = "admin" | "provider" | "user";
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
@@ -220,7 +34,6 @@ export default function DashboardSidebar() {
       className=" border-orange-200/80 bg-orange-50/70 text-orange-950 dark:border-orange-900/40 dark:bg-orange-950/10 dark:text-orange-50
       "
     >
-
       <SidebarHeader className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -280,8 +93,7 @@ export default function DashboardSidebar() {
                 const Icon = item.icon;
 
                 const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                  pathname === item.href ;
 
                 return (
                   <SidebarMenuItem key={item.href} >
@@ -289,11 +101,12 @@ export default function DashboardSidebar() {
                       render={<Link href={item.href} />}
                       isActive={isActive}
                       tooltip={item.title}
-                      className={` relative h-10 rounded-lg px-4 transition-all duration-200 ease-out group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:h-10! group-data-[collapsible=icon]:justify-center  [&>svg]:size-[18px] [&>svg]:shrink-0 [&>svg]:transition-transform [&>svg]:duration-200
+                      className={`relative h-10 rounded-lg px-4 transition-all duration-200 ease-out group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:h-10! group-data-[collapsible=icon]:justify-center  [&>svg]:size-[18px] [&>svg]:shrink-0 [&>svg]:transition-transform [&>svg]:duration-200
+                      hover:scale-105
+                      hover:transition-all hover:ease-in hover:duration-300
                         ${
                           isActive
-                            ? ` bg-orange-500 font-semibold text-white shadow-sm shadow-orange-500/20 hover:bg-orange-600 hover:text-white dark:bg-orange-600 dark:text-white dark:hover:bg-orange-500 [&>svg]:text-white
-                            `
+                            ? `bg-orange-500! text-white! border font-semibold shadow-sm shadow-orange-500/20 hover:bg-orange-600 hover:duration-300 dark:bg-orange-600 dark:text-white dark:hover:bg-orange-500 [&>svg]:text-white`
                             : ` font-medium text-orange-800 hover:bg-orange-100 hover:text-orange-700 dark:text-orange-200 dark:hover:bg-orange-950/40 dark:hover:text-orange-300 [&>svg]:text-orange-500 dark:[&>svg]:text-orange-400 hover:[&>svg]:scale-105
                             `
                         }
@@ -310,7 +123,7 @@ export default function DashboardSidebar() {
                       {/* Active Indicator */}
                       {isActive && (
                         <span
-                          className=" absolute right-2 size-1.5 rounded-full bg-white opacity-90 group-data-[collapsible=icon]:hidden
+                          className="absolute right-2 size-1.5 rounded-full bg-white opacity-90 group-data-[collapsible=icon]:hidden
                           "
                         />
                       )}

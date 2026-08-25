@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import { motion } from "framer-motion";
-import { CalendarDays, MessageSquareQuote, Star, Quote, UserRound, ArrowRight, Link, PenLine, Sparkles, Heart, Utensils, } from "lucide-react";
+import { CalendarDays, MessageSquareQuote, Star, Quote, UserRound, ArrowRight, PenLine, Sparkles, Heart, Utensils, } from "lucide-react";
 
 import { getGlobalReviews } from "@/lib/api/global-reviews";
 import {

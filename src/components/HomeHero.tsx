@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-import {ArrowRight,CircleCheck,Clock3,Flame,Package,ShoppingBag,Sparkles,Star,
+import {ArrowRight,CircleCheck,Flame,Package,ShoppingBag,Sparkles,Star,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { getHeroMeal } from "@/lib/api/meal";
-import { PrimaryMealSpinner, Spinner } from "./ui/spinner";
+import { PrimaryMealSpinner, } from "./ui/spinner";
 
 const containerVariants: Variants = {
   hidden: {},

@@ -1,3 +1,8 @@
+export interface DashboardNavItem {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+}
 export interface AdminUser {
   id: string;
   name: string;
