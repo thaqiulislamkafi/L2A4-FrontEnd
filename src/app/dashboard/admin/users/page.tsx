@@ -37,13 +37,13 @@ export default function AdminUsersPage() {
     setPage(DEFAULT_PAGE);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    const handleReset = () => {
+    setSearch("");
+    setPage(DEFAULT_PAGE);
   };
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPage(DEFAULT_PAGE);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   if (isLoading) {
@@ -51,7 +51,7 @@ export default function AdminUsersPage() {
   }
 
   if (isError) {
-    return <UsersError onRetry={() => refetch()} isRetrying={isFetching} />;
+    return <UsersError onRetry={() => refetch()}/>;
   }
 
   return (
@@ -59,7 +59,8 @@ export default function AdminUsersPage() {
 
       <UsersTableToolbar 
       search={search} 
-      onSearch={handleSearch} />
+      onReset={handleReset}
+      onSearchChange={handleSearch} />
 
       <UsersTable 
       users={users} 
@@ -69,9 +70,9 @@ export default function AdminUsersPage() {
       page={page} 
       totalPages={totalPages} 
       totalItems={totalUsers} 
-      limit={limit} 
+      itemsName="Users"
       onPageChange={handlePageChange}
-       onLimitChange={handleLimitChange} />
+       />
     </div>
   );
 }
