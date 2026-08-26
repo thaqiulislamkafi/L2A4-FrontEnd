@@ -52,3 +52,29 @@ export const getMealById = async (
   return data;
 
 };
+
+export const deleteMeal = async (id: string) => {
+  const { data } = await axiosInstance.delete(`/meals/${id}`);
+  return data;
+};
+
+export interface UpdateMealPayload {
+  name?: string;
+  image?: string;
+  description?: string;
+  pricePerPiece?: number;
+  totalPieces?: number;
+  availablePieces?: number;
+  availabilty_status?: string;
+  isPublished?: boolean;
+  isHeroContent?: boolean;
+  isSliderContent?: boolean;
+  cuisine_type?: string;
+  dietry_type?: string;
+  category?: string;
+}
+
+export const updateMeal = async (id: string, payload: UpdateMealPayload) => {
+  const { data } = await axiosInstance.patch(`/meals/${id}`, payload);
+  return data;
+};

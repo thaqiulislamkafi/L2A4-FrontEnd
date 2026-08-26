@@ -1,15 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import MealsLoading from "./loading";
 import MealsError from "./error";
 import MealsTable from "./(components)/MealsTable";
 import { TablePagination } from "@/components/TablePagination";
 import MealsTableToolbar from "./(components)/MealsTableToolbar";
-import { getPublishedMeals } from "@/lib/api/meal";
+import { getPublishedMeals, deleteMeal } from "@/lib/api/meal";
 import { Meal } from "@/types/meal.type";
+import MealDeleteDialog from "./(components)/MealDeleteDialog";
+import UpdateMealDialog from "./(components)/UpdateMealDialog";
+import { toast } from "@/components/ui/toast";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -18,6 +21,12 @@ export default function AdminMealsPage() {
   const [page, setPage] = React.useState(DEFAULT_PAGE);
   const [limit] = React.useState(DEFAULT_LIMIT);
   const [search, setSearch] = React.useState("");
+
+  const [selectedMeal, setSelectedMeal] = React.useState<Meal | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["admin-meals", page, limit, search],
@@ -45,6 +54,49 @@ export default function AdminMealsPage() {
     setPage(newPage);
   };
 
+  const handleEdit = (meal: Meal) => {
+    setSelectedMeal(meal);
+    setUpdateDialogOpen(true);
+  };
+
+  const handleUpdateDialogChange = (open: boolean) => {
+    setUpdateDialogOpen(open);
+
+    if (!open) setSelectedMeal(null);
+  };
+
+  const handleDeleteRequest = (meal: Meal) => {
+    setSelectedMeal(meal);
+    setDeleteDialogOpen(true);
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteMeal(id),
+    onSuccess: async () => {
+      toast.add({
+        title: "Meal Deleted Successfully!",
+        description: `Meal is permanently deleted`,
+        type: "success",
+      });
+
+      setDeleteDialogOpen(false);
+      setSelectedMeal(null);
+
+      await queryClient.invalidateQueries({ queryKey: ["admin-meals"] });
+    },
+    onError: () => {
+      toast.add({
+        title: "Delete Failed",
+        description: "Unable to delete meal. Please try again.",
+        type: "error",
+      });
+    },
+  });
+
+  const handleDeleteConfirm = (meal: Meal) => {
+    deleteMutation.mutate(meal.id);
+  };
+
   if (isLoading) return <MealsLoading />;
   if (isError) return <MealsError onRetry={() => refetch()} />;
 
@@ -56,7 +108,7 @@ export default function AdminMealsPage() {
         onSearchChange={handleSearch}
       />
 
-      <MealsTable meals={meals} isFetching={isFetching} />
+      <MealsTable meals={meals} isFetching={isFetching} onEdit={handleEdit} onDelete={handleDeleteRequest} />
 
       <TablePagination
         page={page}
@@ -64,6 +116,20 @@ export default function AdminMealsPage() {
         totalItems={totalMeals}
         itemsName="Meals"
         onPageChange={handlePageChange}
+      />
+
+      <MealDeleteDialog
+        meal={selectedMeal}
+        open={deleteDialogOpen}
+        isDeleting={deleteMutation.isPending}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDeleteConfirm}
+      />
+
+      <UpdateMealDialog
+        meal={selectedMeal}
+        open={updateDialogOpen}
+        onOpenChange={handleUpdateDialogChange}
       />
     </div>
   );

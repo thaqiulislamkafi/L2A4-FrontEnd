@@ -12,10 +12,12 @@ import { MealTableColumns } from "./MealTableColumns";
 interface MealsTableProps {
   meals: Meal[];
   isFetching?: boolean;
+  onEdit?: (meal: Meal) => void;
+  onDelete?: (meal: Meal) => void;
 }
 
-export default function MealsTable({ meals, isFetching = false }: MealsTableProps) {
-  const columns = React.useMemo<ColumnDef<Meal>[]>(() => MealTableColumns(), []);
+export default function MealsTable({ meals, isFetching = false, onEdit, onDelete }: MealsTableProps) {
+  const columns = React.useMemo<ColumnDef<Meal>[]>(() => MealTableColumns(onEdit ?? (() => {}), onDelete ?? (() => {})), [onEdit, onDelete]);
 
   const table = useReactTable({
     data: meals,

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MoreHorizontal, Eye } from "lucide-react";
+import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
 import { type ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ function getAvailabilityClass(status?: string) {
   }
 }
 
-export const MealTableColumns = (): ColumnDef<Meal>[] => [
+export const MealTableColumns = (onEdit: (meal: Meal) => void, onDelete: (meal: Meal) => void): ColumnDef<Meal>[] => [
   {
     accessorKey: "name",
     header: "Meal",
@@ -127,7 +127,15 @@ export const MealTableColumns = (): ColumnDef<Meal>[] => [
               <span>View Meal</span>
             </DropdownMenuItem>
 
-            {/* Static actions for now, functionality may be added later */}
+            <DropdownMenuItem onClick={() => onEdit(meal)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
+                          <Pencil className="size-4 text-orange-500 dark:text-orange-400" />
+              <span>Edit Meal</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => onDelete(meal)} className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/30 dark:focus:text-red-400">
+                          <Trash2 className="size-4" />
+              <span>Delete Meal</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
