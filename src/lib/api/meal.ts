@@ -75,6 +75,6 @@ export interface UpdateMealPayload {
 }
 
 export const updateMeal = async (id: string, payload: UpdateMealPayload) => {
-  const { data } = await axiosInstance.patch(`/meals/${id}`, payload);
+  const { data } = await axiosInstance.put(`/meals/${id}`, payload);
   return data;
 };
