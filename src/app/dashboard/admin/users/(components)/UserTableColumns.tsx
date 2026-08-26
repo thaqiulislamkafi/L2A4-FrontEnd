@@ -63,7 +63,7 @@ function formatDate(date?: string | Date) {
   }).format(new Date(date));
 }
 
-const UserTableColumns: ColumnDef<AuthUser>[] = [
+export const UserTableColumns = (onDelete: (user: AuthUser) => void): ColumnDef<AuthUser>[] => [
   {
     accessorKey: "name",
     header: "User",
@@ -167,7 +167,7 @@ const UserTableColumns: ColumnDef<AuthUser>[] = [
 
             <DropdownMenuSeparator className="bg-orange-100 dark:bg-orange-900/40" />
 
-            <DropdownMenuItem className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/30 dark:focus:text-red-400">
+            <DropdownMenuItem onClick={() => onDelete(user)} className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/30 dark:focus:text-red-400">
               <Trash2 className="size-4" />
               <span>Delete User</span>
             </DropdownMenuItem>
@@ -178,4 +178,3 @@ const UserTableColumns: ColumnDef<AuthUser>[] = [
   },
 ];
 
-export default UserTableColumns;

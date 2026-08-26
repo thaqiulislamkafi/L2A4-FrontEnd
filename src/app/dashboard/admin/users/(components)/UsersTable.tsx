@@ -7,15 +7,16 @@ import { Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { AuthUser } from "@/store/auth.store";
-import UserTableColumns from "./UserTableColumns";
+import { UserTableColumns } from "./UserTableColumns";
 
 interface UsersTableProps {
   users: AuthUser[];
   isFetching?: boolean;
+   onDelete: (user: AuthUser) => void;
 }
 
-export default function UsersTable({ users, isFetching = false }: UsersTableProps) {
-  const columns = React.useMemo<ColumnDef<AuthUser>[]>(() => UserTableColumns, []);
+export default function UsersTable({ users, isFetching = false,onDelete }: UsersTableProps) {
+  const columns = React.useMemo<ColumnDef<AuthUser>[]>(() => UserTableColumns(onDelete), [onDelete]);
 
   const table = useReactTable({
     data: users,
@@ -24,7 +25,7 @@ export default function UsersTable({ users, isFetching = false }: UsersTableProp
   });
 
   return (
-    <Card className=" border-orange-200/80 shadow-sm shadow-orange-950/5 dark:border-orange-900/40">
+    <Card className=" border-orange-200/80 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 mx-auto">
       <CardContent className="p-0">
         <div className="relative w-full overflow-x-auto">
           <Table className="max-w-250 overflow-auto">
