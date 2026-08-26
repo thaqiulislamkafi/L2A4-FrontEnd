@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Star,
   MessageSquareQuote,
   Sparkles,
   Send,
+  Loader2,
 } from "lucide-react";
 
 import {
@@ -23,6 +27,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useAuthStore } from "@/store/auth.store";
+import { toast } from "@/components/ui/toast";
+import { createGlobalReview } from "@/lib/api/global-reviews";
+
 interface AddGlobalReviewProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -32,45 +40,106 @@ const AddGlobalReview = ({
   open,
   onOpenChange,
 }: AddGlobalReviewProps) => {
+  const user = useAuthStore((state) => state.user);
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
 
   const displayedRating = hoverRating || rating;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const createReviewMutation = useMutation({
+    mutationFn: createGlobalReview,
 
-    console.log({
-      rating,
-      comment,
-    });
+    onSuccess: (response) => {
+      toast.add({
+        title: "Review submitted successfully!",
+        description:
+          response?.message ||
+          "Thank you for sharing your FoodHub experience.",
+        type: "success",
+      });
 
-    // API integration will be added here later.
+      setRating(0);
+      setHoverRating(0);
+      setComment("");
 
-    onOpenChange(false);
-  };
+      form.reset();
+
+      onOpenChange(false);
+    },
+
+    onError: (error: any) => {
+      console.error("Global review submission failed:", error);
+
+      toast.add({
+        title: "Unable to submit review",
+        description:
+          error?.response?.data?.message ||
+          "Something went wrong while submitting your review.",
+        type: "error",
+      });
+    },
+  });
+
+  const form = useForm({
+    defaultValues: {
+      rating: 0,
+      comment: "",
+    },
+
+    onSubmit: async ({ value }) => {
+      if (!user) {
+        toast.add({
+          title: "Login required",
+          description:
+            "Please log in to your FoodHub account before submitting a review.",
+          type: "warning",
+        });
+
+        return;
+      }
+
+      if (!value.rating) {
+        toast.add({
+          title: "Rating required",
+          description: "Please select a rating before submitting your review.",
+          type: "warning",
+        });
+
+        return;
+      }
+
+      if (!value.comment.trim()) {
+        toast.add({
+          title: "Review required",
+          description: "Please write something about your experience.",
+          type: "warning",
+        });
+
+        return;
+      }
+
+      await createReviewMutation.mutateAsync({
+        user_id: user.id,
+        rating: value.rating,
+        comment: value.comment.trim(),
+      });
+    },
+  });
 
   const handleClose = () => {
+    if (createReviewMutation.isPending) {
+      return;
+    }
+
     onOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-h-[90vh] overflow-y-auto border-orange-100 bg-background p-0 shadow-2xl shadow-orange-200/30 dark:border-orange-950/50 dark:shadow-orange-950/20 sm:max-w-lg
-        "
-      >
-        {/* =========================
-            Header
-        ========================= */}
-
-        <DialogHeader
-          className=" relative overflow-hidden border-b border-orange-100 bg-orange-50/70 p-6 dark:border-orange-950/40 dark:bg-orange-950/20
-          "
-        >
-          {/* Floating decoration */}
-
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto border-orange-100 bg-background p-0 shadow-2xl shadow-orange-200/30 dark:border-orange-950/50 dark:shadow-orange-950/20">
+        <DialogHeader className="relative overflow-hidden border-b border-orange-100 bg-orange-50/70 p-6 dark:border-orange-950/40 dark:bg-orange-950/20">
           <motion.div
             animate={{
               rotate: [0, 8, -8, 0],
@@ -81,38 +150,21 @@ const AddGlobalReview = ({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className=" pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-orange-300/20 blur-2xl
-            "
+            className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-orange-300/20 blur-2xl"
           />
 
           <div className="relative">
-            {/* Badge */}
-
             <Badge
               variant="outline"
-              className=" mb-4 w-fit rounded-full border-orange-200 bg-orange-100 px-3 py-1.5 text-orange-700 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400
-              "
+              className="mb-4 w-fit rounded-full border-orange-200 bg-orange-100 px-3 py-1.5 text-orange-700 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400"
             >
               <Sparkles className="h-3.5 w-3.5" />
-
               Share Your Experience
             </Badge>
 
-            {/* Title */}
-
-            <DialogTitle
-              className="
-                text-2xl
-                font-bold
-                tracking-tight
-                text-slate-900
-                dark:text-white
-              "
-            >
+            <DialogTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               Tell Us What You Think
             </DialogTitle>
-
-            {/* Description */}
 
             <DialogDescription className="mt-2 max-w-md leading-relaxed">
               Your feedback helps FoodHub improve and helps other customers
@@ -121,31 +173,18 @@ const AddGlobalReview = ({
           </div>
         </DialogHeader>
 
-        {/* =========================
-            Form
-        ========================= */}
-
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            form.handleSubmit();
+          }}
+        >
           <div className="space-y-6 p-6">
-
-            {/* =========================
-                Rating
-            ========================= */}
-
-            <Card
-              className=" overflow-hidden border-orange-100 bg-orange-50/40 shadow-none dark:border-orange-950/40 dark:bg-orange-950/10
-              "
-            >
+            <Card className="overflow-hidden border-orange-100 bg-orange-50/40 shadow-none dark:border-orange-950/40 dark:bg-orange-950/10">
               <CardContent className="p-5">
                 <div className="mb-4">
-                  <Label
-                    className="
-                      text-sm
-                      font-semibold
-                      text-slate-900
-                      dark:text-white
-                    "
-                  >
+                  <Label className="text-sm font-semibold text-slate-900 dark:text-white">
                     How was your experience?
                   </Label>
 
@@ -153,8 +192,6 @@ const AddGlobalReview = ({
                     Select a rating from 1 to 5 stars.
                   </p>
                 </div>
-
-                {/* Stars */}
 
                 <div
                   className="flex items-center gap-2"
@@ -174,39 +211,25 @@ const AddGlobalReview = ({
                         whileTap={{
                           scale: 0.9,
                         }}
-                        onMouseEnter={() =>
-                          setHoverRating(star)
-                        }
-                        onClick={() => setRating(star)}
-                        className="
-                          rounded-lg
-                          p-1
-                          outline-none
-                          transition-colors
-                          focus-visible:ring-2
-                          focus-visible:ring-orange-500/40
-                        "
+                        onMouseEnter={() => setHoverRating(star)}
+                        onClick={() => {
+                          setRating(star);
+                          form.setFieldValue("rating", star);
+                        }}
+                        className="rounded-lg p-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-orange-500/40"
                         aria-label={`Give ${star} star${star > 1 ? "s" : ""}`}
                       >
                         <Star
-                          className={`
-                            h-8
-                            w-8
-                            transition-all
-                            duration-200
-                            ${
-                              isActive
-                                ? "fill-orange-500 text-orange-500 drop-shadow-sm"
-                                : "text-orange-200 dark:text-orange-900"
-                            }
-                          `}
+                          className={`h-8 w-8 transition-all duration-200 ${
+                            isActive
+                              ? "fill-orange-500 text-orange-500 drop-shadow-sm"
+                              : "text-orange-200 dark:text-orange-900"
+                          }`}
                         />
                       </motion.button>
                     );
                   })}
                 </div>
-
-                {/* Rating text */}
 
                 <div className="mt-3 h-5">
                   {displayedRating > 0 && (
@@ -220,62 +243,43 @@ const AddGlobalReview = ({
                         opacity: 1,
                         y: 0,
                       }}
-                      className="
-                        text-sm
-                        font-medium
-                        text-orange-600
-                        dark:text-orange-400
-                      "
+                      className="text-sm font-medium text-orange-600 dark:text-orange-400"
                     >
-                      {displayedRating === 5 &&
-                        "Excellent! ⭐"}
-
-                      {displayedRating === 4 &&
-                        "Great experience! 😊"}
-
-                      {displayedRating === 3 &&
-                        "It was good! 👍"}
-
-                      {displayedRating === 2 &&
-                        "Could be better."}
-
-                      {displayedRating === 1 &&
-                        "We'll try to improve."}
+                      {displayedRating === 5 && "Excellent! ⭐"}
+                      {displayedRating === 4 && "Great experience! 😊"}
+                      {displayedRating === 3 && "It was good! 👍"}
+                      {displayedRating === 2 && "Could be better."}
+                      {displayedRating === 1 && "We'll try to improve."}
                     </motion.p>
                   )}
                 </div>
               </CardContent>
             </Card>
 
-            {/* =========================
-                Comment
-            ========================= */}
-
             <div className="space-y-2">
               <Label
                 htmlFor="review-comment"
-                className=" text-sm font-semibold text-slate-900 dark:text-white
-                "
+                className="text-sm font-semibold text-slate-900 dark:text-white"
               >
                 Your Review
               </Label>
 
               <div className="relative">
-                <MessageSquareQuote
-                  className=" pointer-events-none absolute left-4 top-4 h-5 w-5 text-orange-400
-                  "
-                />
+                <MessageSquareQuote className="pointer-events-none absolute left-4 top-4 h-5 w-5 text-orange-400" />
 
                 <Textarea
                   id="review-comment"
                   value={comment}
-                  onChange={(event) =>
-                    setComment(event.target.value)
-                  }
+                  maxLength={500}
+                  onChange={(event) => {
+                    const value = event.target.value;
+
+                    setComment(value);
+                    form.setFieldValue("comment", value);
+                  }}
                   placeholder="Tell us about your FoodHub experience..."
                   rows={5}
-                  className=" resize-none rounded-xl border-orange-100 bg-background pl-12 pr-4 leading-relaxed transition-all duration-300 placeholder:text-muted-foreground focus-visible:border-orange-500 focus-visible:ring-orange-500/20 dark:border-orange-950/50
-                  "
+                  className="resize-none rounded-xl border-orange-100 bg-background pl-12 pr-4 leading-relaxed transition-all duration-300 placeholder:text-muted-foreground focus-visible:border-orange-500 focus-visible:ring-orange-500/20 dark:border-orange-950/50"
                 />
               </div>
 
@@ -285,10 +289,6 @@ const AddGlobalReview = ({
                 </Label>
               </div>
             </div>
-
-            {/* =========================
-                Selected Rating Info
-            ========================= */}
 
             {rating > 0 && (
               <motion.div
@@ -300,8 +300,7 @@ const AddGlobalReview = ({
                   opacity: 1,
                   height: "auto",
                 }}
-                className=" flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 dark:border-orange-950/40 dark:bg-orange-950/20
-                "
+                className="flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 dark:border-orange-950/40 dark:bg-orange-950/20"
               >
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 fill-orange-500 text-orange-500" />
@@ -311,43 +310,44 @@ const AddGlobalReview = ({
                   </Label>
                 </div>
 
-                <Badge
-                  className=" border-orange-200 bg-orange-100 text-orange-700 hover:bg-orange-100 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400
-                  "
-                >
+                <Badge className="border-orange-200 bg-orange-100 text-orange-700 hover:bg-orange-100 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400">
                   {rating}/5
                 </Badge>
               </motion.div>
             )}
           </div>
 
-          {/* =========================
-              Footer
-          ========================= */}
-
-          <div
-            className=" flex flex-col-reverse gap-3 border-t border-orange-100 bg-orange-50/30 p-5 sm:flex-row sm:justify-end dark:border-orange-950/40 dark:bg-orange-950/10
-            "
-          >
+          <div className="flex flex-col-reverse gap-3 border-t border-orange-100 bg-orange-50/30 p-5 sm:flex-row sm:justify-end dark:border-orange-950/40 dark:bg-orange-950/10">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className=" rounded-xl border-orange-200 bg-background text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30
-              "
+              disabled={createReviewMutation.isPending}
+              className="rounded-xl border-orange-200 bg-background text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
             >
               Cancel
             </Button>
 
             <Button
               type="submit"
-              disabled={!rating || !comment.trim()}
-              className=" group rounded-xl bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30 disabled:pointer-events-none disabled:opacity-50
-              "
+              disabled={
+                !rating ||
+                !comment.trim() ||
+                createReviewMutation.isPending
+              }
+              className="group rounded-xl bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30 disabled:pointer-events-none disabled:opacity-50"
             >
-              <Send className="h-4 w-4" />
-
-              Submit Review
+              {createReviewMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Submit Review
+                </>
+              )}
             </Button>
           </div>
         </form>

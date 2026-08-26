@@ -7,7 +7,9 @@ export interface AuthUser {
   createdAt: string;
   updatedAt: string;
   contact:string;
+  address : string;
   role: "user" | "provider" | "admin";
+  age: number ;
   status: string;
 }
 

@@ -12,11 +12,12 @@ import { UserTableColumns } from "./UserTableColumns";
 interface UsersTableProps {
   users: AuthUser[];
   isFetching?: boolean;
-   onDelete: (user: AuthUser) => void;
+  onEdit: (user: AuthUser) => void;
+  onDelete: (user: AuthUser) => void;
 }
 
-export default function UsersTable({ users, isFetching = false,onDelete }: UsersTableProps) {
-  const columns = React.useMemo<ColumnDef<AuthUser>[]>(() => UserTableColumns(onDelete), [onDelete]);
+export default function UsersTable({ users, isFetching = false, onDelete,onEdit }: UsersTableProps) {
+  const columns = React.useMemo<ColumnDef<AuthUser>[]>(() => UserTableColumns(onEdit,onDelete), [onEdit,onDelete]);
 
   const table = useReactTable({
     data: users,

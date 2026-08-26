@@ -13,6 +13,7 @@ import UsersTableToolbar from "./(components)/UsersTableToolbar";
 import { deleteUser, getUsers } from "@/lib/api/user";
 import UserDeleteDialog from "./(components)/UserDeleteDialog";
 import { toast } from "@/components/ui/toast";
+import UpdateUserDialog from "./(components)/UpdateUserDialog";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -21,6 +22,7 @@ export default function AdminUsersPage() {
   const [page, setPage] = React.useState(DEFAULT_PAGE);
   const [limit, setLimit] = React.useState(DEFAULT_LIMIT);
   const [search, setSearch] = React.useState("");
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = React.useState(false);
 
   const [selectedUser, setSelectedUser] = React.useState<AuthUser | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
@@ -50,6 +52,19 @@ export default function AdminUsersPage() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleEdit = (user: AuthUser) => {
+    setSelectedUser(user);
+    setIsUpdateDialogOpen(true);
+  };
+
+  const handleUpdateDialogChange = (open: boolean) => {
+    setIsUpdateDialogOpen(open);
+
+    if (!open) {
+      setSelectedUser(null);
+    }
   };
 
   const handleDeleteRequest = (user: AuthUser) => {
@@ -97,7 +112,9 @@ export default function AdminUsersPage() {
 
       <UsersTable
         users={users}
-        isFetching={isFetching || deleteMutation.isPending} onDelete={handleDeleteRequest} />
+        isFetching={isFetching || deleteMutation.isPending} 
+        onEdit={handleEdit}
+        onDelete={handleDeleteRequest} />
 
       <TablePagination
         page={page}
@@ -113,6 +130,11 @@ export default function AdminUsersPage() {
         isDeleting={deleteMutation.isPending}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDeleteConfirm} />
+
+      <UpdateUserDialog
+        user={selectedUser}
+        open={isUpdateDialogOpen}
+        onOpenChange={handleUpdateDialogChange} />
     </div>
   );
 }

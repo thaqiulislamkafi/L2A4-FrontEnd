@@ -22,3 +22,17 @@ export const getGlobalReviews = async ({
 
   return data;
 };
+
+export interface CreateGlobalReviewPayload {
+  user_id: string;
+  rating: number;
+  comment: string;
+}
+
+export const createGlobalReview = async (
+  payload: CreateGlobalReviewPayload
+) => {
+  const { data } = await axiosInstance.post("/global-reviews", payload);
+
+  return data;
+};

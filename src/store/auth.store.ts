@@ -10,6 +10,8 @@ export interface AuthUser {
   role: "user" | "provider" | "admin";
   status: string;
   createdAt: string;
+  address : string;
+  age : number ;
   updatedAt: string;
 }
 

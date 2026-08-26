@@ -63,7 +63,7 @@ function formatDate(date?: string | Date) {
   }).format(new Date(date));
 }
 
-export const UserTableColumns = (onDelete: (user: AuthUser) => void): ColumnDef<AuthUser>[] => [
+export const UserTableColumns = (onEdit: (user: AuthUser) => void, onDelete: (user: AuthUser) => void): ColumnDef<AuthUser>[] => [
   {
     accessorKey: "name",
     header: "User",
@@ -160,9 +160,12 @@ export const UserTableColumns = (onDelete: (user: AuthUser) => void): ColumnDef<
               <span>View User</span>
             </DropdownMenuItem>
 
-            <DropdownMenuItem render={<Link href={`/dashboard/admin/users/${user.id}/edit`} />} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
+            <DropdownMenuItem onClick={() => onEdit(user)}
+              className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
               <Pencil className="size-4 text-orange-500 dark:text-orange-400" />
-              <span>Edit User</span>
+              <span>
+                Edit User
+              </span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator className="bg-orange-100 dark:bg-orange-900/40" />
