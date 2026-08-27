@@ -49,8 +49,10 @@ export default function UpdateMealReviewDialog({ review, open, onOpenChange }: {
   }, [review, form]);
   if (!review) return null;
   return (
-    <Dialog open={open} onOpenChange={(value) => !mutation.isPending && onOpenChange(value)}>
-      <DialogContent className="max-h-[90vh] w-[min(92vw,560px)] overflow-y-auto rounded-2xl border-orange-200/80 bg-white p-0 dark:border-orange-900/50 dark:bg-orange-950/95">
+    <Dialog open={open} 
+    onOpenChange={(value) => !mutation.isPending && onOpenChange(value)}>
+      <DialogContent 
+      className="max-h-[90vh]  overflow-y-auto rounded-2xl border-orange-200/80 bg-white p-0 dark:border-orange-900/50 dark:bg-orange-950/95">
         <DialogHeader className="border-b border-orange-100 px-6 py-5 dark:border-orange-900/40"><DialogTitle className="text-xl font-bold text-orange-950 dark:text-orange-50">Update Meal Review</DialogTitle><DialogDescription className="text-sm text-orange-700/60 dark:text-orange-300/60">Update the review left by {review.user?.name ?? "this user"}.</DialogDescription></DialogHeader>
         <form onSubmit={(event) => { event.preventDefault(); event.stopPropagation(); form.handleSubmit(); }}>
           <div className="space-y-5 px-6 py-5">
