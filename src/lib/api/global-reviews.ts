@@ -4,14 +4,16 @@ import { GlobalReviewResponse } from "@/types/global-review.type";
 interface GetGlobalReviewsParams {
   page?: number;
   limit?: number;
+  search?: string;
 }
 
 export const getGlobalReviews = async ({
   page = 1,
   limit = 6,
+  search = "",
 }: GetGlobalReviewsParams = {}) => {
   const { data } = await axiosInstance.get<GlobalReviewResponse>(
-    "/global-reviews",
+    `/global-reviews?${search}`,
     {
       params: {
         page,
