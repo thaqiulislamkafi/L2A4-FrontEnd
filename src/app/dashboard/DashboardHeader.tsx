@@ -83,13 +83,8 @@ export default function DashboardHeader() {
           { /*Page Information */}
 
           <div className=" hidden min-w-0 flex-1 sm:block">
-            <div className=" flex min-w-0 items-center gap-2"
+            <div className="ml-3.5 flex min-w-0 items-center gap-2"
             >
-              {/* Orange indicator */}
-              <span
-                className="size-1.5 shrink-0 rounded-full bg-orange-500 shadow-sm shadow-orange-500/40
-                "
-              />
 
               {/* Page title */}
               <span
@@ -98,6 +93,12 @@ export default function DashboardHeader() {
               >
                 {pageInfo.title}
               </span>
+
+               {/* Orange indicator */}
+              <span
+                className="size-1.5 shrink-0 rounded-full bg-orange-500 shadow-sm shadow-orange-500/40
+                "
+              />
             </div>
 
             {/* Page description */}

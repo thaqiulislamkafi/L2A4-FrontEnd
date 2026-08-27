@@ -119,7 +119,7 @@ export default function AdminReviewsPage() {
   }
 
   return (
-    <div className="max-w-[936px] space-y-6 p-4 md:p-6">
+    <div className="space-y-6 p-4 md:p-6">
       <ReviewsTableToolbar search={search} onReset={handleReset} onSearchChange={handleSearch} />
 
       <ReviewsTable reviews={reviews} isFetching={isFetching || deleteMutation.isPending} onEdit={handleEdit} onDelete={handleDeleteRequest} />
