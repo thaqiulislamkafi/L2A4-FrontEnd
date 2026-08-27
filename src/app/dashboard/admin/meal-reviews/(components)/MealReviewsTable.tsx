@@ -8,12 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MealReview } from "@/types/meal-review.type";
 import MealReviewCard from "./MealReviewCard";
 
-export default function MealReviewsTable({ reviews, isFetching = false }: { reviews: MealReview[]; isFetching?: boolean }) {
+export default function MealReviewsTable({ reviews, isFetching = false, onEdit, onDelete }: { reviews: MealReview[]; isFetching?: boolean; onEdit?: (review: MealReview) => void; onDelete?: (review: MealReview) => void }) {
   const columns = React.useMemo<ColumnDef<MealReview>[]>(() => [{
     id: "review",
     header: "Meal Reviews",
-    cell: ({ row }) => <MealReviewCard review={row.original} />,
-  }], []);
+    cell: ({ row }) => <MealReviewCard review={row.original} onEdit={onEdit} onDelete={onDelete} />,
+  }], [onEdit, onDelete]);
   const table = useReactTable({ data: reviews, columns, getCoreRowModel: getCoreRowModel() });
 
   return (

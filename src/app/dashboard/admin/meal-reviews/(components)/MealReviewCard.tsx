@@ -11,6 +11,8 @@ import { MealReview } from "@/types/meal-review.type";
 
 interface MealReviewCardProps {
   review: MealReview;
+  onEdit?: (review: MealReview) => void;
+  onDelete?: (review: MealReview) => void;
 }
 
 function formatDate(date: string) {
@@ -21,7 +23,7 @@ function formatDate(date: string) {
   }).format(new Date(date));
 }
 
-export default function MealReviewCard({ review }: MealReviewCardProps) {
+export default function MealReviewCard({ review, onEdit, onDelete }: MealReviewCardProps) {
   const user = review.user;
   const meal = review.meal;
 
@@ -48,11 +50,11 @@ export default function MealReviewCard({ review }: MealReviewCardProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-44 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
             <DropdownMenuItem className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60">View Review</DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60">
+            <DropdownMenuItem onClick={() => onEdit?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60">
               <Pencil className="size-4 text-orange-500" /> Edit Review
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-orange-100 dark:bg-orange-900/40" />
-            <DropdownMenuItem className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400">
+            <DropdownMenuItem onClick={() => onDelete?.(review)} className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400">
               <Trash2 className="size-4" /> Delete Review
             </DropdownMenuItem>
           </DropdownMenuContent>

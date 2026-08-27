@@ -18,3 +18,18 @@ export const getMealReviews = async ({
 
   return data;
 };
+
+export interface UpdateMealReviewPayload {
+  rating: number;
+  comment: string;
+}
+
+export const updateMealReview = async (id: string, payload: UpdateMealReviewPayload) => {
+  const { data } = await axiosInstance.put(`/reviews/${id}`, payload);
+  return data;
+};
+
+export const deleteMealReview = async (id: string) => {
+  const { data } = await axiosInstance.delete(`/reviews/${id}`);
+  return data;
+};
