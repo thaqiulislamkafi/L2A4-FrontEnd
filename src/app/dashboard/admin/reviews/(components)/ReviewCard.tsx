@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { MoreHorizontal, Star, UserCircle } from "lucide-react";
+import { MoreHorizontal, Pencil, Star, UserCircle, Trash2 } from "lucide-react";
 
 import { GlobalReview } from "@/types/global-review.type";
 
@@ -13,14 +13,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 
 interface ReviewCardProps {
   review: GlobalReview;
+  onEdit?: (review: GlobalReview) => void;
   onDelete?: (review: GlobalReview) => void;
   onView?: (review: GlobalReview) => void;
-}
-
-function getInitials(name?: string | null) {
-  if (!name) return "U";
-
-  return name.split(" ").map((word) => word[0]).join("").slice(0, 2).toUpperCase();
 }
 
 function formatDate(date?: string | Date) {
@@ -39,7 +34,7 @@ function renderStars(rating: number) {
   ));
 }
 
-export default function ReviewCard({ review, onDelete, onView }: ReviewCardProps) {
+export default function ReviewCard({ review, onEdit, onDelete, onView }: ReviewCardProps) {
   const user = review.user;
 
   return (
@@ -65,14 +60,20 @@ export default function ReviewCard({ review, onDelete, onView }: ReviewCardProps
             <MoreHorizontal className="size-4" />
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-40 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
+          <DropdownMenuContent align="end" className="w-44 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
             <DropdownMenuItem onClick={() => onView?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
               <span>View Review</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => onEdit?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
+              <Pencil className="size-4 text-orange-500 dark:text-orange-400" />
+              <span>Edit Review</span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator className="bg-orange-100 dark:bg-orange-900/40" />
 
             <DropdownMenuItem onClick={() => onDelete?.(review)} className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/30 dark:focus:text-red-400">
+              <Trash2 className="size-4" />
               <span>Delete Review</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

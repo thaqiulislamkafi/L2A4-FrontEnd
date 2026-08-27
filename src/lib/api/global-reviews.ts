@@ -31,10 +31,30 @@ export interface CreateGlobalReviewPayload {
   comment: string;
 }
 
+export interface UpdateGlobalReviewPayload {
+  rating: number;
+  comment: string;
+}
+
 export const createGlobalReview = async (
   payload: CreateGlobalReviewPayload
 ) => {
   const { data } = await axiosInstance.post("/global-reviews", payload);
+
+  return data;
+};
+
+export const updateGlobalReview = async (
+  id: string,
+  payload: UpdateGlobalReviewPayload
+) => {
+  const { data } = await axiosInstance.put(`/global-reviews/${id}`, payload);
+
+  return data;
+};
+
+export const deleteGlobalReview = async (id: string) => {
+  const { data } = await axiosInstance.delete(`/global-reviews/${id}`);
 
   return data;
 };
