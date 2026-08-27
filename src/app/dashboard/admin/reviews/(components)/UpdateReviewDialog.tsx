@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Loader2, Save, Star } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -20,11 +21,6 @@ interface UpdateReviewDialogProps {
 
 export default function UpdateReviewDialog({ review, open, onOpenChange }: UpdateReviewDialogProps) {
   const queryClient = useQueryClient();
-
-  const [formData, setFormData] = React.useState<UpdateGlobalReviewPayload>(() => ({
-    rating: review?.rating ?? 0,
-    comment: review?.comment ?? "",
-  }));
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateGlobalReviewPayload) => {
@@ -58,45 +54,61 @@ export default function UpdateReviewDialog({ review, open, onOpenChange }: Updat
     },
   });
 
-  const handleClose = (value: boolean) => {
-    if (updateMutation.isPending) { 
-      return;
-    }
+  const form = useForm({
+    defaultValues: {
+      rating: review?.rating ?? 0,
+      comment: review?.comment ?? "",
+    },
 
-    onOpenChange(value);
-  };
+    onSubmit: async ({ value }) => {
+      if (!review) {
+        return;
+      }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+      if (value.rating < 1 || value.rating > 5) {
+        toast.add({
+          title: "Rating required",
+          description: "Please select a rating between 1 and 5 stars.",
+          type: "warning",
+        });
 
+        return;
+      }
+
+      if (!value.comment.trim()) {
+        toast.add({
+          title: "Comment required",
+          description: "Please enter a review comment before saving.",
+          type: "warning",
+        });
+
+        return;
+      }
+
+      updateMutation.mutate({
+        rating: value.rating,
+        comment: value.comment.trim(),
+      });
+    },
+  });
+
+  React.useEffect(() => {
     if (!review) {
       return;
     }
 
-    if (formData.rating < 1 || formData.rating > 5) {
-      toast.add({
-        title: "Rating required",
-        description: "Please select a rating between 1 and 5 stars.",
-        type: "warning",
-      });
-
-      return;
-    }
-
-    if (!formData.comment.trim()) {
-      toast.add({
-        title: "Comment required",
-        description: "Please enter a review comment before saving.",
-        type: "warning",
-      });
-
-      return;
-    }
-
-    updateMutation.mutate({
-      rating: formData.rating,
-      comment: formData.comment.trim(),
+    form.reset({
+      rating: review.rating ?? 0,
+      comment: review.comment ?? "",
     });
+  }, [review, form]);
+
+  const handleClose = (value: boolean) => {
+    if (updateMutation.isPending) {
+      return;
+    }
+
+    onOpenChange(value);
   };
 
   if (!review) {
@@ -113,43 +125,62 @@ export default function UpdateReviewDialog({ review, open, onOpenChange }: Updat
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            form.handleSubmit();
+          }}
+        >
           <div className="space-y-5 px-6 py-5">
-            <div className="space-y-3">
-              <Label className="font-semibold text-orange-900 dark:text-orange-100">Rating</Label>
+            <form.Field name="rating">
+              {(field) => (
+                <div className="space-y-3">
+                  <Label className="font-semibold text-orange-900 dark:text-orange-100">Rating</Label>
 
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => {
-                  const active = star <= formData.rating;
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const active = star <= field.state.value;
 
-                  return (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setFormData((previous) => ({ ...previous, rating: star }))}
-                      className="rounded-full p-1 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40"
-                      aria-label={`Set rating to ${star}`}
-                    >
-                      <Star className={`size-6 ${active ? "fill-orange-500 text-orange-500" : "text-orange-200 dark:text-orange-800"}`} />
-                    </button>
-                  );
-                })}
+                      return (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => field.handleChange(star)}
+                          className="rounded-full p-1 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40"
+                          aria-label={`Set rating to ${star}`}
+                        >
+                          <Star className={`size-6 ${active ? "fill-orange-500 text-orange-500" : "text-orange-200 dark:text-orange-800"}`} />
+                        </button>
+                      );
+                    })}
 
-                <span className="ml-2 text-sm font-semibold text-orange-700 dark:text-orange-300">{formData.rating}/5</span>
-              </div>
-            </div>
+                    <span className="ml-2 text-sm font-semibold text-orange-700 dark:text-orange-300">
+                      {field.state.value}/5
+                    </span>
+                  </div>
+                </div>
+              )}
+            </form.Field>
 
-            <div className="space-y-2">
-              <Label htmlFor="review-comment" className="font-semibold text-orange-900 dark:text-orange-100">Comment</Label>
-              <Textarea
-                id="review-comment"
-                value={formData.comment}
-                onChange={(event) => setFormData((previous) => ({ ...previous, comment: event.target.value }))}
-                rows={5}
-                placeholder="Write the updated review comment"
-                className="min-h-28 resize-none border-orange-200 bg-orange-50/30 text-orange-900 placeholder:text-orange-500/40 focus-visible:ring-orange-400 dark:border-orange-900/40 dark:bg-orange-950/20 dark:text-orange-50"
-              />
-            </div>
+            <form.Field name="comment">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor="review-comment" className="font-semibold text-orange-900 dark:text-orange-100">
+                    Comment
+                  </Label>
+
+                  <Textarea
+                    id="review-comment"
+                    value={field.state.value}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    rows={5}
+                    placeholder="Write the updated review comment"
+                    className="min-h-28 resize-none border-orange-200 bg-orange-50/30 text-orange-900 placeholder:text-orange-500/40 focus-visible:ring-orange-400 dark:border-orange-900/40 dark:bg-orange-950/20 dark:text-orange-50"
+                  />
+                </div>
+              )}
+            </form.Field>
           </div>
 
           <DialogFooter className="border-t border-orange-100 px-6 py-4 dark:border-orange-900/40">
