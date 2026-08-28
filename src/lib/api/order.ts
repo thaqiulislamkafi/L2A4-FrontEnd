@@ -1,5 +1,12 @@
 import axiosInstance from "@/lib/axios";
-import {  OrdersResponse, GetOrdersParams, UpdateOrderStatusPayload, OrderDetailsResponse } from "@/types/order.type";
+import {
+  OrdersResponse,
+  GetOrdersParams,
+  UpdateOrderStatusPayload,
+  OrderDetailsResponse,
+  OrderItemsResponse,
+  GetOrderItemsParams,
+} from "@/types/order.type";
 
 export const getOrders = async ({
   page = 1,
@@ -7,6 +14,22 @@ export const getOrders = async ({
   search = "",
 }: GetOrdersParams = {}) => {
   const { data } = await axiosInstance.get<OrdersResponse>("/orders", {
+    params: {
+      page,
+      limit,
+      ...(search.trim() ? { search: search.trim() } : {}),
+    },
+  });
+
+  return data;
+};
+
+export const getOrderItems = async ({
+  page = 1,
+  limit = 3,
+  search = "",
+}: GetOrderItemsParams = {}) => {
+  const { data } = await axiosInstance.get<OrderItemsResponse>("/order-items", {
     params: {
       page,
       limit,

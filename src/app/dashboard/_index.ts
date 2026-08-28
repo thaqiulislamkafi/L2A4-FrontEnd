@@ -150,7 +150,7 @@ export const pageMap: Record<string, PageInfo> = {
 
   "/dashboard/admin/order-items": {
     title: "All Order Items",
-    description: "View and manage order items.",
+    description: "View all items included in customer orders.",
   },
 
   "/dashboard/admin/settings": {

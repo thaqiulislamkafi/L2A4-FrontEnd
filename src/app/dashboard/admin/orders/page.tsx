@@ -81,7 +81,7 @@ export default function OrdersPage() {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className="space-y-5 p-4 md:p-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-orange-950 dark:text-orange-50">
             Orders

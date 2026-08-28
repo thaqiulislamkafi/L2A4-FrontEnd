@@ -109,3 +109,23 @@ export interface GetOrdersParams {
   search?: string;
   status?: OrderStatus;
 }
+
+export interface OrderItemsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface OrderItemsResponse {
+  success: boolean;
+  message: string;
+  data: OrderItem[];
+  meta: OrderItemsMeta;
+}
+
+export interface GetOrderItemsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}

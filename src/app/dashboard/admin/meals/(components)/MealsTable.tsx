@@ -26,10 +26,10 @@ export default function MealsTable({ meals, isFetching = false, onEdit, onDelete
   });
 
   return (
-    <Card className=" border-orange-200/80 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 mx-auto">
+    <Card className="relative border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 overflow-hidden">
       <CardContent className="p-0">
-        <div className="relative w-full overflow-x-auto">
-          <Table className="max-w-250 overflow-auto">
+        <div className="overflow-x-auto">
+          <Table className="overflow-auto">
             <TableHeader className="bg-orange-50/80 dark:bg-orange-950/20">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-orange-200/70 hover:bg-transparent dark:border-orange-900/40">

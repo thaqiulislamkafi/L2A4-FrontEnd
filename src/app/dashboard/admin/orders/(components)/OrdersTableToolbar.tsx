@@ -31,7 +31,10 @@ export default function OrdersTableToolbar({ search, onSearchChange, onReset }: 
         <div className="relative min-w-0 flex-1 sm:w-72">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-orange-500 dark:text-orange-400" />
 
-          <Input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search orders..." className="h-9 w-full rounded-lg border-orange-200 bg-white pl-9 pr-9 text-sm text-orange-900 placeholder:text-orange-400/60 focus-visible:border-orange-500 focus-visible:ring-orange-500/20 dark:border-orange-800 dark:bg-orange-950/20 dark:text-orange-100 dark:placeholder:text-orange-400/50" />
+          <Input value={search} 
+          onChange={(event) => onSearchChange(event.target.value)}
+           placeholder="Search orders by Id..." 
+           className="h-9 w-full rounded-lg border-orange-200 bg-white pl-9 pr-9 text-sm text-orange-900 placeholder:text-orange-400/60 focus-visible:border-orange-500 focus-visible:ring-orange-500/20 dark:border-orange-800 dark:bg-orange-950/20 dark:text-orange-100 dark:placeholder:text-orange-400/50" />
 
           {hasSearch && (
             <button type="button" onClick={onReset} aria-label="Clear search" className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-orange-500 transition-colors hover:bg-orange-100 hover:text-orange-700 dark:text-orange-400 dark:hover:bg-orange-950/60 dark:hover:text-orange-300">
