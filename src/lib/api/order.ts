@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios";
-import {  OrdersResponse, GetOrdersParams, UpdateOrderStatusPayload } from "@/types/order.type";
+import {  OrdersResponse, GetOrdersParams, UpdateOrderStatusPayload, OrderDetailsResponse } from "@/types/order.type";
 
 export const getOrders = async ({
   page = 1,
@@ -17,12 +17,18 @@ export const getOrders = async ({
   return data;
 };
 
+export const getOrderById = async (id: string): Promise<OrderDetailsResponse> => {
+  const response = await axiosInstance.get<OrderDetailsResponse>(`/orders/${id}`);
+
+  return response.data;
+};
+
 export const updateOrderStatus = async (
   orderId: string,
   payload: UpdateOrderStatusPayload
 ) => {
   const { data } = await axiosInstance.put(
-    `/orders/${orderId}/status`,
+    `/orders/${orderId}`,
     payload
   );
 
