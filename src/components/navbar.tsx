@@ -1,117 +1,298 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Poppins } from "next/font/google";
-
+import { LayoutDashboard, LogOut, Menu } from "lucide-react";
 import { Geist } from "next/font/google";
 
-const geist = Geist({ subsets: ["latin"] });
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { useAuthStore } from "@/store/auth.store";
+import { useRouter } from "next/navigation";
+import { userLogout } from "@/lib/api/auth";
+import { toast } from "./ui/toast";
 
-<body className={geist.className}></body>
-const poppins = Poppins({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Explore Meals", href: "/explore-meals" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Explore Meals",
+    href: "/explore-meals",
+  },
+  {
+    label: "About",
+    href: "/about",
+  },
+  {
+    label: "Contact",
+    href: "/contact",
+  },
+  {
+    label: "Become a provider",
+    href: "/become-provider",
+  },
 ];
 
 export default function Navbar() {
+
+  const { user,clearUser } = useAuthStore();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+
+    try {
+      await userLogout();
+
+      clearUser();
+
+      toast.add({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+        type: "success",
+      });
+
+      router.push("/");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+
+      toast.add({
+        title: "Sign out failed",
+        description: "Unable to sign out. Please try again.",
+        type: "error",
+      });
+    }
+  };
+  
   return (
-    <header className={`${geist.className} sticky top-0 z-50 border-b border-orange-100 bg-orange-50/90 backdrop-blur-md`}>
+    <header
+      className={`${geist.className} sticky top-0 z-50 border-b border-orange-100 bg-orange-50/90 backdrop-blur-md`}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
+
+        {/* =======================
+                    LOGO
+        ===========================*/}
+
         <Link
           href="/"
-          className="text-3xl font-bold tracking-tight text-orange-600 transition-colors hover:text-orange-700"
+          className="text-3xl font-bold tracking-tight text-orange-600 transition-colors duration-300 hover:text-orange-700"
         >
           FoodHub
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* =======================================
+                      DESKTOP NAVIGATION
+        ============================================ */}
+
         <div className="hidden md:block">
-          <Menubar className="border-0 bg-transparent shadow-none">
-            {navItems.map((item) => (
-              <MenubarMenu key={item.href}>
-                <Link href={item.href}>
-                  <MenubarTrigger className="rounded-md px-4 py-2 font-medium text-slate-700 transition-all hover:bg-orange-100 hover:text-orange-600">
-                    {item.label}
-                  </MenubarTrigger>
-                </Link>
-              </MenubarMenu>
-            ))}
-          </Menubar>
-        </div>
+          <NavigationMenu>
+            <NavigationMenuList className="gap-1">
 
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Link href="/signin">
-            <Button
-              variant="ghost"
-              className="px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
-            >
-              Sign In
-            </Button>
-          </Link>
-
-          <Link href="/signup">
-            <Button className="border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700">
-              Sign Up
-            </Button>
-          </Link>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className="md:hidden">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-orange-600 hover:bg-orange-100"
-              >
-                <Menu className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent
-              align="end"
-              className="w-56 rounded-xl border-orange-100 bg-white"
-            >
               {navItems.map((item) => (
-                <DropdownMenuItem
-                  key={item.href}
-                  className="text-slate-700 focus:bg-orange-100 focus:text-orange-600"
-                >
-                  <Link href={item.href} className="w-full">
+                <NavigationMenuItem key={item.href}>
+                  <NavigationMenuLink
+                    render={
+                      <Link href={item.href} />
+                    }
+                    className="text-sm rounded-md px-4 py-2 font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:text-orange-600 focus:bg-orange-100 focus:text-orange-600
+                    "
+                  >
                     {item.label}
-                  </Link>
-                </DropdownMenuItem>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               ))}
 
-              <DropdownMenuItem className="text-slate-700 focus:bg-orange-100 focus:text-orange-600">
-                <Link href="/signin" className="w-full">
-                  Sign In
-                </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="text-slate-700 focus:bg-orange-100 focus:text-orange-600">
-                <Link href="/signup" className="w-full font-medium">
-                  Sign Up
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
+
+        {/* ===========================================
+                        DESKTOP ACTIONS
+        ==============================================*/}
+
+        <div className="hidden items-center gap-3 md:flex">
+
+          {(user) ? (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  className="gap-2 px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+
+                  Dashboard
+                </Button>
+              </Link>
+
+              <Button
+                onClick={handleSignOut}
+                className="gap-2 border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700"
+              >
+                <LogOut className="h-4 w-4" />
+
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  className="px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
+                >
+                  Sign In
+                </Button>
+              </Link>
+
+              <Link href="/signup">
+                <Button className="border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
+
+        </div>
+
+        {/* =========================================
+                            MOBILE MENU
+            ========================================= */}
+
+        <div className="md:hidden">
+          <Sheet>
+
+            {/* Menu Trigger */}
+
+            <SheetTrigger
+              render={
+                <Button variant="ghost" size="icon"
+                  className=" text-orange-600 transition-all duration-300 hover:bg-orange-100 hover:text-orange-700"
+                />
+              }
+            >
+              <Menu className="size-5" />
+
+              <span className="sr-only">
+                Open navigation menu
+              </span>
+            </SheetTrigger>
+
+            {/* Sheet */}
+
+            <SheetContent side="right"
+              className="border-l border-orange-100 bg-orange-50/95 p-0 sm:max-w-sm dark:border-orange-950/40 dark:bg-background/95"
+            >
+
+              {/* =========================
+                          Header
+                 ========================== */}
+
+              <SheetHeader
+                className=" border-b border-orange-100 bg-orange-100/50 px-6 py-6 dark:border-orange-950/40 dark:bg-orange-950/20"
+              >
+                <SheetTitle
+                  className="tracking-tight text-orange-600"
+                >
+                  FoodHub
+                </SheetTitle>
+
+                <SheetDescription
+                  className=" text-slate-600 dark:text-slate-400"
+                >
+                  Delicious meals, delivered with care.
+                </SheetDescription>
+              </SheetHeader>
+
+              {/* =========================
+                         Navigation
+                ========================== */}
+
+              <nav className="flex flex-1 flex-col px-4 py-6">
+
+                <div className="space-y-2">
+
+                  {navItems.map((item) => (
+                    <SheetClose
+                      key={item.href}
+                      render={
+                        <Link
+                          href={item.href}
+                          className=" flex w-full items-center rounded-xl px-4 py-3.5 text-base font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:pl-5 hover:text-orange-600 dark:text-slate-200 dark:hover:bg-orange-950/30 dark:hover:text-orange-400"
+                        />
+                      }
+                    >
+                      {item.label}
+                    </SheetClose>
+                  ))}
+
+                </div>
+
+                {/* =========================
+                           Divider
+                  ========================== */}
+
+                <div className="my-6 h-px bg-orange-100 dark:bg-orange-950/40" />
+
+                {/* =========================
+                        Authentication
+                   ========================== */}
+
+                <div className="space-y-3">
+
+                  <SheetClose
+                    render={
+                      <Link href="/signin" />
+                    }
+                  >
+                    <Button
+                      variant="outline"
+                      className=" h-12 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
+                    >
+                      Sign In
+                    </Button>
+                  </SheetClose>
+
+                  <SheetClose
+                    render={
+                      <Link href="/signup" />
+                    }
+                  >
+                    <Button
+                      className="my-5 h-12 w-full rounded-xl border border-orange-600 bg-orange-600 font-semibold text-white shadow-md shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-700 hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30"
+                    >
+                      Sign Up
+                    </Button>
+                  </SheetClose>
+
+                </div>
+
+              </nav>
+
+              {/* =========================
+                           Footer
+                ========================== */}
+
+              <SheetFooter
+                className=" border-t border-orange-100 bg-orange-100/30 px-6 py-5 dark:border-orange-950/40 dark:bg-orange-950/10"
+              >
+                <p className="text-center text-xs text-muted-foreground">
+                  © {new Date().getFullYear()} FoodHub. All rights reserved.
+                </p>
+              </SheetFooter>
+
+            </SheetContent>
+          </Sheet>
+        </div>
+
       </div>
     </header>
   );
