@@ -31,7 +31,11 @@ function getAvailabilityClass(status?: string) {
   }
 }
 
-export const MealTableColumns = (onEdit: (meal: Meal) => void, onDelete: (meal: Meal) => void): ColumnDef<Meal>[] => [
+export const MealTableColumns = (
+  onEdit: (meal: Meal) => void,
+  onDelete: (meal: Meal) => void,
+  viewPath = "/dashboard/admin/meals"
+): ColumnDef<Meal>[] => [
   {
     accessorKey: "name",
     header: "Meal",
@@ -122,7 +126,7 @@ export const MealTableColumns = (onEdit: (meal: Meal) => void, onDelete: (meal: 
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-44 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
-            <DropdownMenuItem render={<Link href={`/dashboard/admin/meals/${meal.id}`} />} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
+            <DropdownMenuItem render={<Link href={`${viewPath}/${meal.id}`} />} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
               <Eye className="size-4 text-orange-500 dark:text-orange-400" />
               <span>View Meal</span>
             </DropdownMenuItem>

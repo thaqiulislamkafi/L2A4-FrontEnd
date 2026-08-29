@@ -47,9 +47,10 @@ export default function UpdateMealDialog({ meal, open, onOpenChange }: UpdateMea
         type: "success",
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: ["admin-meals"],
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-meals"] }),
+        queryClient.invalidateQueries({ queryKey: ["provider-meals"] }),
+      ]);
     },
     onError: () => {
       toast.add({

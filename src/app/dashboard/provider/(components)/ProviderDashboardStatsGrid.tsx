@@ -18,7 +18,7 @@ export default function ProviderDashboardStatsGrid({
   return (
     <section
       aria-label="Provider dashboard statistics"
-      className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+      className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
     >
       <DashboardStatCard
         title="Total Meals"

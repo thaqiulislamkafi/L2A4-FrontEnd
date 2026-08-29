@@ -77,15 +77,26 @@ export interface Meal {
   };
 }
 
+export interface MealsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
 export interface PublishedMealsResponse {
   success: boolean;
   message: string;
   data: Meal[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPage: number;
+  meta: MealsMeta;
+}
+
+export interface ProviderMealsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    data: Meal[];
+    meta: MealsMeta;
   };
 }
 

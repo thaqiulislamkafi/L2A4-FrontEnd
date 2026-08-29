@@ -14,10 +14,11 @@ interface MealsTableProps {
   isFetching?: boolean;
   onEdit?: (meal: Meal) => void;
   onDelete?: (meal: Meal) => void;
+  viewPath?: string;
 }
 
-export default function MealsTable({ meals, isFetching = false, onEdit, onDelete }: MealsTableProps) {
-  const columns = React.useMemo<ColumnDef<Meal>[]>(() => MealTableColumns(onEdit ?? (() => {}), onDelete ?? (() => {})), [onEdit, onDelete]);
+export default function MealsTable({ meals, isFetching = false, onEdit, onDelete, viewPath = "/dashboard/admin/meals" }: MealsTableProps) {
+  const columns = React.useMemo<ColumnDef<Meal>[]>(() => MealTableColumns(onEdit ?? (() => {}), onDelete ?? (() => {}), viewPath), [onEdit, onDelete, viewPath]);
 
   const table = useReactTable({
     data: meals,

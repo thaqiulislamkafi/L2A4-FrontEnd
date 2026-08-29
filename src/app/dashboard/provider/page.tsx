@@ -52,7 +52,7 @@ export default function ProviderDashboardPage() {
   }
 
   return (
-    <div className={`${geist.className} flex flex-1 flex-col gap-6 p-4 md:p-6`}>
+    <div className={`${geist.className} flex flex-1 flex-col gap-6 p-4 md:p-6 max-w-234`}>
       <ProviderDashboardStatsGrid
         totalMeals={data.totalMeals}
         totalOrders={data.totalOrders}
