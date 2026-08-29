@@ -6,6 +6,7 @@ import {
   OrderDetailsResponse,
   OrderItemsResponse,
   GetOrderItemsParams,
+  ProviderOrderItemsResponse,
 } from "@/types/order.type";
 
 export const getOrders = async ({
@@ -38,6 +39,24 @@ export const getOrderItems = async ({
   });
 
   return data;
+};
+
+export const getProviderOrderItems = async (
+  providerId: string,
+  { page = 1, limit = 3, search = "" }: GetOrderItemsParams = {}
+) => {
+  const { data } = await axiosInstance.get<ProviderOrderItemsResponse>(
+    `/order-items/provider/${providerId}`,
+    {
+      params: {
+        page,
+        limit,
+        ...(search.trim() ? { search: search.trim() } : {}),
+      },
+    }
+  );
+
+  return data.data;
 };
 
 export const getOrderById = async (id: string): Promise<OrderDetailsResponse> => {

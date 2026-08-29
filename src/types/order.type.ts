@@ -51,7 +51,8 @@ export interface OrderMeal {
   id: string;
   name: string;
   image: string;
-  category_rel: OrderMealCategory;
+  category_rel?: OrderMealCategory;
+  pricePerPiece?: number;
 }
 
 export interface OrderItem {
@@ -125,6 +126,28 @@ export interface OrderItemsResponse {
 }
 
 export interface GetOrderItemsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface ProviderOrderItemsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface ProviderOrderItemsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    data: OrderItem[];
+    meta: ProviderOrderItemsMeta;
+  };
+}
+
+export interface GetProviderOrderItemsParams {
   page?: number;
   limit?: number;
   search?: string;
