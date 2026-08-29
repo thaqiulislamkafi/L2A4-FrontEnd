@@ -1,4 +1,4 @@
-import { AuthUser } from "@/types/auth.type";
+import { AuthUser, GetUserResponse, User } from "@/types/auth.type";
 import axiosInstance from "../axios";
 
 export interface GetUsersParams {
@@ -56,4 +56,28 @@ export const deleteUser = async (id: string): Promise<AuthUserResponse> => {
   const { data } = await axiosInstance.delete<AuthUserResponse>(`/auth/${id}`);
 
   return data;
+};
+
+
+export interface ChangePasswordPayload {
+  password: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+  data: User;
+}
+
+export const getUser = async (id: string): Promise<User> => {
+  const response = await axiosInstance.get<GetUserResponse>(`/auth/${id}`);
+
+  return response.data.data;
+};
+
+export const changePassword = async (payload: ChangePasswordPayload): Promise<ChangePasswordResponse> => {
+  const response = await axiosInstance.post<ChangePasswordResponse>("/auth/change-password", payload);
+
+  return response.data;
 };
