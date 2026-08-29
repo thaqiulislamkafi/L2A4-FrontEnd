@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Utensils, } from "lucide-react";
 
-import { Badge, HeaderBadge } from "@/components/ui/badge";
+import { HeaderBadge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,

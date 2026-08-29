@@ -53,11 +53,6 @@ export default function OrdersPage() {
     setPage(newPage);
   };
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPage(DEFAULT_PAGE);
-  };
-
   const handleStatusChange = (order: Order) => {
     setSelectedOrder(order);
     setStatusDialogOpen(true);
@@ -99,12 +94,11 @@ export default function OrdersPage() {
 
           {meta && (
             <TablePagination
-              currentPage={Number(meta.page)}
+              page={Number(meta.page)}
               totalPages={meta.totalPage}
-              pageSize={meta.limit}
               totalItems={meta.total}
+              itemsName="Orders"
               onPageChange={handlePageChange}
-              onPageSizeChange={handleLimitChange}
             />
           )}
         </div>

@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 import { OrderItem } from "@/types/order.type";
+import Image from "next/image";
 
 export const OrderItemsTableColumns = (onOrderClick: (orderId: string) => void): ColumnDef<OrderItem>[] => [
   {
@@ -31,7 +32,7 @@ export const OrderItemsTableColumns = (onOrderClick: (orderId: string) => void):
     header: "Meal",
     cell: ({ row }) => (
       <div className="flex min-w-52 items-center gap-3">
-        <img src={row.original.meal.image} alt={row.original.meal.name} className="size-10 rounded-lg object-cover" />
+        <Image height={40} width={40} src={row.original.meal.image} alt={row.original.meal.name} className="size-10 rounded-lg object-cover" />
         <span className="font-semibold text-orange-950 dark:text-orange-50">{row.original.meal.name}</span>
       </div>
     ),

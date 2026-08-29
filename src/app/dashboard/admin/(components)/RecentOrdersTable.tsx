@@ -1,32 +1,12 @@
 "use client";
 
 import * as React from "react";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  CircleDollarSign,
-  ShoppingCart,
-} from "lucide-react";
+import { type ColumnDef,flexRender,getCoreRowModel,useReactTable,} from "@tanstack/react-table";
+import { CircleDollarSign, ShoppingCart,} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+import { Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 
 export interface RecentOrder {
@@ -78,76 +58,34 @@ function formatStatus(status: string) {
 function getStatusClasses(status: string) {
   switch (status.toLowerCase()) {
     case "pending":
-      return `
-        border-orange-200
-        bg-orange-100
-        text-orange-700
-        dark:border-orange-800
-        dark:bg-orange-950/50
-        dark:text-orange-300
+      return ` border-orange-200 bg-orange-100 text-orange-700 dark:border-orange-800 dark:bg-orange-950/50 dark:text-orange-300
       `;
 
     case "confirmed":
-      return `
-        border-blue-200
-        bg-blue-50
-        text-blue-700
-        dark:border-blue-900
-        dark:bg-blue-950/40
-        dark:text-blue-400
+      return ` border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-400
       `;
 
     case "processing":
-      return `
-        border-violet-200
-        bg-violet-50
-        text-violet-700
-        dark:border-violet-900
-        dark:bg-violet-950/40
-        dark:text-violet-400
+      return ` border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900 dark:bg-violet-950/40 dark:text-violet-400
       `;
 
     case "shipped":
-      return `
-        border-indigo-200
-        bg-indigo-50
-        text-indigo-700
-        dark:border-indigo-900
-        dark:bg-indigo-950/40
-        dark:text-indigo-400
+      return ` border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-400
       `;
 
     case "delivered":
     case "completed":
-      return `
-        border-emerald-200
-        bg-emerald-50
-        text-emerald-700
-        dark:border-emerald-900
-        dark:bg-emerald-950/40
-        dark:text-emerald-400
+      return ` border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400
       `;
 
     case "cancelled":
     case "canceled":
     case "rejected":
-      return `
-        border-red-200
-        bg-red-50
-        text-red-700
-        dark:border-red-900
-        dark:bg-red-950/40
-        dark:text-red-400
+      return ` border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-400
       `;
 
     default:
-      return `
-        border-orange-200
-        bg-orange-50
-        text-orange-700
-        dark:border-orange-900
-        dark:bg-orange-950/40
-        dark:text-orange-400
+      return ` border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400
       `;
   }
 }
@@ -160,25 +98,14 @@ const columns: ColumnDef<RecentOrder>[] = [
       return (
         <div className="flex min-w-40 items-center gap-2">
           <div
-            className="
-              flex size-8 shrink-0 items-center justify-center
-              rounded-lg
-              bg-orange-100
-              text-orange-600
-              dark:bg-orange-950/50
-              dark:text-orange-400
+            className=" flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400
             "
           >
             <ShoppingCart className="size-4" />
           </div>
 
           <span
-            className="
-              font-mono
-              text-xs
-              font-semibold
-              text-orange-800
-              dark:text-orange-200
+            className=" font-mono text-xs font-semibold text-orange-800 dark:text-orange-200
             "
             title={row.original.id}
           >
@@ -195,12 +122,7 @@ const columns: ColumnDef<RecentOrder>[] = [
     cell: ({ row }) => {
       return (
         <span
-          className="
-            font-mono
-            text-xs
-            font-medium
-            text-orange-700/80
-            dark:text-orange-300/80
+          className=" font-mono text-xs font-medium text-orange-700/80 dark:text-orange-300/80
           "
           title={row.original.user_id}
         >
