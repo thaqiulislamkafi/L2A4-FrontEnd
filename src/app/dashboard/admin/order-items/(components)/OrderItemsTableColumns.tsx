@@ -5,6 +5,15 @@ import { OrderItem } from "@/types/order.type";
 
 export const OrderItemsTableColumns = (onOrderClick: (orderId: string) => void): ColumnDef<OrderItem>[] => [
   {
+    accessorKey: "id",
+    header: "Order Item ID",
+    cell: ({ row }) => (
+      <div className="max-w-45 truncate font-mono text-xs font-semibold text-orange-800 dark:text-orange-300">
+        {row.original.id}
+      </div>
+    ),
+  },
+  {
     accessorKey: "order_id",
     header: "Order ID",
     cell: ({ row }) => (

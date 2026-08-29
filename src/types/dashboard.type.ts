@@ -60,8 +60,63 @@ export interface AdminDashboardData {
   recentOrders: AdminOrder[];
 }
 
+export interface ProviderRecentMeal {
+  id: string;
+  name: string;
+  image: string | null;
+  description: string;
+  cuisine_type: string;
+  dietry_type: string;
+  category: string;
+  availabilty_status: string;
+  pricePerPiece: number;
+  totalPieces: number;
+  availablePieces: number;
+  isPublished: boolean;
+  isHeroContent: boolean;
+  isSliderContent: boolean;
+  provider_id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProviderRecentOrder {
+  id: string;
+  order_id: string;
+  meal_id: string;
+  quantity: number;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProviderRecentReview {
+  id: string;
+  meal_id: string;
+  user_id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProviderDashboardData {
+  totalMeals: number;
+  totalOrders: number;
+  totalReviews: number;
+  recentMeals: ProviderRecentMeal[];
+  recentOrders: ProviderRecentOrder[];
+  recentReviews: ProviderRecentReview[];
+}
+
 export interface AdminDashboardResponse {
   success: boolean;
   message: string;
   data: AdminDashboardData;
+}
+
+export interface ProviderDashboardResponse {
+  success: boolean;
+  message: string;
+  data: ProviderDashboardData;
 }
