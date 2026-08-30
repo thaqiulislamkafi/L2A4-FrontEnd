@@ -101,3 +101,43 @@ export const logoutAllSessions = async () => {
 
   return response.data;
 };
+
+import { VerifyEmailOtpResponse } from "@/types/meal-review.type";
+
+export interface SendEmailOtpPayload {
+  email: string;
+}
+
+export interface SendEmailOtpResponse {
+  success: boolean;
+  message: string;
+  data: boolean;
+}
+
+export interface VerifyEmailOtpPayload {
+  email: string;
+  otp: string;
+}
+
+
+export const sendEmailOtp = async (
+  payload: SendEmailOtpPayload
+): Promise<SendEmailOtpResponse> => {
+  const response = await axiosInstance.post<SendEmailOtpResponse>(
+    "/auth/send-email-otp",
+    payload
+  );
+
+  return response.data;
+};
+
+export const verifyEmailOtp = async (
+  payload: VerifyEmailOtpPayload
+): Promise<VerifyEmailOtpResponse> => {
+  const response = await axiosInstance.post<VerifyEmailOtpResponse>(
+    "/auth/verify-otp-email",
+    payload
+  );
+
+  return response.data;
+};

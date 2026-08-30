@@ -2,18 +2,23 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Camera, CheckCircle2, Mail, ShieldCheck, UserCircle } from "lucide-react";
+import { AlertTriangle, Camera, CheckCircle2, Mail, ShieldCheck, UserCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "@/types/auth.type";
 import ImageUpdateDialog from "./ImageUpdateDialog";
+import { toast } from "@/components/ui/toast";
+import { useMutation} from "@tanstack/react-query";
+import { sendEmailOtp } from "@/lib/api/auth";
+import VerifyEmailDialog from "./VerifyEmailDialog";
 
 interface ProfileHeaderProps {
   user: User;
 }
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
+
   const isVerified = user.emailVerified;
   const isActive = user.status.toLowerCase() === "active";
 
@@ -23,15 +28,72 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     setIsImageUpdateDialogOpen(open);
   };
 
+  const [verifyEmailDialogOpen, setVerifyEmailDialogOpen] = React.useState(false);
+
+  const sendOtpMutation = useMutation({
+    mutationFn: () => sendEmailOtp({ email: user.email }),
+
+    onSuccess: (response) => {
+      if (!response.success) {
+        toast.add({
+          title: "OTP Sending Failed",
+          description: response.message || "Unable to send verification OTP.",
+          type: "error",
+        });
+
+        return;
+      }
+
+      setVerifyEmailDialogOpen(true);
+
+      toast.add({
+        title: "OTP Sent Successfully!",
+        description: `A verification code has been sent to ${user.email}.`,
+        type: "success",
+      });
+    },
+
+    onError: (error: unknown) => {
+      const message = (
+        error as {
+          response?: {
+            data?: {
+              message?: string;
+            };
+          };
+        }
+      )?.response?.data?.message;
+
+      toast.add({
+        title: "OTP Sending Failed",
+        description: message || "Unable to send verification OTP. Please try again.",
+        type: "error",
+      });
+    },
+  });
+
+  const handleVerifyEmail = () => {
+    if (sendOtpMutation.isPending) {
+      return;
+    }
+
+    sendOtpMutation.mutate();
+  };
+
+  const handleEmailVerified = () => {
+    setVerifyEmailDialogOpen(false);
+  };
+
+
   return (
     <div>
       <Card className="overflow-hidden border-orange-200/70 bg-white shadow-sm shadow-orange-950/5 dark:border-orange-900/40 dark:bg-orange-950/20">
         <div className="h-28 bg-linear-to-r from-orange-500 via-orange-400 to-amber-400 dark:from-orange-700 dark:via-orange-600 dark:to-amber-600" />
 
-        <CardContent className="relative px-6 pb-6">
-          <div className="-mt-14 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <CardContent className="-mt-10 px-6 pb-6">
+          <div className=" flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end">
-              <div className="relative">
+              <div className="">
                 {user.image ? (
                   <Image src={user.image} alt={user.name} width={112} height={112} className="size-28 rounded-2xl object-cover bg-white p-1 shadow-lg ring-4 ring-white dark:bg-orange-950 dark:ring-orange-950" />
                 ) : (
@@ -70,12 +132,17 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     {user.email}
                   </span>
 
-                  {isVerified && (
-                    <span className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-                      <CheckCircle2 className="size-4" />
+                  {isVerified ?
+                    (<span className="flex items-center gap-1.5 text-green-600 dark:text-green-400"> <CheckCircle2 className="size-4" />
                       Email Verified
-                    </span>
-                  )}
+                    </span>) :
+                    (
+                      <Button type="button" variant="outline" onClick={handleVerifyEmail} disabled={sendOtpMutation.isPending}
+                        className="h-8  rounded-lg border-amber-300 bg-amber-50 px-3 text-xs font-semibold text-amber-700 hover:bg-amber-100 hover:text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-950/50">
+                        <AlertTriangle className="size-3.5" />
+                        Verify Email
+                      </Button>)
+                  }
                 </div>
               </div>
             </div>
@@ -96,6 +163,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </Card>
 
       <ImageUpdateDialog imageDialogOpen={ImageUpdateDialogOpen} user={user} onOpenChange={handleImageDialogChange} />
+
+      <VerifyEmailDialog email={user.email} open={verifyEmailDialogOpen} onOpenChange={setVerifyEmailDialogOpen} onVerified={handleEmailVerified} />
+
     </div>
 
   );

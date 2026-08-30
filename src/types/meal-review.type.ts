@@ -36,3 +36,28 @@ export interface MealReviewResponse {
     totalPage: number;
   };
 }
+
+export interface VerifyEmailOtpUser {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  contact: string;
+  age: number;
+  address: string;
+  role: "user" | "provider" | "admin";
+  status: string;
+}
+
+export interface VerifyEmailOtpResponse {
+  success: boolean;
+  message: string;
+  data: {
+    status: boolean;
+    token: string | null;
+    user: VerifyEmailOtpUser;
+  };
+}
