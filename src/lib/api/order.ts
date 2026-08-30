@@ -25,6 +25,21 @@ export const getOrders = async ({
   return data;
 };
 
+export const getUserOrders = async (
+  userId: string,
+  { page = 1, limit = 3, search = "" }: GetOrdersParams = {}
+) => {
+  const { data } = await axiosInstance.get<OrdersResponse>(`/orders/user/${userId}`, {
+    params: {
+      page,
+      limit,
+      ...(search.trim() ? { search: search.trim() } : {}),
+    },
+  });
+
+  return data;
+};
+
 export const getOrderItems = async ({
   page = 1,
   limit = 3,
