@@ -19,3 +19,20 @@ export const getUserReviews = async (
 
   return data;
 };
+
+export interface UpdateUserReviewPayload {
+  rating: number;
+  comment: string;
+}
+
+export const updateUserReview = async (id: string, payload: UpdateUserReviewPayload) => {
+  const { data } = await axiosInstance.put(`/reviews/${id}`, payload);
+
+  return data;
+};
+
+export const deleteUserReview = async (id: string) => {
+  const { data } = await axiosInstance.delete(`/reviews/${id}`);
+
+  return data;
+};
