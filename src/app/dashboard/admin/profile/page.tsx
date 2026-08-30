@@ -63,7 +63,7 @@ export default function ProfilePage() {
 
       <ProfileHeader user={profile} />
 
-      <ProfileActions />
+      <ProfileActions user={profile} />
 
       <ProfileInformation user={profile} />
 

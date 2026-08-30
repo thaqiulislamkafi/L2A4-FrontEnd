@@ -10,11 +10,16 @@ import { toast } from "@/components/ui/toast";
 
 import { logoutAllSessions } from "@/lib/api/auth";
 import ChangePasswordDialog from "./ChangePasswordDialog";
+import UpdateProfileDialog from "./UpdateProfileDialog";
+import { User } from "@/types/auth.type";
 
+interface ProfileActionsProps {
+  user: User;
+}
 
-export default function ProfileActions() {
-
+export default function ProfileActions({ user }: ProfileActionsProps) {
   const [changePasswordDialogOpen, setChangePasswordDialogOpen] = React.useState(false);
+  const [updateProfileDialogOpen, setUpdateProfileDialogOpen] = React.useState(false);
 
 
 
@@ -88,7 +93,7 @@ export default function ProfileActions() {
             </div>
           </Button>
 
-          <Button type="button" disabled={logoutAllMutation.isPending} className="h-auto min-h-16 justify-start gap-3 rounded-xl bg-orange-500 px-4 py-3 text-left text-white shadow-sm shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-600">
+          <Button type="button" onClick={() => setUpdateProfileDialogOpen(true)} disabled={logoutAllMutation.isPending} className="h-auto min-h-16 justify-start gap-3 rounded-xl bg-orange-500 px-4 py-3 text-left text-white shadow-sm shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-600">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/15 text-white">
               <Pencil className="size-4" />
             </div>
@@ -104,6 +109,7 @@ export default function ProfileActions() {
       </Card>
 
       <ChangePasswordDialog open={changePasswordDialogOpen} onOpenChange={setChangePasswordDialogOpen} />
+      <UpdateProfileDialog user={user} open={updateProfileDialogOpen} onOpenChange={setUpdateProfileDialogOpen} />
 
     </>
   );
