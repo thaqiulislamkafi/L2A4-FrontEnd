@@ -1,3 +1,4 @@
+import { GetUserResponse, User } from "@/types/auth.type";
 import axiosInstance from "../axios";
 
 interface LoginPayload {
@@ -83,6 +84,20 @@ export const uploadUserImage = async (file: File) => {
 
 export const getMe = async () => {
   const response = await axiosInstance.post("/auth/get-me");
+
+  return response.data;
+};
+
+
+
+export const getUser = async (id: string): Promise<User> => {
+  const response = await axiosInstance.get<GetUserResponse>(`/auth/${id}`);
+
+  return response.data.data;
+};
+
+export const logoutAllSessions = async () => {
+  const response = await axiosInstance.post("/auth/logout-all");
 
   return response.data;
 };
