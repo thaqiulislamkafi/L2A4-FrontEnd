@@ -46,7 +46,7 @@ export const getUsers = async ({ page = 1, limit = 10, search = "" }: GetUsersPa
 };
 
 
-export const updateUser = async (id: string, payload: UpdateUserPayload): Promise<UpdateUserResponse> => {
+export const updateUser = async (id: string, payload: Partial<UpdateUserPayload>): Promise<UpdateUserResponse> => {
   const { data } = await axiosInstance.put<UpdateUserResponse>(`/auth/${id}`, payload);
 
   return data;

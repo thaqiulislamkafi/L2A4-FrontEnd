@@ -95,3 +95,9 @@ export const getUser = async (id: string): Promise<User> => {
 
   return response.data.data;
 };
+
+export const logoutAllSessions = async () => {
+  const response = await axiosInstance.post("/auth/logout-all");
+
+  return response.data;
+};
