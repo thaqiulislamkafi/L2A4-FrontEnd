@@ -12,6 +12,8 @@ import { toast } from "@/components/ui/toast";
 import { useMutation} from "@tanstack/react-query";
 import { sendEmailOtp } from "@/lib/api/auth";
 import VerifyEmailDialog from "./VerifyEmailDialog";
+import NewEmailModal from "./NewEmailModal";
+import VerifyChangedEmailDialog from "./VerifyChangedEmailDialog";
 
 interface ProfileHeaderProps {
   user: User;
@@ -29,6 +31,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   };
 
   const [verifyEmailDialogOpen, setVerifyEmailDialogOpen] = React.useState(false);
+  const [newEmailModalOpen, setNewEmailModalOpen] = React.useState(false);
+  const [verifyChangedEmailDialogOpen, setVerifyChangedEmailDialogOpen] = React.useState(false);
+  const [pendingEmail, setPendingEmail] = React.useState("");
 
   const sendOtpMutation = useMutation({
     mutationFn: () => sendEmailOtp({ email: user.email }),
@@ -153,7 +158,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 Change Image
               </Button>
 
-              <Button type="button" variant="outline" className="rounded-lg border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40">
+              <Button type="button" variant="outline" onClick={() => setNewEmailModalOpen(true)} className="rounded-lg border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40">
                 <Mail className="size-4" />
                 Change Email
               </Button>
@@ -165,6 +170,20 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       <ImageUpdateDialog imageDialogOpen={ImageUpdateDialogOpen} user={user} onOpenChange={handleImageDialogChange} />
 
       <VerifyEmailDialog email={user.email} open={verifyEmailDialogOpen} onOpenChange={setVerifyEmailDialogOpen} onVerified={handleEmailVerified} />
+      <NewEmailModal
+        currentEmail={user.email}
+        open={newEmailModalOpen}
+        onOpenChange={setNewEmailModalOpen}
+        onOtpSent={(newEmail) => {
+          setPendingEmail(newEmail);
+          setVerifyChangedEmailDialogOpen(true);
+        }}
+      />
+      <VerifyChangedEmailDialog
+        newEmail={pendingEmail}
+        open={verifyChangedEmailDialogOpen}
+        onOpenChange={setVerifyChangedEmailDialogOpen}
+      />
 
     </div>
 

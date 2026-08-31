@@ -60,7 +60,7 @@ export default function DashboardHeader() {
   
       try {
         await userLogout();
-  
+        router.push("/");
         clearUser();
   
         toast.add({
@@ -69,7 +69,6 @@ export default function DashboardHeader() {
           type: "success",
         });
   
-        router.push("/");
       } catch (error) {
         console.error("Sign out failed:", error);
   

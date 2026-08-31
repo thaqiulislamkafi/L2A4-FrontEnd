@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { getMe } from "@/lib/api/auth";
 import { GlobalSpinner } from "@/components/ui/spinner";
@@ -13,30 +14,23 @@ interface Props {
 const AuthProvider = ({ children }: Props) => {
   const setAuth = useAuthStore((state) => state.setUser);
   const logout = useAuthStore((state) => state.clearUser);
-  const isLoading = useAuthStore((state) => state.isLoading);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getMe
+  });
 
   useEffect(() => {
-    
-    const restoreSession = async () => {
-      try {
-        const response = await getMe();
+    if (data?.success && data?.data?.user) {
+      setAuth(data.data.user);
+    } else if (isError || data?.success === false) {
+      logout();
+    }
+  }, [data, isError, setAuth, logout]);
 
-        if (response?.success && response?.data?.user) {
-          setAuth(response.data.user);
-        } else {
-          logout();
-        }
-      } catch (error) {
-        console.error("Session restoration failed:", error);
-
-        logout();
-      }
-    };
-
-    restoreSession();
-  }, [setAuth, logout]);
-
-  if (isLoading) return <GlobalSpinner/>
+  if (isLoading) {
+    return <GlobalSpinner />;
+  }
 
   return <>{children}</>;
 };

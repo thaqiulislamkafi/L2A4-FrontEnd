@@ -9,7 +9,6 @@ import { useAuthStore } from "@/store/auth.store";
 
 import OrderDetailsHeader from "./(components)/OrderDetailsHeader";
 import OrderSummaryCard from "./(components)/OrderSummaryCard";
-import CustomerInfoCard from "./(components)/CustomerInfoCard";
 import OrderItemsCard from "./(components)/OrderItemsCard";
 import OrderDetailsError from "./error";
 import OrderDetailsLoading from "./loading";
@@ -57,10 +56,6 @@ export default function UserOrderDetailsPage() {
         <div className="min-w-0 space-y-5">
           <OrderSummaryCard order={order} />
           <OrderItemsCard order={order} />
-        </div>
-
-        <div className="min-w-0 space-y-5">
-          <CustomerInfoCard order={order} />
         </div>
       </div>
     </div>

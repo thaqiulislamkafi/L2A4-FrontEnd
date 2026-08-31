@@ -141,3 +141,41 @@ export const verifyEmailOtp = async (
 
   return response.data;
 };
+
+export interface ChangeEmailPayload {
+  newEmail: string;
+}
+
+export interface VerifyChangedEmailPayload extends ChangeEmailPayload {
+  otp: string;
+}
+
+export interface ChangeEmailResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    success: boolean;
+  };
+}
+
+export const sendChangeEmailOtp = async (
+  payload: ChangeEmailPayload
+): Promise<ChangeEmailResponse> => {
+  const response = await axiosInstance.post<ChangeEmailResponse>(
+    "/auth/otp-change-email",
+    payload
+  );
+
+  return response.data;
+};
+
+export const verifyChangedEmail = async (
+  payload: VerifyChangedEmailPayload
+): Promise<ChangeEmailResponse> => {
+  const response = await axiosInstance.post<ChangeEmailResponse>(
+    "/auth/change-email",
+    payload
+  );
+
+  return response.data;
+};
