@@ -10,8 +10,8 @@ import { toast } from "@/components/ui/toast";
 
 import { logoutAllSessions } from "@/lib/api/auth";
 import ChangePasswordDialog from "./ChangePasswordDialog";
-import UpdateProfileDialog from "./UpdateProfileDialog";
 import { User } from "@/types/auth.type";
+import UpdateProfileDialog from "./UpdateProfileDialog";
 
 interface ProfileActionsProps {
   user: User;

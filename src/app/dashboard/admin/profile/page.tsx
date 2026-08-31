@@ -9,12 +9,12 @@ import { useAuthStore } from "@/store/auth.store";
 import ProfileLoading from "./loading";
 import ProfileError from "./error";
 
-import ProfileHeader from "./(components)/ProfileHeader";
-import ProfileActions from "./(components)/ProfileActions";
-import ProfileInformation from "./(components)/ProfileInformation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { getUser } from "@/lib/api/auth";
+import ProfileHeader from "@/components/shared/profile/ProfileHeader";
+import ProfileActions from "@/components/shared/profile/ProfileActions";
+import ProfileInformation from "@/components/shared/profile/ProfileInformation";
 
 export default function ProfilePage() {
   const user = useAuthStore((state) => state.user);
@@ -22,7 +22,7 @@ export default function ProfilePage() {
   const userId = user?.id;
 
   const profileQuery = useQuery({
-    queryKey: ["admin-profile", userId],
+    queryKey: ["profile", userId],
     queryFn: () => {
       if (!userId) {
         throw new Error("User ID not found");

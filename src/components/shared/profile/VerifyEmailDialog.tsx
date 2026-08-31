@@ -85,7 +85,7 @@ export default function VerifyEmailDialog({
                 return;
             }
             await queryClient.invalidateQueries({
-                queryKey: ["admin-profile"],
+                queryKey: ["profile"],
             });
 
             toast.add({
