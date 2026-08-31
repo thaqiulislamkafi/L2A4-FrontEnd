@@ -1,7 +1,8 @@
 "use client";
 
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { PackageSearch } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2, PackageSearch } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -74,6 +75,12 @@ const columns = [
 ];
 
 export default function OrdersTable({ orders, isFetching = false }: OrdersTableProps) {
+  const router = useRouter();
+
+  const handleRowClick = (order: Order) => {
+    router.push(`/dashboard/user/orders/${order.id}`);
+  };
+
   const table = useReactTable({
     data: orders,
     columns,
@@ -84,6 +91,7 @@ export default function OrdersTable({ orders, isFetching = false }: OrdersTableP
     <div className="relative w-full overflow-x-auto">
       {isFetching && (
         <div className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg border border-orange-200 bg-white px-3 py-2 text-xs font-medium text-orange-600 shadow-sm dark:border-orange-800 dark:bg-orange-950/90 dark:text-orange-300">
+          <Loader2 className="size-3.5 animate-spin" />
           Updating...
         </div>
       )}
@@ -104,7 +112,11 @@ export default function OrdersTable({ orders, isFetching = false }: OrdersTableP
         <TableBody>
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} className="border-orange-100 transition-colors hover:bg-orange-50/50 dark:border-orange-900/30 dark:hover:bg-orange-950/20">
+              <TableRow
+                key={row.id}
+                onClick={() => handleRowClick(row.original)}
+                className="cursor-pointer border-orange-100 transition-colors hover:bg-orange-50/50 dark:border-orange-900/30 dark:hover:bg-orange-950/20"
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="px-4 py-3">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
