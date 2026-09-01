@@ -55,7 +55,7 @@ export default function UserOrderItemsPage() {
   const meta = orderItemsQuery.data?.meta;
 
   return (
-    <div className="space-y-5 p-4 md:p-6 max-w-234">
+    <div className="space-y-5 p-4 md:p-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-orange-950 dark:text-orange-50">
           My Order Items
@@ -65,7 +65,7 @@ export default function UserOrderItemsPage() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-orange-200/70 bg-white shadow-sm shadow-orange-950/5 dark:border-orange-900/40 dark:bg-orange-950/20">
+      <div className="overflow-hidden rounded-xl border border-orange-200/70 bg-white shadow-sm shadow-orange-950/5 dark:border-orange-900/40 dark:bg-orange-950/20 grid grid-cols-1">
         <OrderItemsTableToolbar
           search={search}
           onSearchChange={handleSearchChange}
