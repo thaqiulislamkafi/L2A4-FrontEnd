@@ -19,9 +19,11 @@ import { userLoginByEmailAndPassword } from "@/lib/api/auth";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
+import ForgotPasswordDialog from "@/components/shared/auth/ForgotPasswordDialog";
 
 export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const router = useRouter();
 
   const setUser = useAuthStore((state) => state.setUser);
@@ -372,12 +374,13 @@ export default function SigninPage() {
                         Password
                       </FieldLabel>
 
-                      <Link
-                        href="/forgot-password"
+                      <button
+                        type="button"
+                        onClick={() => setForgotPasswordOpen(true)}
                         className="text-xs font-medium text-orange-600 transition-colors hover:text-orange-700 hover:underline dark:text-orange-400"
                       >
                         Forgot password?
-                      </Link>
+                      </button>
                     </div>
 
                     <FieldContent>
@@ -528,6 +531,10 @@ export default function SigninPage() {
           </motion.div>
         </section>
       </div>
+      <ForgotPasswordDialog
+        open={forgotPasswordOpen}
+        onOpenChange={setForgotPasswordOpen}
+      />
     </main>
   );
 }

@@ -54,9 +54,6 @@ export const userSignup = async (data: SignupData) => {
       email: data.email,
       password: data.password,
       role: data.role,
-      contact: data.contact ?? null,
-      age: data.age ?? null,
-      address: data.address ?? null,
       image: data.image ?? null,
     }
   );
@@ -174,6 +171,44 @@ export const verifyChangedEmail = async (
 ): Promise<ChangeEmailResponse> => {
   const response = await axiosInstance.post<ChangeEmailResponse>(
     "/auth/change-email",
+    payload
+  );
+
+  return response.data;
+};
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordByOtpPayload {
+  email: string;
+  otp: string;
+  newPassword: string;
+}
+
+export interface PasswordResetResponse {
+  success: boolean;
+  message: string;
+  data: boolean;
+}
+
+export const forgotPassword = async (
+  payload: ForgotPasswordPayload
+): Promise<PasswordResetResponse> => {
+  const response = await axiosInstance.post<PasswordResetResponse>(
+    "/auth/forgot-password",
+    payload
+  );
+
+  return response.data;
+};
+
+export const resetPasswordByOtp = async (
+  payload: ResetPasswordByOtpPayload
+): Promise<PasswordResetResponse> => {
+  const response = await axiosInstance.post<PasswordResetResponse>(
+    "/auth/resetpassword-by-otp",
     payload
   );
 

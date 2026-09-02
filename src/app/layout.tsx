@@ -36,11 +36,12 @@ export default function RootLayout({
           <AuthProvider>
             <ThemeProviders>
               {children}
-              <Toaster />
+
             </ThemeProviders>
           </AuthProvider>
 
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );
