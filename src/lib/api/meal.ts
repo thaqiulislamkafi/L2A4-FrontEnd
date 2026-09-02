@@ -90,6 +90,28 @@ export const deleteMeal = async (id: string) => {
   return data;
 };
 
+export interface CreateMealPayload {
+  name: string;
+  image: string;
+  description: string;
+  cuisine_type: string;
+  dietry_type: string;
+  category: string;
+  availabilty_status: string;
+  pricePerPiece: number;
+  totalPieces: number;
+  availablePieces: number;
+  isPublished: boolean;
+  isHeroContent: boolean;
+  isSliderContent: boolean;
+  provider_id: string;
+}
+
+export const createMeal = async (payload: CreateMealPayload) => {
+  const { data } = await axiosInstance.post("/meals", payload);
+  return data;
+};
+
 export interface UpdateMealPayload {
   name?: string;
   image?: string;
