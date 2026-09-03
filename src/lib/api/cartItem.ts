@@ -11,3 +11,8 @@ export const addCartItem = async (payload: AddCartItemPayload) => {
   const { data } = await axiosInstance.post("/cart-items", payload);
   return data;
 };
+
+export const deleteCartItem = async (id: string) => {
+  const { data } = await axiosInstance.delete(`/cart-items/${id}`);
+  return data;
+};

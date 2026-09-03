@@ -12,10 +12,20 @@ import { CartItemsTableColumns } from "./CartItemsTableColumns";
 interface CartItemsTableProps {
   cartItems: CartItem[];
   isFetching?: boolean;
+  onRemove: (id: string) => void;
+  removingId?: string;
 }
 
-export default function CartItemsTable({ cartItems, isFetching = false }: CartItemsTableProps) {
-  const columns = React.useMemo(() => CartItemsTableColumns(), []);
+export default function CartItemsTable({
+  cartItems,
+  isFetching = false,
+  onRemove,
+  removingId,
+}: CartItemsTableProps) {
+  const columns = React.useMemo(
+    () => CartItemsTableColumns({ onRemove, removingId }),
+    [onRemove, removingId]
+  );
   const table = useReactTable({ data: cartItems, columns, getCoreRowModel: getCoreRowModel() });
 
   return (

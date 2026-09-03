@@ -1,11 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { AlertCircle } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { getCartItemsByUserId } from "@/lib/api/cart";
+import { deleteCartItem } from "@/lib/api/cartItem";
 import { useAuthStore } from "@/store/auth.store";
+import { toast } from "@/components/ui/toast";
 
 import CartEmpty from "./(components)/CartEmpty";
 import CartHeader from "./(components)/CartHeader";
@@ -18,11 +18,31 @@ export default function CartPage() {
   const user = useAuthStore((state) => state.user);
 
   const userId = user?.id;
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey: ["cart-items", userId],
     queryFn: () => getCartItemsByUserId(userId as string),
     enabled: Boolean(userId),
+  });
+  const deleteMutation = useMutation({
+    mutationFn: deleteCartItem,
+    onSuccess: async () => {
+      toast.add({
+        title: "Cart Item Removed",
+        description: "The item has been removed from your cart.",
+        type: "success",
+      });
+      await queryClient.invalidateQueries({ queryKey: ["cart-items", userId] });
+    },
+    onError: (error: unknown) => {
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.add({
+        title: "Unable to Remove Cart Item",
+        description: message || "Please try again.",
+        type: "error",
+      });
+    },
   });
 
   if (isLoading) {
@@ -45,7 +65,12 @@ export default function CartPage() {
         ) : (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
             <div className="min-w-0 overflow-hidden rounded-2xl border border-orange-200/70 bg-white shadow-sm shadow-orange-950/5 dark:border-orange-900/40 dark:bg-orange-950/20">
-              <CartItemsTable cartItems={cartItems} isFetching={isFetching} />
+              <CartItemsTable
+                cartItems={cartItems}
+                isFetching={isFetching || deleteMutation.isPending}
+                onRemove={(id) => deleteMutation.mutate(id)}
+                removingId={deleteMutation.isPending ? deleteMutation.variables : undefined}
+              />
             </div>
 
             <CartSummary cartItems={cartItems} />

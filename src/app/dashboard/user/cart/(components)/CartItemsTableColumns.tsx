@@ -1,9 +1,19 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { Loader2, Trash2 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types/cart.type";
 
-export const CartItemsTableColumns = (): ColumnDef<CartItem>[] => [
+interface CartItemsTableColumnsProps {
+  onRemove: (id: string) => void;
+  removingId?: string;
+}
+
+export const CartItemsTableColumns = ({
+  onRemove,
+  removingId,
+}: CartItemsTableColumnsProps): ColumnDef<CartItem>[] => [
   {
     accessorKey: "id",
     header: "Cart Item",
@@ -57,5 +67,27 @@ export const CartItemsTableColumns = (): ColumnDef<CartItem>[] => [
         {format(new Date(row.original.createdAt), "dd MMM yyyy, hh:mm a")}
       </div>
     ),
+  },
+  {
+    id: "actions",
+    header: "Action",
+    cell: ({ row }) => {
+      const isRemoving = removingId === row.original.id;
+
+      return (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/40 dark:hover:text-red-300"
+          onClick={() => onRemove(row.original.id)}
+          disabled={Boolean(removingId)}
+          aria-label={`Remove cart item ${row.original.id}`}
+        >
+          {isRemoving ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+          Remove
+        </Button>
+      );
+    },
   },
 ];
