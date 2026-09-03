@@ -10,9 +10,10 @@ interface MealsTableToolbarProps {
   search: string;
   onSearchChange: (value: string) => void;
   onReset: () => void;
+  onAddMeal?: () => void;
 }
 
-export default function MealsTableToolbar({ search, onSearchChange, onReset }: MealsTableToolbarProps) {
+export default function MealsTableToolbar({ search, onSearchChange, onReset, onAddMeal }: MealsTableToolbarProps) {
   const hasSearch = search.trim().length > 0;
 
   return (
@@ -28,6 +29,11 @@ export default function MealsTableToolbar({ search, onSearchChange, onReset }: M
       </div>
 
       <div className="flex w-full items-center gap-2 sm:w-auto">
+        {onAddMeal && (
+          <Button type="button" onClick={onAddMeal} className="h-9 shrink-0 rounded-lg bg-orange-500 px-3 font-semibold text-white shadow-sm shadow-orange-500/20 hover:bg-orange-600">
+            Add Meal
+          </Button>
+        )}
         <div className="relative min-w-0 flex-1 sm:w-72">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-orange-500 dark:text-orange-400" />
 

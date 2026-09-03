@@ -79,7 +79,7 @@ const ImageUpdateDialog = ({ user, imageDialogOpen, onOpenChange }: ImageUpdateD
                 type: "success",
             });
             await queryClient.invalidateQueries({
-                queryKey: ["admin-profile"],
+                queryKey: ["profile"],
             });
         },
     });

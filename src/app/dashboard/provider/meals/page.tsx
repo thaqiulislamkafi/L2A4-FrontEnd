@@ -12,6 +12,7 @@ import { getProviderMeals, deleteMeal } from "@/lib/api/meal";
 import { Meal } from "@/types/meal.type";
 import MealDeleteDialog from "../../admin/meals/(components)/MealDeleteDialog";
 import UpdateMealDialog from "../../admin/meals/(components)/UpdateMealDialog";
+import AddMealDialog from "../../admin/meals/(components)/AddMealDialog";
 import { toast } from "@/components/ui/toast";
 import { useAuthStore } from "@/store/auth.store";
 
@@ -27,6 +28,7 @@ export default function ProviderMealsPage() {
   const [selectedMeal, setSelectedMeal] = React.useState<Meal | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+  const [addDialogOpen, setAddDialogOpen] = React.useState(false);
 
   const queryClient = useQueryClient();
 
@@ -122,6 +124,7 @@ export default function ProviderMealsPage() {
         search={search}
         onReset={handleReset}
         onSearchChange={handleSearch}
+        onAddMeal={() => setAddDialogOpen(true)}
       />
 
       <MealsTable
@@ -152,6 +155,12 @@ export default function ProviderMealsPage() {
         meal={selectedMeal}
         open={updateDialogOpen}
         onOpenChange={handleUpdateDialogChange}
+      />
+
+      <AddMealDialog
+        providerId={providerId}
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
       />
     </div>
   );

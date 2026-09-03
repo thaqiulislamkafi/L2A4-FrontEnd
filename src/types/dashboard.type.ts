@@ -120,3 +120,47 @@ export interface ProviderDashboardResponse {
   message: string;
   data: ProviderDashboardData;
 }
+
+export interface UserRecentOrder {
+  id: string;
+  user_id: string;
+  total_price: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserRecentReview {
+  id: string;
+  meal_id: string;
+  user_id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserRecentGlobalReview {
+  id: string;
+  user_id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserDashboardData {
+  totalOrders: number;
+  totalOrderItems: number;
+  totalReviews: number;
+  totalGlobalReviews: number;
+  recentOrders: UserRecentOrder[];
+  recentReviews: UserRecentReview[];
+  recentGlobalReviews: UserRecentGlobalReview[];
+}
+
+export interface UserDashboardResponse {
+  success: boolean;
+  message: string;
+  data: UserDashboardData;
+}

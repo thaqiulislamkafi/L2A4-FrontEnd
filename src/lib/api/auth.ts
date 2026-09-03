@@ -54,9 +54,6 @@ export const userSignup = async (data: SignupData) => {
       email: data.email,
       password: data.password,
       role: data.role,
-      contact: data.contact ?? null,
-      age: data.age ?? null,
-      address: data.address ?? null,
       image: data.image ?? null,
     }
   );
@@ -98,6 +95,122 @@ export const getUser = async (id: string): Promise<User> => {
 
 export const logoutAllSessions = async () => {
   const response = await axiosInstance.post("/auth/logout-all");
+
+  return response.data;
+};
+
+import { VerifyEmailOtpResponse } from "@/types/meal-review.type";
+
+export interface SendEmailOtpPayload {
+  email: string;
+}
+
+export interface SendEmailOtpResponse {
+  success: boolean;
+  message: string;
+  data: boolean;
+}
+
+export interface VerifyEmailOtpPayload {
+  email: string;
+  otp: string;
+}
+
+
+export const sendEmailOtp = async (
+  payload: SendEmailOtpPayload
+): Promise<SendEmailOtpResponse> => {
+  const response = await axiosInstance.post<SendEmailOtpResponse>(
+    "/auth/send-email-otp",
+    payload
+  );
+
+  return response.data;
+};
+
+export const verifyEmailOtp = async (
+  payload: VerifyEmailOtpPayload
+): Promise<VerifyEmailOtpResponse> => {
+  const response = await axiosInstance.post<VerifyEmailOtpResponse>(
+    "/auth/verify-otp-email",
+    payload
+  );
+
+  return response.data;
+};
+
+export interface ChangeEmailPayload {
+  newEmail: string;
+}
+
+export interface VerifyChangedEmailPayload extends ChangeEmailPayload {
+  otp: string;
+}
+
+export interface ChangeEmailResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    success: boolean;
+  };
+}
+
+export const sendChangeEmailOtp = async (
+  payload: ChangeEmailPayload
+): Promise<ChangeEmailResponse> => {
+  const response = await axiosInstance.post<ChangeEmailResponse>(
+    "/auth/otp-change-email",
+    payload
+  );
+
+  return response.data;
+};
+
+export const verifyChangedEmail = async (
+  payload: VerifyChangedEmailPayload
+): Promise<ChangeEmailResponse> => {
+  const response = await axiosInstance.post<ChangeEmailResponse>(
+    "/auth/change-email",
+    payload
+  );
+
+  return response.data;
+};
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordByOtpPayload {
+  email: string;
+  otp: string;
+  newPassword: string;
+}
+
+export interface PasswordResetResponse {
+  success: boolean;
+  message: string;
+  data: boolean;
+}
+
+export const forgotPassword = async (
+  payload: ForgotPasswordPayload
+): Promise<PasswordResetResponse> => {
+  const response = await axiosInstance.post<PasswordResetResponse>(
+    "/auth/forgot-password",
+    payload
+  );
+
+  return response.data;
+};
+
+export const resetPasswordByOtp = async (
+  payload: ResetPasswordByOtpPayload
+): Promise<PasswordResetResponse> => {
+  const response = await axiosInstance.post<PasswordResetResponse>(
+    "/auth/resetpassword-by-otp",
+    payload
+  );
 
   return response.data;
 };

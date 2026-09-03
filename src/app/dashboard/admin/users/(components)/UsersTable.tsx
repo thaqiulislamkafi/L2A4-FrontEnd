@@ -27,7 +27,7 @@ export default function UsersTable({ users, isFetching = false, onDelete,onEdit 
   });
 
   return (
-    <Card className=" border-orange-200/80 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 mx-auto">
+    <Card className="p-0 border-orange-200/80 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 overflow-x-auto! ">
       <CardContent className="p-0">
         <div className="relative w-full overflow-x-auto">
           <Table className="max-w-250 overflow-auto">

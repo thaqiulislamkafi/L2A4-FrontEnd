@@ -101,7 +101,8 @@ export default function AdminMealsPage() {
   if (isError) return <MealsError onRetry={() => refetch()} />;
 
   return (
-   <div className="min-w-0 max-w-234 space-y-6 overflow-x-hidden p-4 md:p-6">
+   <div className="space-y-6 overflow-hidden p-4 md:p-6 grid grid-cols-1">
+    
       <MealsTableToolbar
         search={search}
         onReset={handleReset}

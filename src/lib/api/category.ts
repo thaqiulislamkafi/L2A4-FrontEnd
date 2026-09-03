@@ -1,6 +1,6 @@
 import axiosInstance from "../axios";
 
-interface Category {
+export interface Category {
   id: string;
   category_name: string;
 }

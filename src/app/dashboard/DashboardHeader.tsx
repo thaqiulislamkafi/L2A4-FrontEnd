@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {Bell,ChevronRight,LogOut,Settings,UserCircle,} from "lucide-react";
 
 import { useAuthStore } from "@/store/auth.store";
@@ -18,6 +18,8 @@ import { Geist } from "next/font/google";
 import { pageMap } from "./_index";
 import { getProfileHref } from "@/utils/dashboard/getProfileHref";
 import { getRoleLabel } from "@/utils/dashboard/getRoleLabel";
+import { userLogout } from "@/lib/api/auth";
+import { toast } from "@/components/ui/toast";
 
 
 export interface PageInfo {
@@ -45,18 +47,38 @@ function getPageInfo(pathname: string): PageInfo {
 const geist = Geist({ subsets: ["latin"] });
 
 export default function DashboardHeader() {
+
   const pathname = usePathname();
-
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.clearUser);
-
+  const { user,clearUser } = useAuthStore();
   const pageInfo = getPageInfo(pathname);
 
   const profileHref = getProfileHref(user?.role);
 
-  const handleLogout = async () => {
-    await logout();
-  };
+    const router = useRouter();
+  
+    const handleLogout = async () => {
+  
+      try {
+        await userLogout();
+        router.push("/");
+        clearUser();
+  
+        toast.add({
+          title: "Signed out",
+          description: "You have been successfully signed out.",
+          type: "success",
+        });
+  
+      } catch (error) {
+        console.error("Sign out failed:", error);
+  
+        toast.add({
+          title: "Sign out failed",
+          description: "Unable to sign out. Please try again.",
+          type: "error",
+        });
+      }
+    };
 
   return (
     <header className={`${geist.className} sticky top-0 z-30 flex h-16.25 w-full shrink-0 items-center border-b border-orange-200/70 bg-orange-50/80 backdrop-blur-xl supports-backdrop-filter:bg-orange-50/60 dark:border-orange-900/40 dark:bg-orange-950/10 dark:supports-backdrop-filter:bg-orange-950/20
