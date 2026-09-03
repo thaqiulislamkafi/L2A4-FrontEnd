@@ -93,6 +93,11 @@ export const userNavItems: DashboardNavItem[] = [
     icon: LayoutDashboard,
   },
   {
+    title: "My Cart",
+    href: "/dashboard/user/cart",
+    icon: ShoppingCart,
+  },
+  {
     title: "My Orders",
     href: "/dashboard/user/orders",
     icon: ShoppingCart,

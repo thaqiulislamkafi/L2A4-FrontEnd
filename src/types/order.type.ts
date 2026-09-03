@@ -40,6 +40,13 @@ export interface UpdateOrderStatusPayload {
   status: OrderStatus;
 }
 
+export interface CreateOrderPayload {
+  user_id: string;
+  provider_id: string;
+  location: string;
+  contact: string;
+}
+
 export interface OrderMealCategory {
   id: string;
   category_name: string;
@@ -129,6 +136,7 @@ export interface GetOrderItemsParams {
   page?: number;
   limit?: number;
   search?: string;
+
 }
 
 export interface ProviderOrderItemsMeta {
@@ -136,6 +144,20 @@ export interface ProviderOrderItemsMeta {
   limit: number;
   total: number;
   totalPage: number;
+}
+
+export interface UserOrderItemsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface UserOrderItemsResponse {
+  success: boolean;
+  message: string;
+  data: OrderItem[];
+  meta: UserOrderItemsMeta;
 }
 
 export interface ProviderOrderItemsResponse {
@@ -148,6 +170,12 @@ export interface ProviderOrderItemsResponse {
 }
 
 export interface GetProviderOrderItemsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface GetUserOrderItemsParams {
   page?: number;
   limit?: number;
   search?: string;

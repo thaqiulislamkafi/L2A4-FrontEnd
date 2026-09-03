@@ -103,7 +103,7 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="space-y-6 p-4 md:p-6 max-w-234">
+    <div className="space-y-6 p-4 md:p-6 overflow-hidden grid grid-cols-1">
 
       <UsersTableToolbar
         search={search}

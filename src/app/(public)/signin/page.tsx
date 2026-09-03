@@ -19,9 +19,11 @@ import { userLoginByEmailAndPassword } from "@/lib/api/auth";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
+import ForgotPasswordDialog from "@/components/shared/auth/ForgotPasswordDialog";
 
 export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const router = useRouter();
 
   const setUser = useAuthStore((state) => state.setUser);
@@ -372,12 +374,13 @@ export default function SigninPage() {
                         Password
                       </FieldLabel>
 
-                      <Link
-                        href="/forgot-password"
+                      <button
+                        type="button"
+                        onClick={() => setForgotPasswordOpen(true)}
                         className="text-xs font-medium text-orange-600 transition-colors hover:text-orange-700 hover:underline dark:text-orange-400"
                       >
                         Forgot password?
-                      </Link>
+                      </button>
                     </div>
 
                     <FieldContent>
@@ -439,12 +442,12 @@ export default function SigninPage() {
                   <Button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="group h-11 w-full bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30"
+                    className="group h-11 w-full bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30 items-center justify-center"
                   >
                     {isSubmitting ? "Signing in..." : "Sign In"}
 
                     {!isSubmitting && (
-                      <ArrowRight className="ml-auto h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowRight className=" h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     )}
                   </Button>
                 )}
@@ -528,6 +531,10 @@ export default function SigninPage() {
           </motion.div>
         </section>
       </div>
+      <ForgotPasswordDialog
+        open={forgotPasswordOpen}
+        onOpenChange={setForgotPasswordOpen}
+      />
     </main>
   );
 }

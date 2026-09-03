@@ -28,7 +28,7 @@ export default function MealsTable({ meals, isFetching = false, onEdit, onDelete
   });
 
   return (
-    <Card className="relative border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 overflow-hidden">
+    <Card className="relative border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40 overflow-x-auto!">
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table className="overflow-auto">

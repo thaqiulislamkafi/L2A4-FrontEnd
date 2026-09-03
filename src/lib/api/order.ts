@@ -7,7 +7,14 @@ import {
   OrderItemsResponse,
   GetOrderItemsParams,
   ProviderOrderItemsResponse,
+  UserOrderItemsResponse,
+  CreateOrderPayload,
 } from "@/types/order.type";
+
+export const createOrder = async (payload: CreateOrderPayload) => {
+  const { data } = await axiosInstance.post("/orders", payload);
+  return data;
+};
 
 export const getOrders = async ({
   page = 1,
@@ -25,6 +32,39 @@ export const getOrders = async ({
   return data;
 };
 
+export const getUserOrders = async (
+  userId: string,
+  { page = 1, limit = 3, search = "" }: GetOrdersParams = {}
+) => {
+  const { data } = await axiosInstance.get<OrdersResponse>(`/orders/user/${userId}`, {
+    params: {
+      page,
+      limit,
+      ...(search.trim() ? { search: search.trim() } : {}),
+    },
+  });
+
+  return data;
+};
+
+export const getProviderOrders = async (
+  providerId: string,
+  { page = 1, limit = 10, search = "" }: GetOrdersParams = {}
+) => {
+  const { data } = await axiosInstance.get<OrdersResponse>(
+    `/orders/provider/${providerId}`,
+    {
+      params: {
+        page,
+        limit,
+        ...(search.trim() ? { search: search.trim() } : {}),
+      },
+    }
+  );
+
+  return data;
+};
+
 export const getOrderItems = async ({
   page = 1,
   limit = 3,
@@ -37,6 +77,24 @@ export const getOrderItems = async ({
       ...(search.trim() ? { search: search.trim() } : {}),
     },
   });
+
+  return data;
+};
+
+export const getUserOrderItems = async (
+  userId: string,
+  { page = 1, limit = 3, search = "" }: GetOrderItemsParams = {}
+) => {
+  const { data } = await axiosInstance.get<UserOrderItemsResponse>(
+    `/order-items/user/${userId}`,
+    {
+      params: {
+        page,
+        limit,
+        ...(search.trim() ? { search: search.trim() } : {}),
+      },
+    }
+  );
 
   return data;
 };

@@ -56,7 +56,7 @@ export default function UpdateProfileDialog({ user, open, onOpenChange }: Update
         description: response.message || "Your profile information has been updated successfully.",
         type: "success",
       });
-      await queryClient.invalidateQueries({ queryKey: ["admin-profile"] });
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error: unknown) => {
       const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
