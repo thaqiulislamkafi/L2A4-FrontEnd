@@ -47,6 +47,24 @@ export const getUserOrders = async (
   return data;
 };
 
+export const getProviderOrders = async (
+  providerId: string,
+  { page = 1, limit = 10, search = "" }: GetOrdersParams = {}
+) => {
+  const { data } = await axiosInstance.get<OrdersResponse>(
+    `/orders/provider/${providerId}`,
+    {
+      params: {
+        page,
+        limit,
+        ...(search.trim() ? { search: search.trim() } : {}),
+      },
+    }
+  );
+
+  return data;
+};
+
 export const getOrderItems = async ({
   page = 1,
   limit = 3,

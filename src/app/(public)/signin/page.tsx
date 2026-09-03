@@ -442,12 +442,12 @@ export default function SigninPage() {
                   <Button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="group h-11 w-full bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30"
+                    className="group h-11 w-full bg-orange-600 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30 items-center justify-center"
                   >
                     {isSubmitting ? "Signing in..." : "Sign In"}
 
                     {!isSubmitting && (
-                      <ArrowRight className="ml-auto h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowRight className=" h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     )}
                   </Button>
                 )}

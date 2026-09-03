@@ -1,10 +1,25 @@
 "use client";
 
-import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import * as React from "react";
+import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Loader2, PackageSearch } from "lucide-react";
+import { Ban, Loader2, PackageSearch } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/toast";
+import { updateOrderStatus } from "@/lib/api/order";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Order } from "@/types/order.type";
 
@@ -35,7 +50,7 @@ function formatId(id: string) {
   return id.length <= 12 ? id : `${id.slice(0, 8)}...${id.slice(-4)}`;
 }
 
-const columns = [
+const baseColumns: ColumnDef<Order>[] = [
   {
     accessorKey: "id",
     header: "Order",
@@ -76,10 +91,66 @@ const columns = [
 
 export default function OrdersTable({ orders, isFetching = false }: OrdersTableProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [orderToCancel, setOrderToCancel] = React.useState<Order | null>(null);
+
+  const cancelMutation = useMutation({
+    mutationFn: (order: Order) => updateOrderStatus(order.id, { status: "CANCELLED" }),
+    onSuccess: async () => {
+      setOrderToCancel(null);
+      toast.add({
+        title: "Order Cancelled",
+        description: "Your order has been cancelled successfully.",
+        type: "success",
+      });
+      await queryClient.invalidateQueries({ queryKey: ["user-orders"] });
+    },
+    onError: (error: unknown) => {
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.add({
+        title: "Cancellation Failed",
+        description: message || "Unable to cancel the order. Please try again.",
+        type: "error",
+      });
+    },
+  });
 
   const handleRowClick = (order: Order) => {
     router.push(`/dashboard/user/orders/${order.id}`);
   };
+
+  const columns = React.useMemo<ColumnDef<Order>[]>(
+    () => [
+      ...baseColumns,
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const isCancelled = row.original.status === "CANCELLED";
+
+          return (
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              disabled={isCancelled}
+              onClick={(event) => {
+                event.stopPropagation();
+                setOrderToCancel(row.original);
+              }}
+              className="rounded-lg"
+              aria-label={`Cancel order ${row.original.id}`}
+            >
+              <Ban className="size-3.5" />
+              {isCancelled ? "Cancelled" : "Cancel"}
+            </Button>
+          );
+        },
+        enableSorting: false,
+      },
+    ],
+    []
+  );
 
   const table = useReactTable({
     data: orders,
@@ -88,7 +159,8 @@ export default function OrdersTable({ orders, isFetching = false }: OrdersTableP
   });
 
   return (
-    <div className="relative w-full overflow-x-auto">
+    <>
+      <div className="relative w-full overflow-x-auto">
       {isFetching && (
         <div className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg border border-orange-200 bg-white px-3 py-2 text-xs font-medium text-orange-600 shadow-sm dark:border-orange-800 dark:bg-orange-950/90 dark:text-orange-300">
           <Loader2 className="size-3.5 animate-spin" />
@@ -145,6 +217,41 @@ export default function OrdersTable({ orders, isFetching = false }: OrdersTableP
           )}
         </TableBody>
       </Table>
-    </div>
+      </div>
+
+      <AlertDialog
+        open={!!orderToCancel}
+        onOpenChange={(open) => {
+          if (!open && !cancelMutation.isPending) {
+            setOrderToCancel(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel this order?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will cancel order{" "}
+              <span className="font-mono font-semibold">{orderToCancel?.id}</span>. You
+              will not be able to undo it.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={cancelMutation.isPending}>Keep Order</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={cancelMutation.isPending}
+              onClick={() => {
+                if (orderToCancel) {
+                  cancelMutation.mutate(orderToCancel);
+                }
+              }}
+            >
+              {cancelMutation.isPending ? "Cancelling..." : "Yes, Cancel Order"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

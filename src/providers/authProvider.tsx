@@ -17,7 +17,10 @@ const AuthProvider = ({ children }: Props) => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["profile"],
-    queryFn: getMe
+    queryFn: getMe,
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
   });
 
   useEffect(() => {
