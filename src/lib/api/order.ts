@@ -8,7 +8,13 @@ import {
   GetOrderItemsParams,
   ProviderOrderItemsResponse,
   UserOrderItemsResponse,
+  CreateOrderPayload,
 } from "@/types/order.type";
+
+export const createOrder = async (payload: CreateOrderPayload) => {
+  const { data } = await axiosInstance.post("/orders", payload);
+  return data;
+};
 
 export const getOrders = async ({
   page = 1,

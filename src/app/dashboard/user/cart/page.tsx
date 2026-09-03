@@ -1,9 +1,11 @@
 "use client";
 
+import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getCartItemsByUserId } from "@/lib/api/cart";
 import { deleteCartItem } from "@/lib/api/cartItem";
+import { createOrder } from "@/lib/api/order";
 import { useAuthStore } from "@/store/auth.store";
 import { toast } from "@/components/ui/toast";
 
@@ -11,6 +13,7 @@ import CartEmpty from "./(components)/CartEmpty";
 import CartHeader from "./(components)/CartHeader";
 import CartItemsTable from "./(components)/CartItemsTable";
 import CartSummary from "./(components)/CartSummary";
+import CheckoutDialog from "./(components)/CheckoutDialog";
 import CartLoading from "./loading";
 import CartError from "./error";
 
@@ -19,6 +22,7 @@ export default function CartPage() {
 
   const userId = user?.id;
   const queryClient = useQueryClient();
+  const [checkoutOpen, setCheckoutOpen] = React.useState(false);
 
   const { data, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey: ["cart-items", userId],
@@ -44,6 +48,18 @@ export default function CartPage() {
       });
     },
   });
+  const orderMutation = useMutation({
+    mutationFn: createOrder,
+    onSuccess: async (response) => {
+      setCheckoutOpen(false);
+      toast.add({ title: "Order Placed Successfully", description: response.message || "Your order has been placed.", type: "success" });
+      await queryClient.invalidateQueries({ queryKey: ["cart-items", userId] });
+    },
+    onError: (error: unknown) => {
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.add({ title: "Order Placement Failed", description: message || "Unable to place your order right now.", type: "error" });
+    },
+  });
 
   if (isLoading) {
     return <CartLoading/>;
@@ -54,6 +70,7 @@ export default function CartPage() {
   }
 
   const cartItems = data.data ?? [];
+  console.log(cartItems)
 
   return (
     <main className="min-h-full px-4 py-6 sm:px-6 lg:px-8">
@@ -73,9 +90,25 @@ export default function CartPage() {
               />
             </div>
 
-            <CartSummary cartItems={cartItems} />
+            <CartSummary cartItems={cartItems} onProceedToCheckout={() => setCheckoutOpen(true)} />
           </div>
         )}
+        <CheckoutDialog
+          cartItems={cartItems}
+          totalAmount={cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}
+          open={checkoutOpen}
+          isSubmitting={orderMutation.isPending}
+          onOpenChange={setCheckoutOpen}
+          onConfirm={({ location, contact }) => {
+            if (!userId) return;
+            const providerId = cartItems[0]?.meal?.provider_id;
+            if (!providerId) {
+              toast.add({ title: "Provider information unavailable", description: "We cannot place this order until the cart provider is available.", type: "error" });
+              return;
+            }
+            orderMutation.mutate({ user_id: userId, provider_id: providerId, location, contact });
+          }}
+        />
       </div>
     </main>
   );

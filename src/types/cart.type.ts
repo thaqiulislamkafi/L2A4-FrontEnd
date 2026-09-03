@@ -1,3 +1,5 @@
+import { Meal } from "./meal.type";
+
 export interface CartItem {
   id: string;
   cart_id: string;
@@ -7,6 +9,7 @@ export interface CartItem {
   price: number;
   createdAt: string;
   updatedAt: string;
+  meal : Meal
 }
 
 export interface CartItemsResponse {

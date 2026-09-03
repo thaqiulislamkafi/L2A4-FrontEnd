@@ -9,9 +9,10 @@ import { CartItem } from "@/types/cart.type";
 
 interface CartSummaryProps {
   cartItems: CartItem[];
+  onProceedToCheckout: () => void;
 }
 
-export default function CartSummary({ cartItems }: CartSummaryProps) {
+export default function CartSummary({ cartItems, onProceedToCheckout }: CartSummaryProps) {
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -49,7 +50,7 @@ export default function CartSummary({ cartItems }: CartSummaryProps) {
             </div>
           </div>
 
-          <Button type="button" className="w-full rounded-xl bg-orange-500 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-600">
+          <Button type="button" onClick={onProceedToCheckout} className="w-full rounded-xl bg-orange-500 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-600">
             Proceed to Checkout
             <ArrowRight className="size-4" />
           </Button>

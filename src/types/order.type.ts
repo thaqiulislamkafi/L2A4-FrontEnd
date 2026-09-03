@@ -40,6 +40,13 @@ export interface UpdateOrderStatusPayload {
   status: OrderStatus;
 }
 
+export interface CreateOrderPayload {
+  user_id: string;
+  provider_id: string;
+  location: string;
+  contact: string;
+}
+
 export interface OrderMealCategory {
   id: string;
   category_name: string;
