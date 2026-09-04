@@ -11,7 +11,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
 import {
@@ -37,7 +37,7 @@ const ExploreMeals = () => {
   const limit = 9;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["explore-meals", currentPage,search],
+    queryKey: ["explore-meals", currentPage, search],
     queryFn: () =>
       getPublishedMeals({
         page: currentPage,
@@ -157,14 +157,10 @@ const ExploreMeals = () => {
           {/* Badge */}
 
           <div className="mb-6 flex justify-center">
-            <Badge
-              variant="outline"
-              className="gap-2 rounded-full border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary shadow-sm backdrop-blur-sm"
-            >
+            <HeaderBadge>
               <UtensilsCrossed className="size-4" />
-
               Explore Meals
-            </Badge>
+            </HeaderBadge>
           </div>
 
           {/* Heading */}
@@ -197,7 +193,7 @@ const ExploreMeals = () => {
         {/* --------------------------------
             Meal Grid
         -------------------------------- */}
-        {isLoading && <PrimaryMealSpinner/>}
+        {isLoading && <PrimaryMealSpinner />}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
@@ -251,8 +247,8 @@ const ExploreMeals = () => {
                       }
                     }}
                     className={`gap-1 rounded-xl border ${currentPage === 1
-                        ? "pointer-events-none opacity-40"
-                        : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
+                      ? "pointer-events-none opacity-40"
+                      : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
                       }`}
                   >
                     <ChevronLeft className="size-4" />
@@ -304,8 +300,8 @@ const ExploreMeals = () => {
                       }
                     }}
                     className={`gap-1 rounded-xl border ${currentPage === totalPages
-                        ? "pointer-events-none opacity-40"
-                        : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
+                      ? "pointer-events-none opacity-40"
+                      : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
                       }`}
                   >
                     <span className="hidden sm:block">
