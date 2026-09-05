@@ -6,11 +6,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Separator } from "@/components/ui/separator";
 import { getAppSettings, updateAppSetting } from "@/lib/api/app-settings";
+import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/lib/api/category";
 import { AppSetting } from "@/types/app-settings";
 import AppSettingLoading from "./loading";
 import AppSettingsError from "./error";
 import HomePageManagement, { HomePageSetting } from "./(components)/HomePageManagement";
 import ContactInformation, { ContactSetting } from "./(components)/ContactInformation";
+import CategoryManagement from "./(components)/CategoryManagement";
 
 const contactSettingMetadata: Record<string, Pick<ContactSetting, "label" | "placeholder" | "icon">> = {
     "contact.Address": {
@@ -37,6 +39,10 @@ const AppSettingsPage = () => {
         queryKey: ["app-settings"],
         queryFn: getAppSettings,
     });
+    const categoriesQuery = useQuery({
+        queryKey: ["categories"],
+        queryFn: getCategories,
+    });
     const [contactValues, setContactValues] = React.useState<Record<string, string>>({});
 
     const updateMutation = useMutation({
@@ -46,6 +52,19 @@ const AppSettingsPage = () => {
                 queryKey: ["app-settings"],
             });
         },
+    });
+    const categoryCreateMutation = useMutation({
+        mutationFn: createCategory,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    });
+    const categoryUpdateMutation = useMutation({
+        mutationFn: ({ id, categoryName }: { id: string; categoryName: string }) =>
+            updateCategory(id, categoryName),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    });
+    const categoryDeleteMutation = useMutation({
+        mutationFn: deleteCategory,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
     });
 
     const homePageSettings = React.useMemo(() => {
@@ -99,6 +118,18 @@ const AppSettingsPage = () => {
         });
     };
 
+    const handleAddCategory = async (categoryName: string) => {
+        await categoryCreateMutation.mutateAsync(categoryName);
+    };
+
+    const handleEditCategory = async (category: Category, categoryName: string) => {
+        await categoryUpdateMutation.mutateAsync({ id: category.id, categoryName });
+    };
+
+    const handleDeleteCategory = async (category: Category) => {
+        await categoryDeleteMutation.mutateAsync(category.id);
+    };
+
     if (isLoading) return <AppSettingLoading />;
 
     if (isError) return <AppSettingsError onRetry={refetch} />;
@@ -137,6 +168,20 @@ const AppSettingsPage = () => {
                 }
                 onChange={handleContactChange}
                 onSave={handleContactSave}
+            />
+
+            <CategoryManagement
+                categories={categoriesQuery.data?.data ?? []}
+                isSaving={categoryCreateMutation.isPending || categoryUpdateMutation.isPending}
+                isDeleting={categoryDeleteMutation.isPending}
+                hasError={
+                    categoryCreateMutation.isError ||
+                    categoryUpdateMutation.isError ||
+                    categoryDeleteMutation.isError
+                }
+                onAdd={handleAddCategory}
+                onEdit={handleEditCategory}
+                onDelete={handleDeleteCategory}
             />
         </div>
     );
