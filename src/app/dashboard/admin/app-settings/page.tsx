@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { getAppSettings, updateAppSetting } from "@/lib/api/app-settings";
 import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/lib/api/category";
 import { createDietryType, deleteDietryType, DietryType, getDietryTypes, updateDietryType } from "@/lib/api/dietry";
+import { createCuisineType, CuisineType, deleteCuisineType, getCuisineTypes, updateCuisineType } from "@/lib/api/cuisine";
 import { AppSetting } from "@/types/app-settings";
 import AppSettingLoading from "./loading";
 import AppSettingsError from "./error";
@@ -15,6 +16,7 @@ import HomePageManagement, { HomePageSetting } from "./(components)/HomePageMana
 import ContactInformation, { ContactSetting } from "./(components)/ContactInformation";
 import CategoryManagement from "./(components)/CategoryManagement";
 import DietryTypeManagement from "./(components)/DietryTypeManagement";
+import CuisineTypeManagement from "./(components)/CuisineTypeManagement";
 
 const contactSettingMetadata: Record<string, Pick<ContactSetting, "label" | "placeholder" | "icon">> = {
     "contact.Address": {
@@ -48,6 +50,10 @@ const AppSettingsPage = () => {
     const dietryTypesQuery = useQuery({
         queryKey: ["dietry-types"],
         queryFn: getDietryTypes,
+    });
+    const cuisineTypesQuery = useQuery({
+        queryKey: ["cuisine-types"],
+        queryFn: getCuisineTypes,
     });
     const [contactValues, setContactValues] = React.useState<Record<string, string>>({});
 
@@ -83,6 +89,18 @@ const AppSettingsPage = () => {
     const dietryDeleteMutation = useMutation({
         mutationFn: deleteDietryType,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dietry-types"] }),
+    });
+    const cuisineCreateMutation = useMutation({
+        mutationFn: createCuisineType,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cuisine-types"] }),
+    });
+    const cuisineUpdateMutation = useMutation({
+        mutationFn: ({ id, name }: { id: string; name: string }) => updateCuisineType(id, name),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cuisine-types"] }),
+    });
+    const cuisineDeleteMutation = useMutation({
+        mutationFn: deleteCuisineType,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cuisine-types"] }),
     });
 
     const homePageSettings = React.useMemo(() => {
@@ -160,6 +178,18 @@ const AppSettingsPage = () => {
         await dietryDeleteMutation.mutateAsync(type.id);
     };
 
+    const handleAddCuisineType = async (name: string) => {
+        await cuisineCreateMutation.mutateAsync(name);
+    };
+
+    const handleEditCuisineType = async (type: CuisineType, name: string) => {
+        await cuisineUpdateMutation.mutateAsync({ id: type.id, name });
+    };
+
+    const handleDeleteCuisineType = async (type: CuisineType) => {
+        await cuisineDeleteMutation.mutateAsync(type.id);
+    };
+
     if (isLoading) return <AppSettingLoading />;
 
     if (isError) return <AppSettingsError onRetry={refetch} />;
@@ -226,6 +256,20 @@ const AppSettingsPage = () => {
                 onAdd={handleAddDietryType}
                 onEdit={handleEditDietryType}
                 onDelete={handleDeleteDietryType}
+            />
+
+            <CuisineTypeManagement
+                cuisineTypes={cuisineTypesQuery.data?.data ?? []}
+                isSaving={cuisineCreateMutation.isPending || cuisineUpdateMutation.isPending}
+                isDeleting={cuisineDeleteMutation.isPending}
+                hasError={
+                    cuisineCreateMutation.isError ||
+                    cuisineUpdateMutation.isError ||
+                    cuisineDeleteMutation.isError
+                }
+                onAdd={handleAddCuisineType}
+                onEdit={handleEditCuisineType}
+                onDelete={handleDeleteCuisineType}
             />
         </div>
     );
