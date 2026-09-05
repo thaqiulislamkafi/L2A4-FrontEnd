@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { motion } from "framer-motion";
 import {
   MessageSquareQuote,
@@ -9,7 +10,10 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
+import { useAuthStore } from "@/store/auth.store";
 import { MealReviewCard } from "./MealReviewCard";
+import AddMealReview from "./AddMealReview";
 
 interface MealReview {
   id: string;
@@ -27,13 +31,30 @@ interface MealAnalytics {
 }
 
 interface MealReviewsProps {
+  mealId: string;
   reviews: MealReview[];
   analytics?: MealAnalytics;
 }
 
 const MealReviews = ({
+  mealId,
   reviews,
 }: MealReviewsProps) => {
+  const user = useAuthStore((state) => state.user);
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = React.useState(false);
+
+  const handleAddReview = () => {
+    if (!user) {
+      toast.add({
+        title: "Sign in required",
+        description: "Please sign in to add a review.",
+        type: "warning",
+      });
+      return;
+    }
+
+    setIsReviewDialogOpen(true);
+  };
 
   return (
     <section className="relative overflow-hidden py-20 max-w-6xl mx-auto">
@@ -96,6 +117,17 @@ const MealReviews = ({
           </p>
         </motion.div>
 
+        <div className="mt-8 flex justify-center">
+          <Button
+            type="button"
+            onClick={handleAddReview}
+            className="rounded-xl bg-orange-600 px-5 text-white hover:bg-orange-700"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Add Review
+          </Button>
+        </div>
+
         {/* ================= REVIEWS ================= */}
 
         {reviews.length > 0 ? (
@@ -143,6 +175,15 @@ const MealReviews = ({
           </motion.div>
         )}
       </div>
+
+      {user && (
+        <AddMealReview
+          mealId={mealId}
+          userId={user.id}
+          open={isReviewDialogOpen}
+          onOpenChange={setIsReviewDialogOpen}
+        />
+      )}
     </section>
   );
 };
