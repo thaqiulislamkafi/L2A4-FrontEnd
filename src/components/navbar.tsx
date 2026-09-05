@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, LogOut, Menu } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, ShoppingCart } from "lucide-react";
 import { Geist } from "next/font/google";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
 import { userLogout } from "@/lib/api/auth";
 import { toast } from "./ui/toast";
+import { useState } from "react";
+import ShowCart from "./ShowCart";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -43,8 +45,9 @@ const navItems = [
 
 export default function Navbar() {
 
-  const { user,clearUser } = useAuthStore();
+  const { user, clearUser } = useAuthStore();
   const router = useRouter();
+  const [cartOpen, setCartOpen] = useState(false);
 
   const handleSignOut = async () => {
 
@@ -70,12 +73,12 @@ export default function Navbar() {
       });
     }
   };
-  
+
   return (
     <header
       className={`${geist.className} sticky top-0 z-50 border-b border-orange-100 bg-orange-50/90 backdrop-blur-md`}
     >
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="max-w-6xl mx-auto flex h-16 items-center justify-between px-4">
 
         {/* =======================
                     LOGO
@@ -102,7 +105,7 @@ export default function Navbar() {
                     render={
                       <Link href={item.href} />
                     }
-                    className="text-sm rounded-md px-4 py-2 font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:text-orange-600 focus:bg-orange-100 focus:text-orange-600
+                    className="text-sm rounded-md px-4  py-2 font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:text-orange-600 focus:bg-orange-100 focus:text-orange-600
                     "
                   >
                     {item.label}
@@ -118,49 +121,58 @@ export default function Navbar() {
                         DESKTOP ACTIONS
         ==============================================*/}
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
 
-          {(user) ? (
+          {/* ======================= CART ======================= */}
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => setCartOpen(true)}
+            className="group relative size-10 rounded-xl text-orange-600 transition-all duration-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:text-orange-400 dark:hover:bg-orange-950/50 dark:hover:text-orange-300"
+            aria-label="Open shopping cart"
+          >
+            <ShoppingCart className="size-5 transition-transform duration-300 group-hover:scale-110" />
+
+            {/* Cart Count */}
+
+            <span className="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full border-2 border-orange-50 bg-orange-600 text-[10px] font-bold leading-none text-white shadow-sm dark:border-orange-950">
+              0
+            </span>
+          </Button>
+
+          {/* ======================= AUTH ACTIONS ======================= */}
+
+          {user ? (
             <>
               <Link href="/dashboard">
-                <Button
-                  variant="outline"
-                  className="gap-2 px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-
+                <Button variant="outline" className="gap-2 rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300">
+                  <LayoutDashboard className="size-4" />
                   Dashboard
                 </Button>
               </Link>
 
-              <Button
-                onClick={handleSignOut}
-                className="gap-2 border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700"
-              >
-                <LogOut className="h-4 w-4" />
-
+              <Button onClick={handleSignOut} className="gap-2 rounded-xl border border-orange-600 bg-orange-600 px-5 text-base font-medium text-white shadow-sm shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md hover:shadow-orange-600/30">
+                <LogOut className="size-4" />
                 Sign Out
               </Button>
             </>
           ) : (
             <>
               <Link href="/signin">
-                <Button
-                  variant="outline"
-                  className="px-5 text-base font-medium text-orange-600 hover:bg-orange-100 hover:text-orange-700"
-                >
+                <Button variant="outline" className="rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300">
                   Sign In
                 </Button>
               </Link>
 
               <Link href="/signup">
-                <Button className="border border-orange-600 bg-orange-600 px-5 text-base text-white hover:bg-orange-700">
+                <Button className="rounded-xl border border-orange-600 bg-orange-600 px-5 text-base font-medium text-white shadow-sm shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md hover:shadow-orange-600/30">
                   Sign Up
                 </Button>
               </Link>
             </>
           )}
-
         </div>
 
         {/* =========================================
@@ -292,7 +304,10 @@ export default function Navbar() {
             </SheetContent>
           </Sheet>
         </div>
-
+        <ShowCart
+          open={cartOpen}
+          onOpenChange={setCartOpen}
+        />
       </div>
     </header>
   );

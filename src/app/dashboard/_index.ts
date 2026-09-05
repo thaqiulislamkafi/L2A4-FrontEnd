@@ -41,7 +41,7 @@ export const adminNavItems: DashboardNavItem[] = [
   },
   {
     title: "App Settings",
-    href: "/dashboard/admin/settings",
+    href: "/dashboard/admin/app-settings",
     icon: Settings,
   },
   {
@@ -158,7 +158,7 @@ export const pageMap: Record<string, PageInfo> = {
     description: "View all items included in customer orders.",
   },
 
-  "/dashboard/admin/settings": {
+  "/dashboard/admin/app-settings": {
     title: "App Settings",
     description: "Manage application settings.",
   },

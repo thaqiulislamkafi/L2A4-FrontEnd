@@ -158,7 +158,7 @@ export default function AboutCTA() {
                 size="lg"
                 className="group h-12 rounded-xl bg-white px-7 font-semibold text-orange-600 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:bg-orange-50 hover:shadow-2xl"
               >
-                <Link href="/explore-meals">
+                <Link href="/explore-meals" className="flex items-center">
                   <UtensilsCrossed className="mr-2 h-5 w-5" />
 
                   Explore Meals
@@ -173,7 +173,7 @@ export default function AboutCTA() {
                 variant="outline"
                 className="h-12 rounded-xl border-white/40 bg-white/5 px-7 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white/15 hover:text-white"
               >
-                <Link href="/signup">
+                <Link href="/signup" className="flex items-center">
                   <Heart className="mr-2 h-5 w-5" />
 
                   Get Started
