@@ -7,12 +7,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
 import { getAppSettings, updateAppSetting } from "@/lib/api/app-settings";
 import { Category, createCategory, deleteCategory, getCategories, updateCategory } from "@/lib/api/category";
+import { createDietryType, deleteDietryType, DietryType, getDietryTypes, updateDietryType } from "@/lib/api/dietry";
 import { AppSetting } from "@/types/app-settings";
 import AppSettingLoading from "./loading";
 import AppSettingsError from "./error";
 import HomePageManagement, { HomePageSetting } from "./(components)/HomePageManagement";
 import ContactInformation, { ContactSetting } from "./(components)/ContactInformation";
 import CategoryManagement from "./(components)/CategoryManagement";
+import DietryTypeManagement from "./(components)/DietryTypeManagement";
 
 const contactSettingMetadata: Record<string, Pick<ContactSetting, "label" | "placeholder" | "icon">> = {
     "contact.Address": {
@@ -43,6 +45,10 @@ const AppSettingsPage = () => {
         queryKey: ["categories"],
         queryFn: getCategories,
     });
+    const dietryTypesQuery = useQuery({
+        queryKey: ["dietry-types"],
+        queryFn: getDietryTypes,
+    });
     const [contactValues, setContactValues] = React.useState<Record<string, string>>({});
 
     const updateMutation = useMutation({
@@ -65,6 +71,18 @@ const AppSettingsPage = () => {
     const categoryDeleteMutation = useMutation({
         mutationFn: deleteCategory,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
+    });
+    const dietryCreateMutation = useMutation({
+        mutationFn: createDietryType,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dietry-types"] }),
+    });
+    const dietryUpdateMutation = useMutation({
+        mutationFn: ({ id, name }: { id: string; name: string }) => updateDietryType(id, name),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dietry-types"] }),
+    });
+    const dietryDeleteMutation = useMutation({
+        mutationFn: deleteDietryType,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dietry-types"] }),
     });
 
     const homePageSettings = React.useMemo(() => {
@@ -130,6 +148,18 @@ const AppSettingsPage = () => {
         await categoryDeleteMutation.mutateAsync(category.id);
     };
 
+    const handleAddDietryType = async (name: string) => {
+        await dietryCreateMutation.mutateAsync(name);
+    };
+
+    const handleEditDietryType = async (type: DietryType, name: string) => {
+        await dietryUpdateMutation.mutateAsync({ id: type.id, name });
+    };
+
+    const handleDeleteDietryType = async (type: DietryType) => {
+        await dietryDeleteMutation.mutateAsync(type.id);
+    };
+
     if (isLoading) return <AppSettingLoading />;
 
     if (isError) return <AppSettingsError onRetry={refetch} />;
@@ -182,6 +212,20 @@ const AppSettingsPage = () => {
                 onAdd={handleAddCategory}
                 onEdit={handleEditCategory}
                 onDelete={handleDeleteCategory}
+            />
+
+            <DietryTypeManagement
+                dietryTypes={dietryTypesQuery.data?.data ?? []}
+                isSaving={dietryCreateMutation.isPending || dietryUpdateMutation.isPending}
+                isDeleting={dietryDeleteMutation.isPending}
+                hasError={
+                    dietryCreateMutation.isError ||
+                    dietryUpdateMutation.isError ||
+                    dietryDeleteMutation.isError
+                }
+                onAdd={handleAddDietryType}
+                onEdit={handleEditDietryType}
+                onDelete={handleDeleteDietryType}
             />
         </div>
     );
