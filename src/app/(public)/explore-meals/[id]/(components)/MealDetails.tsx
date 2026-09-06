@@ -59,10 +59,21 @@ const MealDetails = ({ meal }: MealDetailsProps) => {
   });
 
   const handleAddToCart = () => {
+
     if (!user) {
       toast.add({
         title: "Please sign in",
         description: "You need to sign in before adding meals to your cart.",
+        type: "error",
+      });
+
+      return;
+    }
+
+    if (user.role !== 'user') {
+      toast.add({
+        title: "Not permit to add cart",
+        description: "Only user account can add cart items.",
         type: "error",
       });
 

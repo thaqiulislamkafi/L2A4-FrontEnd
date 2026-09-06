@@ -43,7 +43,10 @@ const MealReviews = ({
   const user = useAuthStore((state) => state.user);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = React.useState(false);
 
-  const handleAddReview = () => {
+  const handleAddReview = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (!user) {
       toast.add({
         title: "Sign in required",
@@ -53,9 +56,17 @@ const MealReviews = ({
       return;
     }
 
+    if (user.role !== "user") {
+      toast.add({
+        title: "Not permitted to review this meal",
+        description: "Only user accounts can add reviews of meals.",
+        type: "warning",
+      });
+      return;
+    }
+
     setIsReviewDialogOpen(true);
   };
-
   return (
     <section className="relative overflow-hidden py-20 max-w-6xl mx-auto">
 
