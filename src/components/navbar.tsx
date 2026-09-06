@@ -12,9 +12,11 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
 import { userLogout } from "@/lib/api/auth";
+import { getCartItemsByUserId } from "@/lib/api/cart";
 import { toast } from "./ui/toast";
 import { useState } from "react";
 import ShowCart from "./ShowCart";
+import { useQuery } from "@tanstack/react-query";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -48,6 +50,15 @@ export default function Navbar() {
   const { user, clearUser } = useAuthStore();
   const router = useRouter();
   const [cartOpen, setCartOpen] = useState(false);
+  const userId = user?.id;
+
+  const { data: cartData } = useQuery({
+    queryKey: ["cart-items", userId],
+    queryFn: () => getCartItemsByUserId(userId as string),
+    enabled: Boolean(userId),
+  });
+
+  const cartItemCount = cartData?.data.reduce((total, item) => total + item.quantity, 0) ?? 0;
 
   const handleSignOut = async () => {
 
@@ -138,7 +149,7 @@ export default function Navbar() {
             {/* Cart Count */}
 
             <span className="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full border-2 border-orange-50 bg-orange-600 text-[10px] font-bold leading-none text-white shadow-sm dark:border-orange-950">
-              0
+              {cartItemCount}
             </span>
           </Button>
 

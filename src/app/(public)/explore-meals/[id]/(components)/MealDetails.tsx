@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Clock3, Loader2, Minus, Package, Plus, ShoppingBag, Utensils } from "lucide-react";
 
@@ -32,10 +32,15 @@ const MealDetails = ({ meal }: MealDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
 
   const addCartMutation = useMutation({
     mutationFn: (payload: AddCartItemPayload) => addCartItem(payload),
-    onSuccess: (response) => {
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cart-items", user?.id],
+      });
+
       toast.add({
         title: "Added to cart!",
         description: `${quantity} ${quantity === 1 ? "piece has" : "pieces have"} been added to your cart.`,
@@ -54,10 +59,21 @@ const MealDetails = ({ meal }: MealDetailsProps) => {
   });
 
   const handleAddToCart = () => {
+
     if (!user) {
       toast.add({
         title: "Please sign in",
         description: "You need to sign in before adding meals to your cart.",
+        type: "error",
+      });
+
+      return;
+    }
+
+    if (user.role !== 'user') {
+      toast.add({
+        title: "Not permit to add cart",
+        description: "Only user account can add cart items.",
         type: "error",
       });
 

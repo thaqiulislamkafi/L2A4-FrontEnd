@@ -20,15 +20,17 @@ interface GetMealsParams {
   page?: number;
   limit?: number;
   search?: string;
+  category?: string;
 }
 
 export const getPublishedMeals = async ({
   page = 1,
   limit = 6,
   search = "",
+  category = ""
 }: GetMealsParams): Promise<PublishedMealsResponse> => {
   const { data } = await axiosInstance.get<PublishedMealsResponse>(
-    `/meals/published?search=${search}`,
+    `/meals/published?search=${search}&category_name=${category === "All Categories" ? "ALL" : category}`,
     {
       params: {
         page,
