@@ -37,12 +37,13 @@ const ExploreMeals = () => {
   const limit = 9;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["explore-meals", currentPage, search],
+    queryKey: ["explore-meals", currentPage, search,category],
     queryFn: () =>
       getPublishedMeals({
         page: currentPage,
         limit,
-        search
+        search,
+        category
       }),
   });
 

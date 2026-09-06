@@ -76,6 +76,7 @@ const MealDetailsPage = () => {
         {/* Reviews */}
 
         <MealReviews
+          mealId={meal.id}
           reviews={meal.reviews}
         />
 

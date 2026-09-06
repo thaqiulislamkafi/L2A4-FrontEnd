@@ -19,6 +19,18 @@ export const getMealReviews = async ({
   return data;
 };
 
+export interface CreateMealReviewPayload {
+  meal_id: string;
+  user_id: string;
+  rating: number;
+  comment: string;
+}
+
+export const createMealReview = async (payload: CreateMealReviewPayload) => {
+  const { data } = await axiosInstance.post("/reviews", payload);
+  return data;
+};
+
 export interface UpdateMealReviewPayload {
   rating: number;
   comment: string;
