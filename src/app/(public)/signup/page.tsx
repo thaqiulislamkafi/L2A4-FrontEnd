@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/auth.store";
+import axiosInstance from "@/lib/axios";
 
 export default function SignupPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,7 +79,7 @@ export default function SignupPage() {
           value.image = uploadResponse.data.imageUrl;
         }
 
-        console.log(value) ;
+        console.log(value);
 
         signupMutation.mutate(value);
       } catch (error: any) {
@@ -94,6 +95,24 @@ export default function SignupPage() {
       }
     },
   });
+
+
+ const handleGoogleSignUp = async () => {
+
+  try {
+    const response = await axiosInstance.post(`/auth/sign-in/social`, {
+      provider: "google",
+      callbackURL: `${window.location.origin}/auth/callback`,
+      requestSignUp: true
+    });
+
+    if (response.data?.url) {
+      window.location.href = response.data.url;
+    }
+  } catch (error) {
+    console.error("Google sign-up failed:", error);
+  }
+};
 
   return (
     <main className="min-h-screen overflow-hidden bg-orange-50/40 dark:bg-orange-950/10">
@@ -591,6 +610,7 @@ export default function SignupPage() {
                   <Button
                     type="button"
                     variant="outline"
+                    onClick={handleGoogleSignUp}
                     className="h-11 w-full border-orange-100 font-medium transition-all hover:border-orange-200 hover:bg-orange-50 dark:border-orange-950/50 dark:hover:bg-orange-950/20"
                   >
                     <GoogleIcon />
@@ -607,7 +627,7 @@ export default function SignupPage() {
                 <p className="text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <Link
-                    href="/login"
+                    href="/signin"
                     className="font-semibold text-orange-600 hover:text-orange-700 hover:underline dark:text-orange-400"
                   >
                     Sign in
