@@ -10,7 +10,7 @@ export const userLoginByEmailAndPassword = async (
   payload: LoginPayload
 ) => {
   const { data } = await axiosInstance.post(
-    "/auth/sign-in",
+    "/auth-manage/sign-in",
     payload
   );
 
@@ -19,7 +19,7 @@ export const userLoginByEmailAndPassword = async (
 
 export const userLogout = async () => {
   const { data } = await axiosInstance.post(
-    "/auth/sign-out"
+    "/auth-manage/sign-out"
   );
 
   return data;
@@ -48,7 +48,7 @@ export interface SignupData {
 
 export const userSignup = async (data: SignupData) => {
   const response = await axiosInstance.post(
-    "/auth/sign-up",
+    "/auth-manage/sign-up",
     {
       name: data.name,
       email: data.email,
@@ -67,7 +67,7 @@ export const uploadUserImage = async (file: File) => {
   formData.append("file", file);
 
   const response = await axiosInstance.post(
-    "/auth/image-upload",
+    "/auth-manage/image-upload",
     formData,
     {
       headers: {
@@ -80,7 +80,7 @@ export const uploadUserImage = async (file: File) => {
 };
 
 export const getMe = async () => {
-  const response = await axiosInstance.post("/auth/get-me");
+  const response = await axiosInstance.post("/auth-manage/get-me");
 
   return response.data;
 };
@@ -88,13 +88,13 @@ export const getMe = async () => {
 
 
 export const getUser = async (id: string): Promise<User> => {
-  const response = await axiosInstance.get<GetUserResponse>(`/auth/${id}`);
+  const response = await axiosInstance.get<GetUserResponse>(`/auth-manage/${id}`);
 
   return response.data.data;
 };
 
 export const logoutAllSessions = async () => {
-  const response = await axiosInstance.post("/auth/logout-all");
+  const response = await axiosInstance.post("/auth-manage/logout-all");
 
   return response.data;
 };
@@ -121,7 +121,7 @@ export const sendEmailOtp = async (
   payload: SendEmailOtpPayload
 ): Promise<SendEmailOtpResponse> => {
   const response = await axiosInstance.post<SendEmailOtpResponse>(
-    "/auth/send-email-otp",
+    "/auth-manage/send-email-otp",
     payload
   );
 
@@ -132,7 +132,7 @@ export const verifyEmailOtp = async (
   payload: VerifyEmailOtpPayload
 ): Promise<VerifyEmailOtpResponse> => {
   const response = await axiosInstance.post<VerifyEmailOtpResponse>(
-    "/auth/verify-otp-email",
+    "/auth-manage/verify-otp-email",
     payload
   );
 
@@ -159,7 +159,7 @@ export const sendChangeEmailOtp = async (
   payload: ChangeEmailPayload
 ): Promise<ChangeEmailResponse> => {
   const response = await axiosInstance.post<ChangeEmailResponse>(
-    "/auth/otp-change-email",
+    "/auth-manage/otp-change-email",
     payload
   );
 
@@ -170,7 +170,7 @@ export const verifyChangedEmail = async (
   payload: VerifyChangedEmailPayload
 ): Promise<ChangeEmailResponse> => {
   const response = await axiosInstance.post<ChangeEmailResponse>(
-    "/auth/change-email",
+    "/auth-manage/change-email",
     payload
   );
 
@@ -197,7 +197,7 @@ export const forgotPassword = async (
   payload: ForgotPasswordPayload
 ): Promise<PasswordResetResponse> => {
   const response = await axiosInstance.post<PasswordResetResponse>(
-    "/auth/forgot-password",
+    "/auth-manage/forgot-password",
     payload
   );
 
@@ -208,7 +208,7 @@ export const resetPasswordByOtp = async (
   payload: ResetPasswordByOtpPayload
 ): Promise<PasswordResetResponse> => {
   const response = await axiosInstance.post<PasswordResetResponse>(
-    "/auth/resetpassword-by-otp",
+    "/auth-manage/resetpassword-by-otp",
     payload
   );
 

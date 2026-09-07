@@ -20,6 +20,7 @@ import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import ForgotPasswordDialog from "@/components/shared/auth/ForgotPasswordDialog";
+import axiosInstance from "@/lib/axios";
 
 export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +28,7 @@ export default function SigninPage() {
   const router = useRouter();
 
   const setUser = useAuthStore((state) => state.setUser);
-  
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -66,6 +67,23 @@ export default function SigninPage() {
       }
     },
   });
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const response = await axiosInstance.post("/auth/sign-in/social", {
+        provider: "google",
+        callbackURL: `${window.location.origin}/auth/callback`,
+        errorCallbackURL: `${window.location.origin}/auth/callback`,
+        requestSignUp: false,
+      });
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+    }
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-orange-50/40 dark:bg-orange-950/10">
@@ -471,6 +489,7 @@ export default function SigninPage() {
                 type="button"
                 variant="outline"
                 className="h-11 w-full border-orange-100 bg-background font-medium transition-all hover:border-orange-200 hover:bg-orange-50 dark:border-orange-950/50 dark:hover:bg-orange-950/20"
+                onClick={handleGoogleSignIn}
               >
                 <svg
                   className="mr-2 h-4 w-4"
@@ -503,7 +522,7 @@ export default function SigninPage() {
             <p className="mt-8 text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link
-                href="/register"
+                href="/signin"
                 className="font-semibold text-orange-600 transition-colors hover:text-orange-700 hover:underline dark:text-orange-400"
               >
                 Create an account
