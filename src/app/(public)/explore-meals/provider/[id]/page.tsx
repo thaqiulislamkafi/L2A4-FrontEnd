@@ -4,28 +4,47 @@ import * as React from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ChefHat, ChevronLeft, ChevronRight, Search, UtensilsCrossed } from "lucide-react";
+import { ChefHat, ChevronLeft, ChevronRight, UtensilsCrossed } from "lucide-react";
 
 import MealCard from "@/components/MealCard";
 import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { PrimaryMealSpinner } from "@/components/ui/spinner";
 import { getProviderMeals } from "@/lib/api/meal";
 import { getUser } from "@/lib/api/user";
 import { Meal } from "@/types/meal.type";
+import MealFilters from "../../MealFilters";
 
 const ProviderMealsPage = () => {
   const params = useParams();
   const providerId = params.id as string;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
+  const [category, setCategory] = React.useState("All Categories");
+  const [cuisineType, setCuisineType] = React.useState("All Cuisine Types");
+  const [dietryType, setDietryType] = React.useState("All Dietary Types");
   const limit = 9;
 
   const mealsQuery = useQuery({
-    queryKey: ["provider-meals", providerId, currentPage, search],
-    queryFn: () => getProviderMeals(providerId, { page: currentPage, limit, search }),
+    queryKey: [
+      "provider-meals",
+      providerId,
+      currentPage,
+      search,
+      category,
+      cuisineType,
+      dietryType,
+    ],
+    queryFn: () =>
+      getProviderMeals(providerId, {
+        page: currentPage,
+        limit,
+        search,
+        category,
+        cuisineType,
+        dietryType,
+      }),
     enabled: Boolean(providerId),
   });
 
@@ -95,20 +114,36 @@ const ProviderMealsPage = () => {
           </p>
         </motion.div>
 
-        <div className="mx-auto mb-14 flex max-w-6xl flex-col gap-4 sm:flex-row">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-4 top-1/2 z-10 size-5 -translate-y-1/2 text-orange-500" />
-            <Input
-              value={search}
-              onChange={(event) => { setSearch(event.target.value); setCurrentPage(1); }}
-              placeholder="Search this provider&apos;s meals..."
-              className="h-14 rounded-2xl border-orange-100 pl-12 dark:border-orange-950/50"
-            />
-          </div>
-          <Badge variant="outline" className="h-14 justify-center rounded-2xl border-orange-200 px-5 text-orange-700">
-            {mealsQuery.data?.meta.total ?? 0} Meals
-          </Badge>
-        </div>
+        <MealFilters
+          search={search}
+          category={category}
+          cuisineType={cuisineType}
+          dietryType={dietryType}
+          totalMeals={mealsQuery.data?.meta.total ?? 0}
+          onSearchChange={(value) => {
+            setSearch(value);
+            setCurrentPage(1);
+          }}
+          onCategoryChange={(value) => {
+            setCategory(value ?? "All Categories");
+            setCurrentPage(1);
+          }}
+          onCuisineTypeChange={(value) => {
+            setCuisineType(value ?? "All Cuisine Types");
+            setCurrentPage(1);
+          }}
+          onDietryTypeChange={(value) => {
+            setDietryType(value ?? "All Dietary Types");
+            setCurrentPage(1);
+          }}
+          onReset={() => {
+            setSearch("");
+            setCategory("All Categories");
+            setCuisineType("All Cuisine Types");
+            setDietryType("All Dietary Types");
+            setCurrentPage(1);
+          }}
+        />
 
         {mealsQuery.isLoading && <PrimaryMealSpinner />}
         {!mealsQuery.isLoading && meals.length === 0 && (
