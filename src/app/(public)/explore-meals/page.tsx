@@ -33,17 +33,28 @@ const ExploreMeals = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const [category, setCategory] = React.useState("All Categories");
+  const [cuisineType, setCuisineType] = React.useState("All Cuisine Types");
+  const [dietryType, setDietryType] = React.useState("All Dietary Types");
 
   const limit = 9;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["explore-meals", currentPage, search,category],
+    queryKey: [
+      "explore-meals",
+      currentPage,
+      search,
+      category,
+      cuisineType,
+      dietryType,
+    ],
     queryFn: () =>
       getPublishedMeals({
         page: currentPage,
         limit,
         search,
-        category
+        category,
+        cuisineType,
+        dietryType,
       }),
   });
 
@@ -128,7 +139,15 @@ const ExploreMeals = () => {
   };
 
   const handleCategoryChange = (value: string | null) => {
-    setCategory(value ?? "ALL");
+    setCategory(value ?? "All Categories");
+  };
+
+  const handleCuisineTypeChange = (value: string | null) => {
+    setCuisineType(value ?? "All Cuisine Types");
+  };
+
+  const handleDietryTypeChange = (value: string | null) => {
+    setDietryType(value ?? "All Dietary Types");
   };
 
   return (
@@ -182,12 +201,18 @@ const ExploreMeals = () => {
         <MealFilters
           search={search}
           category={category}
+          cuisineType={cuisineType}
+          dietryType={dietryType}
           totalMeals={meta?.total ?? 0}
           onSearchChange={setSearch}
           onCategoryChange={handleCategoryChange}
+          onCuisineTypeChange={handleCuisineTypeChange}
+          onDietryTypeChange={handleDietryTypeChange}
           onReset={() => {
             setSearch("");
-            setCategory("ALL");
+            setCategory("All Categories");
+            setCuisineType("All Cuisine Types");
+            setDietryType("All Dietary Types");
           }}
         />
 
