@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import {BadgeCheck,CalendarDays,Mail,Phone,User,ShieldCheck,Sparkles,MapPin,Utensils,
+import {ArrowRight,BadgeCheck,CalendarDays,Mail,Phone,User,ShieldCheck,Sparkles,MapPin,Utensils,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -262,6 +263,18 @@ const MealProvider = ({
                   ========================================= */}
 
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="group h-12 rounded-xl border-orange-200 bg-background px-6 font-semibold text-orange-700 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
+                    >
+                      <Link href={`/explore-meals/provider/${provider.id}`} className="flex gap-2">
+                        <Utensils className="h-4 w-4" />
+                        View All Meals
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    </Button>
+
                     <Button
                       size="lg"
                       // asChild

@@ -21,20 +21,30 @@ interface GetMealsParams {
   limit?: number;
   search?: string;
   category?: string;
+  cuisineType?: string;
+  dietryType?: string;
 }
 
 export const getPublishedMeals = async ({
   page = 1,
   limit = 6,
   search = "",
-  category = ""
+  category = "",
+  cuisineType = "",
+  dietryType = "",
 }: GetMealsParams): Promise<PublishedMealsResponse> => {
   const { data } = await axiosInstance.get<PublishedMealsResponse>(
-    `/meals/published?search=${search}&category_name=${category === "All Categories" ? "ALL" : category}`,
+    "/meals/published",
     {
       params: {
         page,
         limit,
+        search,
+        category_name: category === "All Categories" ? "ALL" : category,
+        cuisine_type_name:
+          cuisineType === "All Cuisine Types" ? "ALL" : cuisineType,
+        dietry_type_name:
+          dietryType === "All Dietary Types" ? "ALL" : dietryType,
       },
     }
   );
@@ -58,7 +68,14 @@ export interface ProviderMealsListResponse {
 
 export const getProviderMeals = async (
   providerId: string,
-  { page = 1, limit = 10, search = "" }: GetMealsParams
+  {
+    page = 1,
+    limit = 10,
+    search = "",
+    category = "",
+    cuisineType = "",
+    dietryType = "",
+  }: GetMealsParams
 ): Promise<ProviderMealsListResponse["data"]> => {
   const { data } = await axiosInstance.get<ProviderMealsListResponse>(
     `/meals/provider/${providerId}`,
@@ -67,6 +84,11 @@ export const getProviderMeals = async (
         page,
         limit,
         search,
+        category_name: category === "All Categories" ? "ALL" : category,
+        cuisine_type_name:
+          cuisineType === "All Cuisine Types" ? "ALL" : cuisineType,
+        dietry_type_name:
+          dietryType === "All Dietary Types" ? "ALL" : dietryType,
       },
     }
   );

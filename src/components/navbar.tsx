@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { useAuthStore } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { userLogout } from "@/lib/api/auth";
 import { getCartItemsByUserId } from "@/lib/api/cart";
-import axiosInstance from "@/lib/axios";
 import { toast } from "./ui/toast";
 import { useState } from "react";
 import ShowCart from "./ShowCart";
 import { useQuery } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -49,6 +49,7 @@ const navItems = [
 export default function Navbar() {
 
   const { user, clearUser } = useAuthStore();
+  const pathname = usePathname();
   const router = useRouter();
   const [cartOpen, setCartOpen] = useState(false);
   const userId = user?.id;
@@ -60,6 +61,8 @@ export default function Navbar() {
   });
 
   const cartItemCount = cartData?.data.reduce((total, item) => total + item.quantity, 0) ?? 0;
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname?.startsWith(`${href}/`));
 
   const handleSignOut = async () => {
 
@@ -81,29 +84,6 @@ export default function Navbar() {
       toast.add({
         title: "Sign out failed",
         description: "Unable to sign out. Please try again.",
-        type: "error",
-      });
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      const response = await axiosInstance.post("/auth/sign-in/social", {
-        provider: "google",
-        callbackURL: `${window.location.origin}/auth/callback`,
-        errorCallbackURL: `${window.location.origin}/auth/callback`,
-        requestSignUp: false,
-      });
-
-      if (response.data?.url) {
-        window.location.href = response.data.url;
-      }
-    } catch (error) {
-      console.error("Google sign-in failed:", error);
-
-      toast.add({
-        title: "Google sign-in failed",
-        description: "Unable to continue with Google. Please try again.",
         type: "error",
       });
     }
@@ -140,8 +120,13 @@ export default function Navbar() {
                     render={
                       <Link href={item.href} />
                     }
-                    className="text-sm rounded-md px-4  py-2 font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:text-orange-600 focus:bg-orange-100 focus:text-orange-600
-                    "
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className={cn(
+                      "rounded-md px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-orange-100 hover:text-orange-600 focus:bg-orange-100 focus:text-orange-600",
+                      isActive(item.href)
+                        ? "bg-orange-100 text-orange-600 shadow-sm"
+                        : "text-slate-700"
+                    )}
                   >
                     {item.label}
                   </NavigationMenuLink>
@@ -182,7 +167,10 @@ export default function Navbar() {
           {user ? (
             <>
               <Link href="/dashboard">
-                <Button variant="outline" className="gap-2 rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300">
+                <Button variant="outline" aria-current={isActive("/dashboard") ? "page" : undefined} className={cn(
+                  "gap-2 rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300",
+                  isActive("/dashboard") && "bg-orange-100 shadow-sm dark:bg-orange-950/50"
+                )}>
                   <LayoutDashboard className="size-4" />
                   Dashboard
                 </Button>
@@ -196,13 +184,19 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/signin">
-                <Button variant="outline" className="rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300">
+                <Button variant="outline" aria-current={isActive("/signin") ? "page" : undefined} className={cn(
+                  "rounded-xl border-orange-200 px-5 text-base font-medium text-orange-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:border-orange-900 dark:text-orange-400 dark:hover:border-orange-800 dark:hover:bg-orange-950/50 dark:hover:text-orange-300",
+                  isActive("/signin") && "bg-orange-100 shadow-sm dark:bg-orange-950/50"
+                )}>
                   Sign In
                 </Button>
               </Link>
 
               <Link href="/signup">
-                <Button className="rounded-xl border border-orange-600 bg-orange-600 px-5 text-base font-medium text-white shadow-sm shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md hover:shadow-orange-600/30">
+                <Button aria-current={isActive("/signup") ? "page" : undefined} className={cn(
+                  "rounded-xl border border-orange-600 bg-orange-600 px-5 text-base font-medium text-white shadow-sm shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-orange-700 hover:shadow-md hover:shadow-orange-600/30",
+                  isActive("/signup") && "ring-2 ring-orange-300 ring-offset-1"
+                )}>
                   Sign Up
                 </Button>
               </Link>
@@ -214,7 +208,21 @@ export default function Navbar() {
                             MOBILE MENU
             ========================================= */}
 
-        <div className="md:hidden overflow-auto">
+        <div className="flex items-center gap-2 md:hidden">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => setCartOpen(true)}
+            className="group relative size-10 rounded-xl text-orange-600 transition-all duration-300 hover:bg-orange-100 hover:text-orange-700 hover:shadow-sm dark:text-orange-400 dark:hover:bg-orange-950/50 dark:hover:text-orange-300"
+            aria-label="Open shopping cart"
+          >
+            <ShoppingCart className="size-5 transition-transform duration-300 group-hover:scale-110" />
+            <span className="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full border-2 border-orange-50 bg-orange-600 text-[10px] font-bold leading-none text-white shadow-sm dark:border-orange-950">
+              {cartItemCount}
+            </span>
+          </Button>
+
           <Sheet>
 
             {/* Menu Trigger */}
@@ -273,7 +281,13 @@ export default function Navbar() {
                       render={
                         <Link
                           href={item.href}
-                          className=" flex w-full items-center rounded-xl px-4 py-3.5 text-base font-medium text-slate-700 transition-all duration-300 hover:bg-orange-100 hover:pl-5 hover:text-orange-600 dark:text-slate-200 dark:hover:bg-orange-950/30 dark:hover:text-orange-400"
+                          aria-current={isActive(item.href) ? "page" : undefined}
+                          className={cn(
+                            "flex w-full items-center rounded-xl px-4 py-3.5 text-base font-medium transition-all duration-300 hover:bg-orange-100 hover:pl-5 hover:text-orange-600 dark:hover:bg-orange-950/30 dark:hover:text-orange-400",
+                            isActive(item.href)
+                              ? "bg-orange-100 text-orange-600 shadow-sm dark:bg-orange-950/30 dark:text-orange-400"
+                              : "text-slate-700 dark:text-slate-200"
+                          )}
                         />
                       }
                     >
@@ -298,12 +312,18 @@ export default function Navbar() {
                     <>
                       <SheetClose nativeButton={false}
                         render={
-                          <Link href="/dashboard" />
+                          <Link
+                            href="/dashboard"
+                            aria-current={isActive("/dashboard") ? "page" : undefined}
+                          />
                         }
                       >
                         <Button
                           variant="outline"
-                          className="h-12 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
+                          className={cn(
+                            "h-12 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30",
+                            isActive("/dashboard") && "bg-orange-100 shadow-sm dark:bg-orange-950/30"
+                          )}
                         >
                           <LayoutDashboard className="size-4" />
                           Dashboard
@@ -326,34 +346,36 @@ export default function Navbar() {
                     <>
                       <SheetClose nativeButton={false}
                         render={
-                          <Link href="/signin" />
+                          <Link
+                            href="/signin"
+                            aria-current={isActive("/signin") ? "page" : undefined}
+                          />
                         }
                       >
                         <Button
                           variant="outline"
-                          className="h-12 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
+                          className={cn(
+                            "h-12 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30",
+                            isActive("/signin") && "bg-orange-100 shadow-sm dark:bg-orange-950/30"
+                          )}
                         >
                           Sign In
                         </Button>
                       </SheetClose>
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleGoogleSignIn}
-                        className="h-12 mt-4 w-full rounded-xl border-orange-200 bg-background font-semibold text-orange-600 transition-all duration-300 hover:border-orange-300 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900 dark:text-orange-400 dark:hover:bg-orange-950/30"
-                      >
-                        <GoogleIcon />
-                        Sign in with Google
-                      </Button>
-
                       <SheetClose nativeButton={false}
                         render={
-                          <Link href="/signup" />
+                          <Link
+                            href="/signup"
+                            aria-current={isActive("/signup") ? "page" : undefined}
+                          />
                         }
                       >
                         <Button
-                          className="my-5 h-12 w-full rounded-xl border border-orange-600 bg-orange-600 font-semibold text-white shadow-md shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-700 hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30"
+                          className={cn(
+                            "my-5 h-12 w-full rounded-xl border border-orange-600 bg-orange-600 font-semibold text-white shadow-md shadow-orange-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-700 hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30",
+                            isActive("/signup") && "ring-2 ring-orange-300 ring-offset-1"
+                          )}
                         >
                           Sign Up
                         </Button>
