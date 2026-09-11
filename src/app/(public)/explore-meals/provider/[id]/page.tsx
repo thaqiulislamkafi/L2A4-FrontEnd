@@ -1,46 +1,35 @@
 "use client";
 
 import * as React from "react";
-
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import {
-  ChefHat,
-  ChevronLeft,
-  ChevronRight,
-  UtensilsCrossed,
-} from "lucide-react";
+import { ChefHat, ChevronLeft, ChevronRight, UtensilsCrossed } from "lucide-react";
 
+import MealCard from "@/components/MealCard";
 import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
-import { getPublishedMeals } from "@/lib/api/meal";
-import { Meal } from "@/types/meal.type";
-import MealCard from "@/components/MealCard";
-import ExploreMealsError from "./error";
-import MealFilters from "./MealFilters";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { PrimaryMealSpinner } from "@/components/ui/spinner";
+import { getProviderMeals } from "@/lib/api/meal";
+import { getUser } from "@/lib/api/user";
+import { Meal } from "@/types/meal.type";
+import MealFilters from "../../MealFilters";
 
-const ExploreMeals = () => {
-
+const ProviderMealsPage = () => {
+  const params = useParams();
+  const providerId = params.id as string;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const [category, setCategory] = React.useState("All Categories");
   const [cuisineType, setCuisineType] = React.useState("All Cuisine Types");
   const [dietryType, setDietryType] = React.useState("All Dietary Types");
-
   const limit = 9;
 
-  const { data, isLoading, isError } = useQuery({
+  const mealsQuery = useQuery({
     queryKey: [
-      "explore-meals",
+      "provider-meals",
+      providerId,
       currentPage,
       search,
       category,
@@ -48,7 +37,7 @@ const ExploreMeals = () => {
       dietryType,
     ],
     queryFn: () =>
-      getPublishedMeals({
+      getProviderMeals(providerId, {
         page: currentPage,
         limit,
         search,
@@ -56,47 +45,29 @@ const ExploreMeals = () => {
         cuisineType,
         dietryType,
       }),
+    enabled: Boolean(providerId),
   });
 
-  const meals: Meal[] = data?.data ?? [];
-  const totalPages = data?.meta?.totalPage ?? 1;
+  const providerQuery = useQuery({
+    queryKey: ["provider", providerId],
+    queryFn: () => getUser(providerId),
+    enabled: Boolean(providerId),
+  });
 
-  const meta = data?.meta;
-
-  // if (isLoading) return <ExploreMealsLoader />
-
-  if (isError) return <ExploreMealsError />
-
-  /*
-   * --------------------------------
-   * Empty State
-   * --------------------------------
-   */
-
-  if (meals.length === 0 && (!isLoading)) {
-    return (
-      <section className="relative overflow-hidden bg-orange-50/40 py-24 dark:bg-orange-950/10">
-        <div className=" relative mx-auto px-4">
-          <Card className="mx-auto max-w-xl rounded-3xl border-primary/10 bg-background/80 p-10 text-center shadow-sm backdrop-blur-sm">
-            <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-primary/10">
-              <ChefHat className="size-9 text-primary" />
-            </div>
-
-            <h2 className="mt-6 text-3xl font-bold">
-              No Meals Found
-            </h2>
-
-            <p className="mt-3 text-muted-foreground">
-              There are no published meals available right now. Please check
-              back soon.
-            </p>
-          </Card>
-        </div>
-      </section>
-    );
+  if (mealsQuery.isError) {
+    return <section className="py-24 text-center text-muted-foreground">Unable to load this provider&apos;s meals.</section>;
   }
 
-  const getPaginationItems = () => {
+  const meals: Meal[] = mealsQuery.data?.data ?? [];
+  const totalPages = mealsQuery.data?.meta?.totalPage ?? 1;
+  const providerName = providerQuery.data?.name ?? "FoodHub Provider";
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+   const getPaginationItems = () => {
     const pages: (number | "ellipsis")[] = [];
 
     if (totalPages <= 7) {
@@ -129,72 +100,17 @@ const ExploreMeals = () => {
     return pages;
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const handleCategoryChange = (value: string | null) => {
-    setCategory(value ?? "All Categories");
-  };
-
-  const handleCuisineTypeChange = (value: string | null) => {
-    setCuisineType(value ?? "All Cuisine Types");
-  };
-
-  const handleDietryTypeChange = (value: string | null) => {
-    setDietryType(value ?? "All Dietary Types");
-  };
-
   return (
-    <section className="relative overflow-hidden  bg-orange-50/40 py-24 dark:bg-orange-950/10">
-      {/* --------------------------------
-          Background Effects
-      -------------------------------- */}
-
+    <section className="relative overflow-hidden bg-orange-50/40 py-24 dark:bg-orange-950/10">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-orange-100/70 via-background to-orange-50/50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/10" />
-
-      <div className="pointer-events-none absolute -left-32 top-40 size-80 rounded-full bg-orange-200/30 blur-3xl dark:bg-orange-900/10" />
-
-      <div className="pointer-events-none absolute -right-32 bottom-20 size-80 rounded-full bg-orange-200/30 blur-3xl dark:bg-orange-900/10" />
-
-      <div className=" relative mx-auto px-4">
-        {/* --------------------------------
-            Header
-        -------------------------------- */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-14 max-w-3xl text-center"
-        >
-          {/* Badge */}
-
+      <div className="relative mx-auto max-w-6xl px-4">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mx-auto mb-12 max-w-3xl text-center">
           <div className="mb-6 flex justify-center">
-            <HeaderBadge>
-              <UtensilsCrossed className="size-4" />
-              Explore Meals
-            </HeaderBadge>
+            <HeaderBadge><UtensilsCrossed className="size-4" /> Provider Meals</HeaderBadge>
           </div>
-
-          {/* Heading */}
-
-          <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-            Discover Delicious Meals
-          </h1>
-
-          {/* Description */}
-
+          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{providerName}&apos;s Meals</h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Explore delicious meals from trusted FoodHub providers. Discover
-            traditional Bangladeshi dishes, seafood, burgers, curries, and
-            many more flavors made for you.
+            Explore all the delicious meals prepared by {providerName}. Find your next favorite dish from this trusted FoodHub provider.
           </p>
         </motion.div>
 
@@ -203,45 +119,49 @@ const ExploreMeals = () => {
           category={category}
           cuisineType={cuisineType}
           dietryType={dietryType}
-          totalMeals={meta?.total ?? 0}
-          onSearchChange={setSearch}
-          onCategoryChange={handleCategoryChange}
-          onCuisineTypeChange={handleCuisineTypeChange}
-          onDietryTypeChange={handleDietryTypeChange}
+          totalMeals={mealsQuery.data?.meta.total ?? 0}
+          onSearchChange={(value) => {
+            setSearch(value);
+            setCurrentPage(1);
+          }}
+          onCategoryChange={(value) => {
+            setCategory(value ?? "All Categories");
+            setCurrentPage(1);
+          }}
+          onCuisineTypeChange={(value) => {
+            setCuisineType(value ?? "All Cuisine Types");
+            setCurrentPage(1);
+          }}
+          onDietryTypeChange={(value) => {
+            setDietryType(value ?? "All Dietary Types");
+            setCurrentPage(1);
+          }}
           onReset={() => {
             setSearch("");
             setCategory("All Categories");
             setCuisineType("All Cuisine Types");
             setDietryType("All Dietary Types");
+            setCurrentPage(1);
           }}
         />
 
-        {/* --------------------------------
-            Meal Grid
-        -------------------------------- */}
-        {isLoading && <PrimaryMealSpinner />}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
-        >
+        {mealsQuery.isLoading && <PrimaryMealSpinner />}
+        {!mealsQuery.isLoading && meals.length === 0 && (
+          <Card className="mx-auto max-w-xl rounded-3xl p-10 text-center">
+            <ChefHat className="mx-auto size-12 text-primary" />
+            <h2 className="mt-5 text-2xl font-bold">No Meals Found</h2>
+            <p className="mt-3 text-muted-foreground">This provider has no meals matching your search.</p>
+          </Card>
+        )}
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {meals.map((meal, index) => (
-            <motion.div
-              key={meal.id}
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.4,
-                delay: index * 0.05,
-              }}
-            >
+            <motion.div key={meal.id} initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
               <MealCard meal={meal} />
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* --------------------------------
+       {/* --------------------------------
             Pagination
         -------------------------------- */}
 
@@ -355,4 +275,4 @@ const ExploreMeals = () => {
   );
 };
 
-export default ExploreMeals;
+export default ProviderMealsPage;

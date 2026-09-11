@@ -40,20 +40,20 @@ export interface UpdateUserResponse {
 }
 
 export const getUsers = async ({ page = 1, limit = 10, search = "" }: GetUsersParams): Promise<UsersResponse> => {
-  const { data } = await axiosInstance.get<UsersResponse>("/auth", { params: { page, limit, search } });
+  const { data } = await axiosInstance.get<UsersResponse>("/auth-manage", { params: { page, limit, search } });
 
   return data;
 };
 
 
 export const updateUser = async (id: string, payload: Partial<UpdateUserPayload>): Promise<UpdateUserResponse> => {
-  const { data } = await axiosInstance.put<UpdateUserResponse>(`/auth/${id}`, payload);
+  const { data } = await axiosInstance.put<UpdateUserResponse>(`/auth-manage/${id}`, payload);
 
   return data;
 };
 
 export const deleteUser = async (id: string): Promise<AuthUserResponse> => {
-  const { data } = await axiosInstance.delete<AuthUserResponse>(`/auth/${id}`);
+  const { data } = await axiosInstance.delete<AuthUserResponse>(`/auth-manage/${id}`);
 
   return data;
 };
@@ -71,13 +71,13 @@ export interface ChangePasswordResponse {
 }
 
 export const getUser = async (id: string): Promise<User> => {
-  const response = await axiosInstance.get<GetUserResponse>(`/auth/${id}`);
+  const response = await axiosInstance.get<GetUserResponse>(`/auth-manage/${id}`);
 
   return response.data.data;
 };
 
 export const changePassword = async (payload: ChangePasswordPayload): Promise<ChangePasswordResponse> => {
-  const response = await axiosInstance.post<ChangePasswordResponse>("/auth/change-password", payload);
+  const response = await axiosInstance.post<ChangePasswordResponse>("/auth-manage/change-password", payload);
 
   return response.data;
 };
