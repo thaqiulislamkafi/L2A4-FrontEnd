@@ -12,21 +12,19 @@ export default function ProviderLayout({
   children: ReactNode;
 }) {
   const user = useAuthStore((state) => state.user);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.replace("/");
-      return;
-    }
+    if (isLoading) <Spinner />;
+  }, [router, user, isLoading]);
 
-    if (user.role !== "provider") {
-      router.replace("/dashboard");
-    }
-  }, [router, user]);
-
-  if (!user || user.role !== "provider") {
+  if (!user) {
     return <Spinner />;
+  }
+
+  if (user.role !== "provider") {
+    router.replace("/forbidden");
   }
 
   return <>{children}</>;
