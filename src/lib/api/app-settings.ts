@@ -1,4 +1,4 @@
-import { AppSettingsResponse, UpdateAppSettingResponse } from "@/types/app-settings";
+import { AppSetting, AppSettingsResponse, UpdateAppSettingResponse } from "@/types/app-settings";
 import axiosInstance from "../axios";
 
 
@@ -6,6 +6,11 @@ export const getAppSettings = async (): Promise<AppSettingsResponse> => {
   const { data } = await axiosInstance.get<AppSettingsResponse>("/app-settings");
 
   return data;
+};
+
+export const getHomepageSettings = async (): Promise<AppSetting[]> => {
+    const response = await axiosInstance.get<AppSettingsResponse>("/app-settings/key/homepage");
+    return response.data.data;
 };
 
 export const updateAppSetting = async ({

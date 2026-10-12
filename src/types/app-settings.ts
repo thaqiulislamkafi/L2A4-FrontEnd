@@ -18,3 +18,12 @@ export interface UpdateAppSettingResponse {
   message: string;
   data: AppSetting;
 }
+
+export interface HomepageSettings {
+    HomeHero: boolean;
+    ShowMeals: boolean;
+    HowFoodHubWorks: boolean;
+    ShowReviews: boolean;
+    HomeFaqSection: boolean;
+    HomeStatistics: boolean;
+}

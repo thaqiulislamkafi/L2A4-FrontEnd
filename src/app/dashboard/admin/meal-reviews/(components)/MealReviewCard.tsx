@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MealReview } from "@/types/meal-review.type";
+import Link from "next/link";
 
 interface MealReviewCardProps {
   review: MealReview;
@@ -29,7 +30,9 @@ export default function MealReviewCard({ review, onEdit, onDelete }: MealReviewC
 
   return (
     <Card className="group h-full overflow-hidden border-orange-200/80 bg-white shadow-sm shadow-orange-950/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-orange-950/10 dark:border-orange-900/40 dark:bg-orange-950/20">
+
       <CardHeader className="flex flex-row items-start justify-between gap-4 border-b border-orange-100/80 px-5 py-4 dark:border-orange-900/30">
+      
         <div className="flex min-w-0 items-center gap-3">
           {user?.image ? (
             <Image src={user.image} alt={user.name || "User"} width={44} height={44} className="size-11 shrink-0 rounded-full object-cover ring-2 ring-orange-100 dark:ring-orange-900/50" />
@@ -39,34 +42,47 @@ export default function MealReviewCard({ review, onEdit, onDelete }: MealReviewC
             </div>
           )}
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-orange-950 dark:text-orange-50">{user?.name ?? "Unknown User"}</p>
-            <p className="truncate text-xs font-medium text-orange-600/60 dark:text-orange-300/60">{user?.email ?? "No email available"}</p>
+            <Link href={`/dashboard/admin/users/${user?.id}`} className="underline truncate text-sm font-bold text-orange-950 dark:text-orange-50">
+              {user?.name ?? "Unknown User"}
+            </Link>
+            <p className="truncate text-xs font-medium text-orange-600/60 dark:text-orange-300/60">
+              {user?.email ?? "No email available"}
+            </p>
           </div>
         </div>
 
         <DropdownMenu>
+
           <DropdownMenuTrigger render={<Button variant="ghost" size="icon" aria-label={`Actions for ${meal?.name ?? "review"}`} />} className="shrink-0 text-orange-600 hover:bg-orange-50 hover:text-orange-700 dark:text-orange-400 dark:hover:bg-orange-950/40">
             <MoreHorizontal className="size-4" />
+
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end" className="w-44 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
-            <DropdownMenuItem className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60">View Review</DropdownMenuItem>
+           
             <DropdownMenuItem onClick={() => onEdit?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60">
               <Pencil className="size-4 text-orange-500" /> Edit Review
             </DropdownMenuItem>
+
             <DropdownMenuSeparator className="bg-orange-100 dark:bg-orange-900/40" />
+            
             <DropdownMenuItem onClick={() => onDelete?.(review)} className="cursor-pointer rounded-lg font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400">
               <Trash2 className="size-4" /> Delete Review
             </DropdownMenuItem>
+
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
 
       <CardContent className="space-y-4 px-5 py-5">
         <div className="flex items-start gap-3">
-          {meal?.image ? <Image src={meal.image} alt={meal.name} width={64} height={64} className="size-16 shrink-0 rounded-lg object-cover" /> : null}
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-orange-950 dark:text-orange-50">{meal?.name ?? "Unknown Meal"}</p>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-orange-700/70 dark:text-orange-300/70">{meal?.description ?? "No meal description available."}</p>
+            <Link href={`/dashboard/admin/meals/${meal?.id}`} className="underline truncate text-sm font-bold text-orange-950 dark:text-orange-50">
+              {meal?.name ?? "Unknown Meal"}
+            </Link>
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-orange-700/70 dark:text-orange-300/70">
+              {meal?.description ?? "No meal description available."}
+            </p>
             {meal ? <p className="mt-1 text-xs font-semibold text-orange-600 dark:text-orange-400">৳{meal.pricePerPiece} per piece</p> : null}
           </div>
         </div>

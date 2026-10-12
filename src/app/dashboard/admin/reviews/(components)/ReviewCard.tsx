@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 interface ReviewCardProps {
   review: GlobalReview;
@@ -50,8 +51,12 @@ export default function ReviewCard({ review, onEdit, onDelete, onView }: ReviewC
           )}
 
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-orange-950 dark:text-orange-50">{user?.name ?? "Unknown User"}</p>
-            <p className="truncate text-xs font-medium text-orange-600/60 dark:text-orange-300/60">{user?.email ?? "No email available"}</p>
+            <Link href={`/dashboard/admin/users/${user?.id}`} className="underline truncate text-sm font-bold text-orange-950 dark:text-orange-50">
+              {user?.name ?? "Unknown User"}
+            </Link>
+            <p className="truncate text-xs font-medium text-orange-600/60 dark:text-orange-300/60">
+              {user?.email ?? "No email available"}
+            </p>
           </div>
         </div>
 
@@ -61,9 +66,7 @@ export default function ReviewCard({ review, onEdit, onDelete, onView }: ReviewC
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-44 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
-            <DropdownMenuItem onClick={() => onView?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
-              <span>View Review</span>
-            </DropdownMenuItem>
+
 
             <DropdownMenuItem onClick={() => onEdit?.(review)} className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300">
               <Pencil className="size-4 text-orange-500 dark:text-orange-400" />
