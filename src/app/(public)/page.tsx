@@ -29,7 +29,6 @@ const page = async () => {
         settings.HomeStatistics ? getDashboardStatsServer().catch(() => null) : Promise.resolve(null),
     ]);
 
-    console.log("Dashboard Stats:", dashboardStats);
     return (
         <div className={geist.className}>
 

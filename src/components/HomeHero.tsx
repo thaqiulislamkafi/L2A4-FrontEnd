@@ -3,15 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-import {ArrowRight,CircleCheck,Flame,Package,ShoppingBag,Sparkles,Star,
-} from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import {ArrowRight,CircleCheck,Flame,Package,ShoppingBag,Sparkles,Star,} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { getHeroMeal } from "@/lib/api/meal";
-import { PrimaryMealSpinner, } from "./ui/spinner";
 import { HeroMeal } from "@/types/meal.type";
 
 const containerVariants: Variants = {
@@ -39,22 +35,12 @@ const itemVariants: Variants = {
 };
 
 export default function HomeHero({ meal, }: { meal: HeroMeal | null }) {
-  // const { data, isLoading, isError } = useQuery({
-  //   queryKey: ["hero-meal"],
-  //   queryFn: getHeroMeal,
-  // });
-  // const { data, isLoading, isError } = useQuery({
-  //   queryKey: ["hero-meal"],
-  //   queryFn: getHeroMeal,
-  // });
-;
 
-// if (isLoading) return <PrimaryMealSpinner/>
 
   if (!meal) {
     return (
       <section className="relative overflow-hidden bg-orange-50">
-        <div className="mx-auto flex min-h-[500px] max-w-7xl items-center justify-center px-4">
+        <div className="mx-auto flex min-h-125 max-w-7xl items-center justify-center px-4">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-slate-900">
               Something went wrong
@@ -84,7 +70,7 @@ export default function HomeHero({ meal, }: { meal: HeroMeal | null }) {
     meal.availabilty_status === "AVAILABLE" && meal.availablePieces > 0;
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-orange-100">
+    <section className="relative overflow-hidden bg-linear-to-br from-orange-50 via-white to-orange-100">
       {/* ================= BACKGROUND ================= */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -347,15 +333,15 @@ export default function HomeHero({ meal, }: { meal: HeroMeal | null }) {
                     width={700}
                     height={800}
                     priority
-                    className="h-[520px] w-full object-cover transition duration-700 hover:scale-105 md:h-[600px]"
+                    className="h-130 w-full object-cover transition duration-700 hover:scale-105 md:h-150"
                   />
                 ) : (
-                  <div className="flex h-[520px] items-center justify-center bg-orange-100 text-orange-600 md:h-[600px]">
+                  <div className="flex h-130 items-center justify-center bg-orange-100 text-orange-600 md:h-150">
                     No image available
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
 
                 {/* Image Badge */}
 
@@ -446,12 +432,12 @@ export default function HomeHero({ meal, }: { meal: HeroMeal | null }) {
                 </div>
               </div>
 
-              <div className="my-4 h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent" />
+              <div className="my-4 h-px bg-linear-to-r from-transparent via-orange-200 to-transparent" />
 
               <Link href={`/explore-meals/${meal.id}`}>
                 <Button
                   size="lg"
-                  className="group h-auto w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-700 px-5 py-3 font-bold text-white shadow-lg shadow-orange-600/20 hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-600/30"
+                  className="group h-auto w-full rounded-xl bg-linear-to-r from-orange-500 to-orange-700 px-5 py-3 font-bold text-white shadow-lg shadow-orange-600/20 hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-600/30"
                 >
                   Order This Meal
 

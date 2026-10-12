@@ -1,26 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import { motion } from "framer-motion";
 import { CalendarDays, MessageSquareQuote, Star, Quote, UserRound, ArrowRight, PenLine, Sparkles, Heart, Utensils, } from "lucide-react";
 
-import { getGlobalReviews } from "@/lib/api/global-reviews";
-import {
-  GlobalReview,
-  GlobalReviewResponse,
-} from "@/types/global-review.type";
+import { GlobalReview, } from "@/types/global-review.type";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import AddGlobalReview from "./AddGlobalReview";
 
@@ -28,44 +18,23 @@ const ShowReviews = ({ reviews }: { reviews: GlobalReview[] }) => {
 
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
-  // const { data, isLoading, isError } = useQuery<GlobalReviewResponse>({
-  //   queryKey: ["global-reviews"],
-  //   queryFn: () =>
-  //     getGlobalReviews({
-  //       page: 1,
-  //       limit: 6,
-  //     }),
-  // });
+  if (!reviews.length) {
+    return (
+      <section className="relative overflow-hidden bg-orange-50">
+        <div className="mx-auto flex min-h-125 max-w-7xl items-center justify-center px-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Something went wrong
+            </h2>
 
-  /* ================= LOADING ================= */
-
-  // if (isLoading) {
-  //   return (
-  //     <section className="bg-orange-50/60 py-20">
-  //       <div className="mx-auto flex min-h-100 max-w-7xl items-center justify-center px-6">
-  //         <div className="flex flex-col items-center gap-4">
-  //           <Spinner className="size-10 text-orange-600" />
-
-  //           <p className="text-sm font-medium text-orange-700">
-  //             Loading customer reviews...
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </section>
-  //   );
-  // }
-
-  /* ================= ERROR ================= */
-
-  // if (isError || !data) {
-  //   return null;
-  // }
-
-  // const reviews: GlobalReview[] = data.data;
-
-  // if (!reviews.length) {
-  //   return null;
-  // }
+            <p className="mt-2 text-slate-600">
+              We couldnt load All Reviews.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden bg-orange-50/60 py-20">
@@ -362,7 +331,7 @@ interface ReviewCardProps {
 
 function ReviewCard({ review, index }: ReviewCardProps) {
   return (
-    <Card className="group mx-4 my-2 shrink-0 border-orange-100 bg-orange-100/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-100/70 md:w-[370px]">
+    <Card className="group mx-4 my-2 shrink-0 border-orange-100 bg-orange-100/10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-100/70 md:w-92.5">
       {/* ================= USER ================= */}
 
       <CardHeader className="pb-4">
