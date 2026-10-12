@@ -18,5 +18,13 @@ export default function AdminLayout({
     if (!user)  <Spinner/>
   }, [router, user]);
 
+  if (!user) {
+    return <Spinner />;
+  }
+  
+  if (user.role !== "admin") {
+    router.replace("/forbidden");
+  }
+
   return <>{children}</>;
 }

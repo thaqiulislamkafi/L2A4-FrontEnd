@@ -11,18 +11,15 @@ export default function UserLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.replace("/");
-      return;
-    }
-
-    if (user.role !== "user") {
-      router.replace("/dashboard");
-    }
+    if (!user) <Spinner />
   }, [router, user]);
 
-  if (!user || user.role !== "user") {
+  if (!user) {
     return <Spinner />;
+  }
+  
+  if (user.role !== "user") {
+    router.replace("/forbidden");
   }
 
   return <>{children}</>;

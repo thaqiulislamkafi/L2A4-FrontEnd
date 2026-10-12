@@ -21,7 +21,7 @@ export const OrderItemsTableColumns = (onOrderClick: (orderId: string) => void):
       <button
         type="button"
         onClick={() => onOrderClick(row.original.order_id)}
-        className="max-w-45 truncate font-mono text-left text-xs font-semibold text-orange-800 underline-offset-4 hover:underline dark:text-orange-300"
+        className="max-w-45 underline cursor-pointer truncate font-mono text-left text-xs font-semibold text-orange-800 underline-offset-4  dark:text-orange-300"
       >
         {row.original.order_id}
       </button>
