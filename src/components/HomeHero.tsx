@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { getHeroMeal } from "@/lib/api/meal";
 import { PrimaryMealSpinner, } from "./ui/spinner";
+import { HeroMeal } from "@/types/meal.type";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -37,17 +38,20 @@ const itemVariants: Variants = {
   },
 };
 
-export default function HomeHero() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["hero-meal"],
-    queryFn: getHeroMeal,
-  });
+export default function HomeHero({ meal, }: { meal: HeroMeal | null }) {
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["hero-meal"],
+  //   queryFn: getHeroMeal,
+  // });
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["hero-meal"],
+  //   queryFn: getHeroMeal,
+  // });
+;
 
-  const meal = data?.data;
+// if (isLoading) return <PrimaryMealSpinner/>
 
-if (isLoading) return <PrimaryMealSpinner/>
-
-  if (isError || !meal) {
+  if (!meal) {
     return (
       <section className="relative overflow-hidden bg-orange-50">
         <div className="mx-auto flex min-h-[500px] max-w-7xl items-center justify-center px-4">
@@ -65,7 +69,7 @@ if (isLoading) return <PrimaryMealSpinner/>
     );
   }
 
-  const analytics = meal.mealAnalytics?.[0];
+  const analytics = meal?.mealAnalytics?.[0];
 
   const totalReviews = analytics?.totalReviews ?? 0;
   const totalOrders = analytics?.totalOrders ?? 0;

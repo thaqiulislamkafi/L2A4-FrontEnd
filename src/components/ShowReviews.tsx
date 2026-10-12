@@ -24,48 +24,48 @@ import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import AddGlobalReview from "./AddGlobalReview";
 
-const ShowReviews = () => {
+const ShowReviews = ({ reviews }: { reviews: GlobalReview[] }) => {
 
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
-  const { data, isLoading, isError } = useQuery<GlobalReviewResponse>({
-    queryKey: ["global-reviews"],
-    queryFn: () =>
-      getGlobalReviews({
-        page: 1,
-        limit: 6,
-      }),
-  });
+  // const { data, isLoading, isError } = useQuery<GlobalReviewResponse>({
+  //   queryKey: ["global-reviews"],
+  //   queryFn: () =>
+  //     getGlobalReviews({
+  //       page: 1,
+  //       limit: 6,
+  //     }),
+  // });
 
   /* ================= LOADING ================= */
 
-  if (isLoading) {
-    return (
-      <section className="bg-orange-50/60 py-20">
-        <div className="mx-auto flex min-h-100 max-w-7xl items-center justify-center px-6">
-          <div className="flex flex-col items-center gap-4">
-            <Spinner className="size-10 text-orange-600" />
+  // if (isLoading) {
+  //   return (
+  //     <section className="bg-orange-50/60 py-20">
+  //       <div className="mx-auto flex min-h-100 max-w-7xl items-center justify-center px-6">
+  //         <div className="flex flex-col items-center gap-4">
+  //           <Spinner className="size-10 text-orange-600" />
 
-            <p className="text-sm font-medium text-orange-700">
-              Loading customer reviews...
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  //           <p className="text-sm font-medium text-orange-700">
+  //             Loading customer reviews...
+  //           </p>
+  //         </div>
+  //       </div>
+  //     </section>
+  //   );
+  // }
 
   /* ================= ERROR ================= */
 
-  if (isError || !data) {
-    return null;
-  }
+  // if (isError || !data) {
+  //   return null;
+  // }
 
-  const reviews: GlobalReview[] = data.data;
+  // const reviews: GlobalReview[] = data.data;
 
-  if (!reviews.length) {
-    return null;
-  }
+  // if (!reviews.length) {
+  //   return null;
+  // }
 
   return (
     <section className="relative overflow-hidden bg-orange-50/60 py-20">

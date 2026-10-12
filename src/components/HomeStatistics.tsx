@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { HeaderBadge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "./ui/skeleton";
+import { HomepageStats } from "@/lib/api/dashboard-stats.server";
 
 const statisticsConfig = [
   {
@@ -45,68 +46,68 @@ const statisticsConfig = [
   },
 ] as const;
 
-export default function HomeStatistics() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["dashboard-stats"],
-    queryFn: getDashboardStats,
-  });
+export default function HomeStatistics({ stats }: { stats: HomepageStats | null }) {
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["dashboard-stats"],
+  //   queryFn: getDashboardStats,
+  // });
 
-  const stats = data?.data;
+  // const stats = data?.data;
 
   /* ============================================================
      Loading State
   ============================================================ */
 
-  if (isLoading) {
-    return (
-      <section className="relative overflow-hidden py-24">
-        {/* Background */}
+  // if (isLoading) {
+  //   return (
+  //     <section className="relative overflow-hidden py-24">
+  //       {/* Background */}
 
-        <div className="absolute inset-0 bg-linear-to-b from-orange-50 via-transparent to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20" />
+  //       <div className="absolute inset-0 bg-linear-to-b from-orange-50 via-transparent to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20" />
 
-        <div className="relative  mx-auto px-4">
-          {/* Header Skeleton */}
+  //       <div className="relative  mx-auto px-4">
+  //         {/* Header Skeleton */}
 
-          <div className="mx-auto max-w-3xl text-center">
-            <Skeleton className="mx-auto h-8 w-40 rounded-full" />
+  //         <div className="mx-auto max-w-3xl text-center">
+  //           <Skeleton className="mx-auto h-8 w-40 rounded-full" />
 
-            <Skeleton className="mx-auto mt-6 h-12 w-80 max-w-full" />
+  //           <Skeleton className="mx-auto mt-6 h-12 w-80 max-w-full" />
 
-            <Skeleton className="mx-auto mt-5 h-5 w-full max-w-2xl" />
-            <Skeleton className="mx-auto mt-2 h-5 w-2/3 max-w-xl" />
-          </div>
+  //           <Skeleton className="mx-auto mt-5 h-5 w-full max-w-2xl" />
+  //           <Skeleton className="mx-auto mt-2 h-5 w-2/3 max-w-xl" />
+  //         </div>
 
-          {/* Cards Skeleton */}
+  //         {/* Cards Skeleton */}
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden rounded-3xl border-orange-100 dark:border-orange-900/30"
-              >
-                <CardContent className="p-6">
-                  <Skeleton className="size-14 rounded-2xl" />
+  //         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+  //           {Array.from({ length: 5 }).map((_, index) => (
+  //             <Card
+  //               key={index}
+  //               className="overflow-hidden rounded-3xl border-orange-100 dark:border-orange-900/30"
+  //             >
+  //               <CardContent className="p-6">
+  //                 <Skeleton className="size-14 rounded-2xl" />
 
-                  <Skeleton className="mt-6 h-10 w-24" />
+  //                 <Skeleton className="mt-6 h-10 w-24" />
 
-                  <Skeleton className="mt-3 h-6 w-36" />
+  //                 <Skeleton className="mt-3 h-6 w-36" />
 
-                  <Skeleton className="mt-3 h-4 w-full" />
-                  <Skeleton className="mt-2 h-4 w-4/5" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  //                 <Skeleton className="mt-3 h-4 w-full" />
+  //                 <Skeleton className="mt-2 h-4 w-4/5" />
+  //               </CardContent>
+  //             </Card>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     </section>
+  //   );
+  // }
 
   /* ============================================================
      Error State
   ============================================================ */
 
-  if (isError || !stats) {
+  if (!stats) {
     return (
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0 bg-linear-to-b from-orange-50 via-transparent to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20" />
@@ -201,8 +202,7 @@ export default function HomeStatistics() {
           {statisticsConfig.map((stat, index) => {
             const Icon = stat.icon;
 
-            const value =
-              stats[stat.key as keyof typeof stats] ?? 0;
+            const value = Number(stats[stat.key as keyof HomepageStats] ?? 0);
 
             return (
               <motion.div

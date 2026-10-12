@@ -20,66 +20,66 @@ import { useQuery } from "@tanstack/react-query";
 import { Meal } from "@/types/meal.type";
 import { getPublishedMeals } from "@/lib/api/meal";
 
-const ShowMeals = () => {
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ["published-meals", 1, 6],
-        queryFn: () =>
-            getPublishedMeals({
-                page: 1,
-                limit: 6,
-            }),
-    });
+const ShowMeals = ({ meals }: { meals: Meal[] | null }) => {
+    // const { data, isLoading, isError } = useQuery({
+    //     queryKey: ["published-meals", 1, 6],
+    //     queryFn: () =>
+    //         getPublishedMeals({
+    //             page: 1,
+    //             limit: 6,
+    //         }),
+    // });
 
-    const meals: Meal[] = data?.data ?? [];
+    // const meals: Meal[] = data?.data ?? [];
 
     /* =========================
        Loading UI
     ========================= */
 
-    if (isLoading) {
-        return (
-            <section className="relative overflow-hidden py-24">
-                <div className="absolute inset-0 bg-linear-to-b from-orange-50/70 via-background to-orange-50/40 dark:from-orange-950/20 dark:via-background dark:to-orange-950/10" />
+    // if (isLoading) {
+    //     return (
+    //         <section className="relative overflow-hidden py-24">
+    //             <div className="absolute inset-0 bg-linear-to-b from-orange-50/70 via-background to-orange-50/40 dark:from-orange-950/20 dark:via-background dark:to-orange-950/10" />
 
-                <div className="relative  mx-auto px-4">
-                    <div className="mx-auto mb-14 max-w-3xl text-center">
-                        <div className="mx-auto h-7 w-40 animate-pulse rounded-full bg-orange-100 dark:bg-orange-950/40" />
+    //             <div className="relative  mx-auto px-4">
+    //                 <div className="mx-auto mb-14 max-w-3xl text-center">
+    //                     <div className="mx-auto h-7 w-40 animate-pulse rounded-full bg-orange-100 dark:bg-orange-950/40" />
 
-                        <div className="mx-auto mt-6 h-12 w-3/4 animate-pulse rounded-lg bg-muted" />
+    //                     <div className="mx-auto mt-6 h-12 w-3/4 animate-pulse rounded-lg bg-muted" />
 
-                        <div className="mx-auto mt-5 h-5 max-w-2xl animate-pulse rounded bg-muted" />
-                    </div>
+    //                     <div className="mx-auto mt-5 h-5 max-w-2xl animate-pulse rounded bg-muted" />
+    //                 </div>
 
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {Array.from({ length: 6 }).map((_, index) => (
-                            <div
-                                key={index}
-                                className="overflow-hidden rounded-3xl border bg-background shadow-sm"
-                            >
-                                <div className="h-60 animate-pulse bg-orange-100 dark:bg-orange-950/30" />
+    //                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    //                     {Array.from({ length: 6 }).map((_, index) => (
+    //                         <div
+    //                             key={index}
+    //                             className="overflow-hidden rounded-3xl border bg-background shadow-sm"
+    //                         >
+    //                             <div className="h-60 animate-pulse bg-orange-100 dark:bg-orange-950/30" />
 
-                                <div className="space-y-4 p-6">
-                                    <div className="h-6 w-3/4 animate-pulse rounded bg-muted" />
+    //                             <div className="space-y-4 p-6">
+    //                                 <div className="h-6 w-3/4 animate-pulse rounded bg-muted" />
 
-                                    <div className="h-4 w-full animate-pulse rounded bg-muted" />
+    //                                 <div className="h-4 w-full animate-pulse rounded bg-muted" />
 
-                                    <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+    //                                 <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
 
-                                    <div className="h-9 w-full animate-pulse rounded bg-muted" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-        );
-    }
+    //                                 <div className="h-9 w-full animate-pulse rounded bg-muted" />
+    //                             </div>
+    //                         </div>
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //         </section>
+    //     );
+    // }
 
     /* =========================
        Error UI
     ========================= */
 
-    if (isError) {
+    if (!meals) {
         return (
             <section className="relative overflow-hidden py-24">
                 <div className=" mx-auto px-4">

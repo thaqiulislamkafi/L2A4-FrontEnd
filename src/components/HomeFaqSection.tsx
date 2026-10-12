@@ -21,10 +21,10 @@ import {Accordion,AccordionContent,AccordionItem,AccordionTrigger,
 import { FAQ } from "@/types/faq.type";
 import { useGetAllFaqs } from "@/hooks/faqs/useGetAllFaqs";
 
-export default function HomeFaqSection() {
-  const { data, isLoading, isError } = useGetAllFaqs(1, 6);
+export default function HomeFaqSection({ faqs} : { faqs: FAQ[] }) {
+  // const { data, isLoading, isError } = useGetAllFaqs(1, 6);
 
-  const faqs = data?.data ?? [];
+  // const faqs = data?.data ?? [];
 
   return (
     <section className="relative overflow-hidden py-24">
@@ -98,7 +98,7 @@ export default function HomeFaqSection() {
         >
           {/* ==================== Loading ==================== */}
 
-          {isLoading && (
+          {/* {isLoading && (
             <Card className="border-orange-100 bg-white/80 shadow-sm backdrop-blur dark:border-orange-900/30 dark:bg-slate-900/70">
               <CardContent className="flex min-h-48 flex-col items-center justify-center gap-4">
                 <Spinner className="size-8 text-orange-600" />
@@ -108,11 +108,11 @@ export default function HomeFaqSection() {
                 </Label>
               </CardContent>
             </Card>
-          )}
+          )} */}
 
           {/* ==================== Error ==================== */}
 
-          {isError && !isLoading && (
+          {/* {isError && !isLoading && (
             <Card className="border-orange-200 bg-orange-50/70 dark:border-orange-900/40 dark:bg-orange-950/20">
               <CardContent className="flex min-h-48 flex-col items-center justify-center text-center">
                 <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
@@ -129,11 +129,11 @@ export default function HomeFaqSection() {
                 </p>
               </CardContent>
             </Card>
-          )}
+          )} */}
 
           {/* ==================== FAQ List ==================== */}
 
-          {!isLoading && !isError && faqs.length > 0 && (
+          {faqs.length > 0 && (
             
             <Card className="overflow-hidden border-orange-100 bg-orange-50/20 shadow-lg shadow-orange-100/40 backdrop-blur-sm dark:border-orange-900/30 dark:bg-slate-900/80 dark:shadow-none">
 
@@ -192,7 +192,7 @@ export default function HomeFaqSection() {
 
           {/* ==================== Empty ==================== */}
 
-          {!isLoading && !isError && faqs.length === 0 && (
+          {faqs.length === 0 && (
             <Card className="border-orange-100 bg-white/80 dark:border-orange-900/30 dark:bg-slate-900/70">
               <CardContent className="flex min-h-48 flex-col items-center justify-center text-center">
                 <MessageCircleQuestion className="mb-4 size-10 text-orange-400" />
