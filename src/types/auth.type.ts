@@ -11,6 +11,9 @@ export interface AuthUser {
   role: "user" | "provider" | "admin";
   age: number ;
   status: string;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: string | null;
 }
 
 export interface LoginResponse {
@@ -32,6 +35,9 @@ export interface User {
   role: "user" | "provider" | "admin";
   age: number ;
   status: string;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: string | null;
 }
 
 export interface GetUserResponse {

@@ -25,6 +25,14 @@ export interface AuthUserResponse {
   data: AuthUser;
 }
 
+export interface ManageUserBanResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+  };
+}
+
 export interface UpdateUserPayload {
   name: string;
   image: string;
@@ -54,6 +62,18 @@ export const updateUser = async (id: string, payload: Partial<UpdateUserPayload>
 
 export const deleteUser = async (id: string): Promise<AuthUserResponse> => {
   const { data } = await axiosInstance.delete<AuthUserResponse>(`/auth-manage/${id}`);
+
+  return data;
+};
+
+export const banUser = async (id: string): Promise<ManageUserBanResponse> => {
+  const { data } = await axiosInstance.post<ManageUserBanResponse>(`/auth-manage/ban-user/${id}`);
+
+  return data;
+};
+
+export const unbanUser = async (id: string): Promise<ManageUserBanResponse> => {
+  const { data } = await axiosInstance.post<ManageUserBanResponse>(`/auth-manage/unban-user/${id}`);
 
   return data;
 };
