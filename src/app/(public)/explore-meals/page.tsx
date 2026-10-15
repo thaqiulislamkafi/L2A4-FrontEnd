@@ -8,6 +8,7 @@ import {
   ChefHat,
   ChevronLeft,
   ChevronRight,
+  RotateCcw,
   UtensilsCrossed,
 } from "lucide-react";
 
@@ -27,6 +28,7 @@ import MealCard from "@/components/MealCard";
 import ExploreMealsError from "./error";
 import MealFilters from "./MealFilters";
 import { PrimaryMealSpinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
 
 const ExploreMeals = () => {
 
@@ -35,6 +37,14 @@ const ExploreMeals = () => {
   const [category, setCategory] = React.useState("All Categories");
   const [cuisineType, setCuisineType] = React.useState("All Cuisine Types");
   const [dietryType, setDietryType] = React.useState("All Dietary Types");
+
+  const handleResetFilters = () => {
+    setCurrentPage(1);
+    setSearch("");
+    setCategory("All Categories");
+    setCuisineType("All Cuisine Types");
+    setDietryType("All Dietary Types");
+  };
 
   const limit = 9;
 
@@ -73,28 +83,36 @@ const ExploreMeals = () => {
    * --------------------------------
    */
 
-  if (meals.length === 0 && (!isLoading)) {
+
+  if (meals.length === 0 && !isLoading) {
     return (
       <section className="relative overflow-hidden bg-orange-50/40 py-24 dark:bg-orange-950/10">
-        <div className=" relative mx-auto px-4">
-          <Card className="mx-auto max-w-xl rounded-3xl border-primary/10 bg-background/80 p-10 text-center shadow-sm backdrop-blur-sm">
-            <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-primary/10">
-              <ChefHat className="size-9 text-primary" />
+        <div className="relative mx-auto px-4">
+          <Card className="mx-auto max-w-xl rounded-3xl border-orange-200/70 bg-background/80 p-10 text-center shadow-lg shadow-orange-500/5 backdrop-blur-sm dark:border-orange-900/40">
+            <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-orange-100 dark:bg-orange-950/50">
+              <ChefHat className="size-9 text-orange-500" />
             </div>
 
-            <h2 className="mt-6 text-3xl font-bold">
+            <h2 className="mt-6 text-3xl font-bold text-foreground">
               No Meals Found
             </h2>
 
             <p className="mt-3 text-muted-foreground">
-              There are no published meals available right now. Please check
-              back soon.
+              We couldn&apos;t find any meals matching your current search or filters. Try changing your filters or reset them to explore all available meals.
             </p>
+
+            <Button onClick={handleResetFilters} className="mt-6 gap-2 bg-orange-500 text-white hover:bg-orange-600">
+              <RotateCcw className="size-4" />
+              Reset Filters
+            </Button>
           </Card>
         </div>
       </section>
     );
   }
+
+
+
 
   const getPaginationItems = () => {
     const pages: (number | "ellipsis")[] = [];
