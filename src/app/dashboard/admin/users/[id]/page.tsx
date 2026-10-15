@@ -3,27 +3,33 @@
 import * as React from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   BadgeCheck,
   CalendarDays,
   Clock3,
   Hash,
+  Loader2,
   Mail,
   MapPin,
+  Pencil,
   Phone,
   ShieldCheck,
+  Trash2,
   UserRound,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUser } from "@/lib/api/user";
+import { toast } from "@/components/ui/toast";
+import { deleteUser, getUser } from "@/lib/api/user";
 import type { User } from "@/types/auth.type";
 import UserDetailsError from "./error";
 import UserDetailsLoading from "./loading";
+import UserDeleteDialog from "../(components)/UserDeleteDialog";
+import UpdateUserDialog from "../(components)/UpdateUserDialog";
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -106,11 +112,36 @@ export default function UserDetailsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const userId = params.id;
+  const queryClient = useQueryClient();
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const userQuery = useQuery({
     queryKey: ["admin-user", userId],
     queryFn: () => getUser(userId),
     enabled: Boolean(userId),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteUser(userId),
+    onSuccess: async () => {
+      toast.add({
+        title: "User Deleted Successfully",
+        description: "The user account has been permanently deleted.",
+        type: "success",
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.removeQueries({ queryKey: ["admin-user", userId] });
+      router.push("/dashboard/admin/users");
+    },
+    onError: () => {
+      toast.add({
+        title: "Unable to Delete User",
+        description: "The user could not be deleted. Please try again.",
+        type: "error",
+      });
+    },
   });
 
   if (userQuery.isLoading) {
@@ -148,15 +179,31 @@ export default function UserDetailsPage() {
           </div>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/dashboard/admin/users")}
-          className="rounded-xl border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Users
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsUpdateDialogOpen(true)}
+            className="rounded-xl border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40"
+          >
+            <Pencil className="size-4" />
+            Update
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsDeleteDialogOpen(true)}
+            disabled={deleteMutation.isPending}
+            className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/30"
+          >
+            {deleteMutation.isPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Trash2 className="size-4" />
+            )}
+            Delete
+          </Button>
+        </div>
       </div>
 
       <Card className="overflow-hidden border-orange-200/70 bg-white shadow-sm shadow-orange-950/5 dark:border-orange-900/40 dark:bg-orange-950/20">
@@ -273,6 +320,19 @@ export default function UserDetailsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <UpdateUserDialog
+        user={user}
+        open={isUpdateDialogOpen}
+        onOpenChange={setIsUpdateDialogOpen}
+      />
+      <UserDeleteDialog
+        user={user}
+        open={isDeleteDialogOpen}
+        isDeleting={deleteMutation.isPending}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={() => deleteMutation.mutate()}
+      />
     </div>
   );
 }
