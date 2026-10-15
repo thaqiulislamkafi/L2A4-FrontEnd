@@ -7,11 +7,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Meal } from "@/types/meal.type";
 
 interface MealDeleteDialogProps {
-  meal: Meal | null;
+  meal: Pick<Meal, "id" | "name"> | null;
   open: boolean;
   isDeleting: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (meal: Meal) => void;
+  onConfirm: (meal: Pick<Meal, "id" | "name">) => void;
 }
 
 export default function MealDeleteDialog({ meal, open, isDeleting, onOpenChange, onConfirm }: MealDeleteDialogProps) {

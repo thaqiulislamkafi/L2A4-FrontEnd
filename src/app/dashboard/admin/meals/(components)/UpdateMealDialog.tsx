@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 
 import { updateMeal, UpdateMealPayload } from "@/lib/api/meal";
-import { Meal } from "@/types/meal.type";
+import type { Meal } from "@/types/meal.type";
 import { uploadUserImage } from "@/lib/api/auth";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/components/ui/toast";
 
 interface UpdateMealDialogProps {
-  meal: Meal | null;
+  meal: Pick<
+    Meal,
+    | "id"
+    | "name"
+    | "image"
+    | "description"
+    | "pricePerPiece"
+    | "totalPieces"
+    | "availablePieces"
+    | "availabilty_status"
+  > | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -50,6 +60,7 @@ export default function UpdateMealDialog({ meal, open, onOpenChange }: UpdateMea
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["admin-meals"] }),
         queryClient.invalidateQueries({ queryKey: ["provider-meals"] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-meal", meal?.id] }),
       ]);
     },
     onError: () => {

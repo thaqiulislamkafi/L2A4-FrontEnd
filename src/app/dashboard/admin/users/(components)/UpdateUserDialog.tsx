@@ -75,6 +75,9 @@ export default function UpdateUserDialog({ user, open, onOpenChange }: UpdateUse
       await queryClient.invalidateQueries({
         queryKey: ["admin-users"],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["admin-user", user?.id],
+      });
     },
   });
 

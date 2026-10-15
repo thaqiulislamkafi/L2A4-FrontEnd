@@ -107,7 +107,7 @@ export default function ProviderMealsPage() {
     },
   });
 
-  const handleDeleteConfirm = (meal: Meal) => {
+  const handleDeleteConfirm = (meal: Pick<Meal, "id" | "name">) => {
     deleteMutation.mutate(meal.id);
   };
 
