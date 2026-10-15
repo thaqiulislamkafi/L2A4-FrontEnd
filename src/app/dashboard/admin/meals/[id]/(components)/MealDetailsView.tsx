@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   ArrowLeft,
+  Pencil,
   CalendarDays,
   CheckCircle2,
   Clock3,
@@ -11,6 +12,7 @@ import {
   MessageSquare,
   Package,
   Phone,
+  Trash2,
   Star,
   Tag,
   UserRound,
@@ -25,6 +27,9 @@ import type { MealDetailsType } from "@/types/meal.type";
 interface MealDetailsViewProps {
   meal: MealDetailsType;
   onBack: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
+  isDeleting: boolean;
 }
 
 function formatDate(value?: string) {
@@ -75,6 +80,9 @@ function DetailTile({
 export default function MealDetailsView({
   meal,
   onBack,
+  onUpdate,
+  onDelete,
+  isDeleting,
 }: MealDetailsViewProps) {
   const analytics = meal.mealAnalytics?.[0];
   const reviews = meal.reviews ?? [];
@@ -92,13 +100,33 @@ export default function MealDetailsView({
         >
           <ArrowLeft className="size-4" />
         </Button>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="text-xl font-bold tracking-tight text-orange-950 dark:text-orange-50 sm:text-2xl">
             Meal Details
           </h1>
           <p className="truncate text-xs font-medium text-orange-700/60 dark:text-orange-300/60">
             {meal.name} <span className="font-mono">· {meal.id}</span>
           </p>
+        </div>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <Button
+            type="button"
+            onClick={onUpdate}
+            className="h-9 gap-2 rounded-lg bg-orange-500 px-3 font-semibold text-white hover:bg-orange-600"
+          >
+            <Pencil className="size-4" />
+            <span className="hidden sm:inline">Update</span>
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onDelete}
+            disabled={isDeleting}
+            className="h-9 gap-2 rounded-lg border-red-200 px-3 font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/30"
+          >
+            <Trash2 className="size-4" />
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
         </div>
       </div>
 
