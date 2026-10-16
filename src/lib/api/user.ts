@@ -1,4 +1,4 @@
-import { AuthUser, GetUserResponse, User } from "@/types/auth.type";
+import { AuthUser, GetProvidersParams, GetUserResponse, ProvidersResponse, User } from "@/types/auth.type";
 import axiosInstance from "../axios";
 
 export interface GetUsersParams {
@@ -49,6 +49,15 @@ export interface UpdateUserResponse {
 
 export const getUsers = async ({ page = 1, limit = 10, search = "" }: GetUsersParams): Promise<UsersResponse> => {
   const { data } = await axiosInstance.get<UsersResponse>("/auth-manage", { params: { page, limit, search } });
+
+  return data;
+};
+
+
+export const getProviders = async ({ page = 1, limit = 10, search = "" }: GetProvidersParams = {}): Promise<ProvidersResponse> => {
+  const { data } = await axiosInstance.get<ProvidersResponse>("/auth-manage/providers", {
+    params: { page, limit, search },
+  });
 
   return data;
 };

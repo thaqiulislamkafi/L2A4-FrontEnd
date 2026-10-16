@@ -33,6 +33,10 @@ const navItems = [
     href: "/explore-meals",
   },
   {
+    label : "Providers",
+    href: "/providers",
+  },
+  {
     label: "About",
     href: "/about",
   },
