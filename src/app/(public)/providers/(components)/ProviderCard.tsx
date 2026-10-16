@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BadgeCheck, CalendarDays, Mail, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, Mail, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import type { Provider } from "@/types/auth.type";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ProviderCardProps {
   provider: Provider;
@@ -79,6 +81,15 @@ const ProviderCard = ({ provider, index }: ProviderCardProps) => {
             {provider.banReason}
           </div>
         )}
+        <div className="mt-5 border-t border-orange-100 pt-4 dark:border-orange-900/40">
+          <Button className="group/button w-full gap-2 rounded-xl bg-orange-500 font-semibold text-white transition-all duration-300 hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/20">
+            <Link href={`explore-meals/provider/${provider.id}`} className="flex w-full items-center justify-center gap-2">
+            <p> View Provider Meals</p>
+             
+              <ArrowRight className="size-4 transition-transform duration-300 group-hover/button:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
       </Card>
     </motion.div>
   );

@@ -9,7 +9,7 @@ interface ProvidersLoadingProps {
 
 const ProvidersLoading = ({ count = 6 }: ProvidersLoadingProps) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
         {Array.from({ length: count }).map((_, index) => (
           <motion.div key={index} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.25) }}>
