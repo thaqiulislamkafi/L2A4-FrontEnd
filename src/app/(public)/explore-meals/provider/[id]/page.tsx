@@ -15,6 +15,8 @@ import { getProviderMeals } from "@/lib/api/meal";
 import { getUser } from "@/lib/api/user";
 import { Meal } from "@/types/meal.type";
 import MealFilters from "../../MealFilters";
+import ProviderMealsLoading from "./loading";
+import ProviderMealsError from "./error";
 
 const ProviderMealsPage = () => {
   const params = useParams();
@@ -55,7 +57,11 @@ const ProviderMealsPage = () => {
   });
 
   if (mealsQuery.isError) {
-    return <section className="py-24 text-center text-muted-foreground">Unable to load this provider&apos;s meals.</section>;
+    return <ProviderMealsError reset={mealsQuery.refetch} />;
+  }
+
+  if(mealsQuery.isLoading || providerQuery.isLoading) {
+    return <ProviderMealsLoading />;
   }
 
   const meals: Meal[] = mealsQuery.data?.data ?? [];
