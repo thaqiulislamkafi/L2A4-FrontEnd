@@ -19,12 +19,12 @@ export default function ProviderLayout({
     if (isLoading) <Spinner />;
   }, [router, user, isLoading]);
 
-  if (!user) {
-    return <Spinner />;
+  if (user && user.role !== "provider") {
+    router.replace("/forbidden");
   }
 
-  if (user.role !== "provider") {
-    router.replace("/forbidden");
+  if (!isLoading && !user) {
+    router.replace("/signin");
   }
 
   return <>{children}</>;

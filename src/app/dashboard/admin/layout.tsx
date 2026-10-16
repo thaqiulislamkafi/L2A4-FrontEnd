@@ -12,18 +12,19 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const user = useAuthStore((s) => s.user);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user)  <Spinner/>
-  }, [router, user]);
+    if (isLoading) <Spinner />;
+  }, [router, user, isLoading]);
 
-  if (!user) {
-    return <Spinner />;
-  }
-  
-  if (user.role !== "admin") {
+  if (user && user.role !== "admin") {
     router.replace("/forbidden");
+  }
+
+  if (!isLoading && !user) {
+    router.replace("/signin");
   }
 
   return <>{children}</>;
