@@ -1,4 +1,4 @@
-import { AuthUser, GetUserResponse, User } from "@/types/auth.type";
+import { AuthUser, GetProvidersParams, GetUserResponse, ProvidersResponse, User } from "@/types/auth.type";
 import axiosInstance from "../axios";
 
 export interface GetUsersParams {
@@ -25,6 +25,14 @@ export interface AuthUserResponse {
   data: AuthUser;
 }
 
+export interface ManageUserBanResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+  };
+}
+
 export interface UpdateUserPayload {
   name: string;
   image: string;
@@ -46,6 +54,15 @@ export const getUsers = async ({ page = 1, limit = 10, search = "" }: GetUsersPa
 };
 
 
+export const getProviders = async ({ page = 1, limit = 10, search = "" }: GetProvidersParams = {}): Promise<ProvidersResponse> => {
+  const { data } = await axiosInstance.get<ProvidersResponse>("/auth-manage/providers", {
+    params: { page, limit, search },
+  });
+
+  return data;
+};
+
+
 export const updateUser = async (id: string, payload: Partial<UpdateUserPayload>): Promise<UpdateUserResponse> => {
   const { data } = await axiosInstance.put<UpdateUserResponse>(`/auth-manage/${id}`, payload);
 
@@ -54,6 +71,18 @@ export const updateUser = async (id: string, payload: Partial<UpdateUserPayload>
 
 export const deleteUser = async (id: string): Promise<AuthUserResponse> => {
   const { data } = await axiosInstance.delete<AuthUserResponse>(`/auth-manage/${id}`);
+
+  return data;
+};
+
+export const banUser = async (id: string): Promise<ManageUserBanResponse> => {
+  const { data } = await axiosInstance.post<ManageUserBanResponse>(`/auth-manage/ban-user/${id}`);
+
+  return data;
+};
+
+export const unbanUser = async (id: string): Promise<ManageUserBanResponse> => {
+  const { data } = await axiosInstance.post<ManageUserBanResponse>(`/auth-manage/unban-user/${id}`);
 
   return data;
 };

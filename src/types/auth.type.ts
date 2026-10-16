@@ -11,6 +11,47 @@ export interface AuthUser {
   role: "user" | "provider" | "admin";
   age: number ;
   status: string;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: string | null;
+}
+
+export interface Provider {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
+  createdAt: string;
+  updatedAt: string;
+  contact: string;
+  age: number | null;
+  address: string | null;
+  role: "provider" | string;
+  status: string;
+  banned: boolean;
+  banReason: string | null;
+  banExpires: string | null;
+}
+
+export interface ProvidersMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface ProvidersResponse {
+  success: boolean;
+  message: string;
+  data: Provider[];
+  meta: ProvidersMeta;
+}
+
+export interface GetProvidersParams {
+  page?: number;
+  limit?: number;
+  search?: string;
 }
 
 export interface LoginResponse {
@@ -32,6 +73,9 @@ export interface User {
   role: "user" | "provider" | "admin";
   age: number ;
   status: string;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: string | null;
 }
 
 export interface GetUserResponse {

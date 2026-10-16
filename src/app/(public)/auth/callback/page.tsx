@@ -50,6 +50,27 @@ export default function AuthCallbackPage() {
         );
     }
 
+    if(error === "BANNED_USER") {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-orange-50 p-4">
+                <Card className="w-full max-w-md border-orange-100 shadow-lg bg-orange-50/10">
+                    <CardHeader className="text-center">
+                        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100">
+                            <AlertCircle className="h-7 w-7 text-orange-600" />
+                        </div>
+                        <CardTitle className="text-2xl font-bold">Account Banned</CardTitle>
+                    </CardHeader>  
+                    
+                    <CardContent className="space-y-5 text-center">
+                        <p className="text-sm leading-6 text-gray-600">
+                            Your account has been banned. Please contact support for further assistance.
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-orange-50">
             <div className="flex flex-col items-center gap-3">
