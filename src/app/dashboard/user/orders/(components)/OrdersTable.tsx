@@ -61,6 +61,27 @@ const baseColumns: ColumnDef<Order>[] = [
     ),
   },
   {
+    accessorKey: "contact",
+    header: "Contact",
+    cell: ({ row }: { row: { original: Order } }) => (
+      <span className="whitespace-nowrap text-sm text-orange-800 dark:text-orange-200">
+        {row.original.contact || "—"}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+    cell: ({ row }: { row: { original: Order } }) => (
+      <span
+        className="block max-w-56 truncate text-sm text-orange-800 dark:text-orange-200"
+        title={row.original.location}
+      >
+        {row.original.location || "—"}
+      </span>
+    ),
+  },
+  {
     accessorKey: "total_price",
     header: "Total",
     cell: ({ row }: { row: { original: Order } }) => (

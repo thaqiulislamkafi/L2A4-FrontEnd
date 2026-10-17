@@ -4,12 +4,12 @@ import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { TablePagination } from "@/components/TablePagination";
-import OrderItemsError from "../../admin/order-items/error";
-import OrderItemsLoading from "../../admin/order-items/loading";
-import OrderItemsTable from "../../admin/order-items/(components)/OrderItemsTable";
-import OrderItemsTableToolbar from "../../admin/order-items/(components)/OrderItemsTableToolbar";
 import { getProviderOrderItems } from "@/lib/api/order";
 import { useAuthStore } from "@/store/auth.store";
+import OrderItemsError from "./error";
+import OrderItemsLoading from "./loading";
+import OrderItemsTableToolbar from "./(components)/OrderItemsTableToolbar";
+import OrderItemsTable from "./(components)/OrderItemsTable";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 3;

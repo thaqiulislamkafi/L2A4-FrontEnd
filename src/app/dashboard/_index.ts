@@ -73,11 +73,11 @@ export const providerNavItems: DashboardNavItem[] = [
     href: "/dashboard/provider/order-items",
     icon: ListOrdered,
   },
-  {
-    title: "My Revenues",
-    href: "/dashboard/provider/revenues",
-    icon: Wallet,
-  },
+  // {
+  //   title: "My Revenues",
+  //   href: "/dashboard/provider/revenues",
+  //   icon: Wallet,
+  // },
   {
     title: "My Profile",
     href: "/dashboard/provider/profile",
