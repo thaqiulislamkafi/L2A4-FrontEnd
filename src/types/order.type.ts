@@ -12,6 +12,8 @@ export interface Order {
   user_id: string;
   total_price: number;
   status: OrderStatus;
+  location?: string;
+  contact?: string;
   createdAt: string;
   updatedAt: string;
 }

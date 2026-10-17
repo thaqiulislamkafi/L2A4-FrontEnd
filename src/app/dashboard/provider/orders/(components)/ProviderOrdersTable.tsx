@@ -85,6 +85,23 @@ export default function ProviderOrdersTable({ orders, isFetching = false }: Prov
       cell: ({ row }) => <span className="font-mono text-xs text-orange-700/70 dark:text-orange-300/70">{row.original.user_id}</span>,
     },
     {
+      accessorKey: "contact",
+      header: "Contact",
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm text-orange-800 dark:text-orange-200">{row.original.contact || "—"}</span>,
+    },
+    {
+      accessorKey: "location",
+      header: "Location",
+      cell: ({ row }) => (
+        <span
+          className="block max-w-56 truncate text-sm text-orange-800 dark:text-orange-200"
+          title={row.original.location}
+        >
+          {row.original.location || "—"}
+        </span>
+      ),
+    },
+    {
       accessorKey: "total_price",
       header: "Total",
       cell: ({ row }) => <span className="font-bold text-orange-700 dark:text-orange-300">{formatPrice(row.original.total_price)}</span>,
