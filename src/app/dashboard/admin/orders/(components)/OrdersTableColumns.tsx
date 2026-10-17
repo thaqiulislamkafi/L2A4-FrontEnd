@@ -46,6 +46,24 @@ export const OrdersTableColumns = ({ onStatusChange, onView }: OrdersTableColumn
     ),
   },
   {
+    accessorKey: "contact",
+    header: "Contact",
+    cell: ({ row }) => (
+      <div className="whitespace-nowrap text-sm text-orange-800 dark:text-orange-200">
+        {row.original.contact || "—"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+    cell: ({ row }) => (
+      <div className="max-w-56 truncate text-sm text-orange-800 dark:text-orange-200" title={row.original.location}>
+        {row.original.location || "—"}
+      </div>
+    ),
+  },
+  {
     accessorKey: "total_price",
     header: "Total Price",
     cell: ({ row }) => (
