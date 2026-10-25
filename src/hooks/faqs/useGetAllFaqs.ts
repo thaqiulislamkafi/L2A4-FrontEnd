@@ -9,5 +9,6 @@ export const useGetAllFaqs = (
   return useQuery({
     queryKey: ["faqs", page, limit],
     queryFn: () => getFaqs(page, limit),
+    placeholderData: (previous) => previous,
   });
 };

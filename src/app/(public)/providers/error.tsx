@@ -4,12 +4,21 @@ import { motion } from "framer-motion";
 import { AlertCircle, ArrowLeft, RefreshCw, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import axios from "axios";
 
 interface ProvidersErrorProps {
   onRetry: () => void;
+  error: unknown
 }
 
-const ProvidersError = ({ onRetry }: ProvidersErrorProps) => {
+const ProvidersError = ({ onRetry, error }: ProvidersErrorProps) => {
+
+  const message = axios.isAxiosError<{ message?: string }>(error)
+    ? error.response?.data?.message ?? error.message
+    : error instanceof Error
+      ? error.message
+      : "Unable to Load Providers.";
+
   return (
     <section className="flex min-h-150 items-center justify-center px-4 py-12">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-xl">
@@ -21,7 +30,7 @@ const ProvidersError = ({ onRetry }: ProvidersErrorProps) => {
           </motion.div>
 
           <h2 className="mt-6 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Unable to Load Providers
+            {message}
           </h2>
 
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground sm:text-base">
