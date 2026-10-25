@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Pencil } from "lucide-react";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,12 +19,14 @@ interface FAQsTableProps {
   faqs: FAQ[];
   isFetching?: boolean;
   onEdit: (faq: FAQ) => void;
+  onDelete: (faq: FAQ) => void;
 }
 
 export default function FAQsTable({
   faqs,
   isFetching = false,
   onEdit,
+  onDelete,
 }: FAQsTableProps) {
   return (
     <Card className="relative overflow-hidden border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40">
@@ -97,16 +99,28 @@ export default function FAQsTable({
                     </time>
                   </TableCell>
                   <TableCell className="px-4 py-4 align-top">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      aria-label={`Edit FAQ: ${faq.question}`}
-                      onClick={() => onEdit(faq)}
-                      className="border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40"
-                    >
-                      <Pencil className="size-4" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon-sm"
+                        aria-label={`Edit FAQ: ${faq.question}`}
+                        onClick={() => onEdit(faq)}
+                        className="border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40"
+                      >
+                        <Pencil className="size-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon-sm"
+                        aria-label={`Delete FAQ: ${faq.question}`}
+                        onClick={() => onDelete(faq)}
+                        className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/40"
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

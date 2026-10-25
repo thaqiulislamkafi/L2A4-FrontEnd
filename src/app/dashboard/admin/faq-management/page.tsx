@@ -2,14 +2,18 @@
 
 import * as React from "react";
 import { Plus } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { TablePagination } from "@/components/TablePagination";
 import { Separator } from "@/components/ui/separator";
 import { useGetAllFaqs } from "@/hooks/faqs/useGetAllFaqs";
+import { deleteFaq } from "@/lib/api/faqs";
 import type { FAQ } from "@/types/faq.type";
+import { toast } from "@/components/ui/toast";
 
 import AddFaqDialog from "./(component)/AddFaqDialog";
+import DeleteFaqDialog from "./(component)/DeleteFaqDialog";
 import UpdateFaqDialog from "./(component)/UpdateFaqDialog";
 import FaqManagementError from "./error";
 import FaqManagementLoading from "./loading";
@@ -23,10 +27,39 @@ export default function FaqManagementPage() {
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
   const [selectedFaq, setSelectedFaq] = React.useState<FAQ | null>(null);
   const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, isFetching, refetch } = useGetAllFaqs(
     page,
     DEFAULT_LIMIT
   );
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteFaq(id),
+    onSuccess: async () => {
+      toast.add({
+        title: "FAQ Deleted Successfully",
+        description: "The FAQ has been permanently deleted.",
+        type: "success",
+      });
+
+      setDeleteDialogOpen(false);
+      setSelectedFaq(null);
+
+      if ((data?.data.length ?? 0) === 1 && page > 1) {
+        setPage((currentPage) => currentPage - 1);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["faqs"] });
+    },
+    onError: () => {
+      toast.add({
+        title: "Delete FAQ Failed",
+        description: "Unable to delete the FAQ. Please try again.",
+        type: "error",
+      });
+    },
+  });
 
   if (isLoading) return <FaqManagementLoading />;
   if (isError) return <FaqManagementError onRetry={() => void refetch()} />;
@@ -38,6 +71,17 @@ export default function FaqManagementPage() {
 
   const handleUpdateDialogChange = (open: boolean) => {
     setUpdateDialogOpen(open);
+
+    if (!open) setSelectedFaq(null);
+  };
+
+  const handleDeleteRequest = (faq: FAQ) => {
+    setSelectedFaq(faq);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogChange = (open: boolean) => {
+    setDeleteDialogOpen(open);
 
     if (!open) setSelectedFaq(null);
   };
@@ -68,6 +112,7 @@ export default function FaqManagementPage() {
         faqs={data?.data ?? []}
         isFetching={isFetching}
         onEdit={handleEdit}
+        onDelete={handleDeleteRequest}
       />
 
       <TablePagination
@@ -88,6 +133,14 @@ export default function FaqManagementPage() {
         faq={selectedFaq}
         open={updateDialogOpen}
         onOpenChange={handleUpdateDialogChange}
+      />
+
+      <DeleteFaqDialog
+        faq={selectedFaq}
+        open={deleteDialogOpen}
+        isDeleting={deleteMutation.isPending}
+        onOpenChange={handleDeleteDialogChange}
+        onConfirm={(faq) => deleteMutation.mutate(faq.id)}
       />
     </div>
   );

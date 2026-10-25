@@ -48,3 +48,9 @@ export const updateFaq = async (
 
   return data;
 };
+
+export const deleteFaq = async (id: string): Promise<CreateFAQResponse> => {
+  const { data } = await axiosInstance.delete<CreateFAQResponse>(`/faq/${id}`);
+
+  return data;
+};
