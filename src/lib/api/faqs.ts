@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios";
-import { FAQResponse } from "@/types/faq.type";
+import { FAQ, FAQResponse } from "@/types/faq.type";
 
 export const getFaqs = async (
   page: number = 1,
@@ -7,6 +7,31 @@ export const getFaqs = async (
 ): Promise<FAQResponse> => {
   const { data } = await axiosInstance.get<FAQResponse>(
     `/faqs?page=${page}&limit=${limit}`
+  );
+
+  return data;
+};
+
+export interface CreateFAQPayload {
+  question: string;
+  answer: string;
+  sortOrder: number;
+  isPublished: boolean;
+  category: string;
+}
+
+export interface CreateFAQResponse {
+  success: boolean;
+  message: string;
+  data: FAQ;
+}
+
+export const createFaq = async (
+  payload: CreateFAQPayload
+): Promise<CreateFAQResponse> => {
+  const { data } = await axiosInstance.post<CreateFAQResponse>(
+    "/faqs",
+    payload
   );
 
   return data;
