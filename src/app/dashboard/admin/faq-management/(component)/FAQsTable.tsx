@@ -5,6 +5,7 @@ import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -18,15 +19,19 @@ import type { FAQ } from "@/types/faq.type";
 interface FAQsTableProps {
   faqs: FAQ[];
   isFetching?: boolean;
+  isTogglingPublish: boolean;
   onEdit: (faq: FAQ) => void;
   onDelete: (faq: FAQ) => void;
+  onTogglePublish: (faq: FAQ) => void;
 }
 
 export default function FAQsTable({
   faqs,
   isFetching = false,
+  isTogglingPublish,
   onEdit,
   onDelete,
+  onTogglePublish,
 }: FAQsTableProps) {
   return (
     <Card className="relative overflow-hidden border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40">
@@ -82,16 +87,25 @@ export default function FAQsTable({
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-4 align-top">
-                    <Badge
-                      variant={faq.isPublished ? "default" : "secondary"}
-                      className={
-                        faq.isPublished
-                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                          : ""
-                      }
-                    >
-                      {faq.isPublished ? "Published" : "Draft"}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={faq.isPublished ? "default" : "secondary"}
+                        className={
+                          faq.isPublished
+                            ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                            : ""
+                        }
+                      >
+                        {faq.isPublished ? "Published" : "Draft"}
+                      </Badge>
+                      <Switch
+                        checked={faq.isPublished}
+                        onCheckedChange={() => onTogglePublish(faq)}
+                        disabled={isTogglingPublish}
+                        aria-label={`${faq.isPublished ? "Unpublish" : "Publish"} FAQ: ${faq.question}`}
+                        className="data-[checked]:bg-emerald-600"
+                      />
+                    </div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap px-4 py-4 align-top text-sm text-muted-foreground">
                     <time dateTime={faq.updatedAt}>

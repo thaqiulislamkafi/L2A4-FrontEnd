@@ -42,7 +42,7 @@ export const updateFaq = async (
   payload: CreateFAQPayload
 ): Promise<CreateFAQResponse> => {
   const { data } = await axiosInstance.put<CreateFAQResponse>(
-    `/faq/${id}`,
+    `/faqs/${id}`,
     payload
   );
 
@@ -51,6 +51,16 @@ export const updateFaq = async (
 
 export const deleteFaq = async (id: string): Promise<CreateFAQResponse> => {
   const { data } = await axiosInstance.delete<CreateFAQResponse>(`/faq/${id}`);
+
+  return data;
+};
+
+export const toggleFaqPublishStatus = async (
+  id: string
+): Promise<CreateFAQResponse> => {
+  const { data } = await axiosInstance.patch<CreateFAQResponse>(
+    `/faqs/${id}/toggle-status`
+  );
 
   return data;
 };
