@@ -1,8 +1,9 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -17,11 +18,13 @@ import type { FAQ } from "@/types/faq.type";
 interface FAQsTableProps {
   faqs: FAQ[];
   isFetching?: boolean;
+  onEdit: (faq: FAQ) => void;
 }
 
 export default function FAQsTable({
   faqs,
   isFetching = false,
+  onEdit,
 }: FAQsTableProps) {
   return (
     <Card className="relative overflow-hidden border-orange-200/80 p-0 shadow-sm shadow-orange-950/5 dark:border-orange-900/40">
@@ -43,6 +46,9 @@ export default function FAQsTable({
               </TableHead>
               <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wide text-orange-700 dark:text-orange-300">
                 Updated
+              </TableHead>
+              <TableHead className="h-11 w-20 px-4 text-xs font-bold uppercase tracking-wide text-orange-700 dark:text-orange-300">
+                Actions
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -90,12 +96,24 @@ export default function FAQsTable({
                       {new Date(faq.updatedAt).toLocaleDateString()}
                     </time>
                   </TableCell>
+                  <TableCell className="px-4 py-4 align-top">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                      aria-label={`Edit FAQ: ${faq.question}`}
+                      onClick={() => onEdit(faq)}
+                      className="border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40"
+                    >
+                      <Pencil className="size-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow className="hover:bg-transparent">
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="h-32 text-center text-sm font-medium text-orange-700/60 dark:text-orange-300/60"
                 >
                   No FAQs found.

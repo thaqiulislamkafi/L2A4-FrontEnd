@@ -36,3 +36,15 @@ export const createFaq = async (
 
   return data;
 };
+
+export const updateFaq = async (
+  id: string,
+  payload: CreateFAQPayload
+): Promise<CreateFAQResponse> => {
+  const { data } = await axiosInstance.put<CreateFAQResponse>(
+    `/faq/${id}`,
+    payload
+  );
+
+  return data;
+};

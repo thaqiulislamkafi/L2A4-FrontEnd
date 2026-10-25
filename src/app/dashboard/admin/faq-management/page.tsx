@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { TablePagination } from "@/components/TablePagination";
 import { Separator } from "@/components/ui/separator";
 import { useGetAllFaqs } from "@/hooks/faqs/useGetAllFaqs";
+import type { FAQ } from "@/types/faq.type";
 
 import AddFaqDialog from "./(component)/AddFaqDialog";
+import UpdateFaqDialog from "./(component)/UpdateFaqDialog";
 import FaqManagementError from "./error";
 import FaqManagementLoading from "./loading";
 import FAQsTable from "./(component)/FAQsTable";
@@ -19,6 +21,8 @@ const DEFAULT_LIMIT = 5;
 export default function FaqManagementPage() {
   const [page, setPage] = React.useState(DEFAULT_PAGE);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+  const [selectedFaq, setSelectedFaq] = React.useState<FAQ | null>(null);
+  const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
   const { data, isLoading, isError, isFetching, refetch } = useGetAllFaqs(
     page,
     DEFAULT_LIMIT
@@ -26,6 +30,17 @@ export default function FaqManagementPage() {
 
   if (isLoading) return <FaqManagementLoading />;
   if (isError) return <FaqManagementError onRetry={() => void refetch()} />;
+
+  const handleEdit = (faq: FAQ) => {
+    setSelectedFaq(faq);
+    setUpdateDialogOpen(true);
+  };
+
+  const handleUpdateDialogChange = (open: boolean) => {
+    setUpdateDialogOpen(open);
+
+    if (!open) setSelectedFaq(null);
+  };
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
@@ -49,7 +64,11 @@ export default function FaqManagementPage() {
 
       <Separator />
 
-      <FAQsTable faqs={data?.data ?? []} isFetching={isFetching} />
+      <FAQsTable
+        faqs={data?.data ?? []}
+        isFetching={isFetching}
+        onEdit={handleEdit}
+      />
 
       <TablePagination
         page={page}
@@ -63,6 +82,12 @@ export default function FaqManagementPage() {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onCreated={() => setPage(DEFAULT_PAGE)}
+      />
+
+      <UpdateFaqDialog
+        faq={selectedFaq}
+        open={updateDialogOpen}
+        onOpenChange={handleUpdateDialogChange}
       />
     </div>
   );
