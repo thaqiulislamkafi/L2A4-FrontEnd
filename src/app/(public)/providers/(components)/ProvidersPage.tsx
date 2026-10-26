@@ -20,7 +20,7 @@ const ProvidersPage = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch,error } = useQuery({
     queryKey: ["providers", currentPage, search],
     queryFn: () => getProviders({ page: currentPage, limit: LIMIT, search }),
   });
@@ -62,7 +62,7 @@ const ProvidersPage = () => {
   };
 
   if(!providers && isError && !isLoading) {
-    return <ProvidersError onRetry={() => void refetch()} />;
+    return <ProvidersError onRetry={() => void refetch()} error={error} />;
   }
 
   if(isLoading) {

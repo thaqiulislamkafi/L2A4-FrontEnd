@@ -1,5 +1,5 @@
 import { DashboardNavItem } from "@/types/dashboard.type";
-import { ChefHat, LayoutDashboard, ListOrdered, MessageSquareText, Settings, ShoppingCart, Star, UserCircle, Users, UtensilsCrossed, Wallet } from "lucide-react";
+import { ChefHat, CircleHelp, LayoutDashboard, ListOrdered, MessageSquareText, Settings, ShoppingCart, Star, UserCircle, Users, UtensilsCrossed, Wallet } from "lucide-react";
 import { PageInfo } from "./DashboardHeader";
 
 
@@ -38,6 +38,11 @@ export const adminNavItems: DashboardNavItem[] = [
     title: "All Order Items",
     href: "/dashboard/admin/order-items",
     icon: ListOrdered,
+  },
+  {
+    title: "FAQ Management",
+    href: "/dashboard/admin/faq-management",
+    icon: CircleHelp,
   },
   {
     title: "App Settings",
@@ -161,6 +166,11 @@ export const pageMap: Record<string, PageInfo> = {
   "/dashboard/admin/app-settings": {
     title: "App Settings",
     description: "Manage application settings.",
+  },
+
+  "/dashboard/admin/faq-management": {
+    title: "FAQ Management",
+    description: "Manage frequently asked questions.",
   },
 
   "/dashboard/admin/profile": {
