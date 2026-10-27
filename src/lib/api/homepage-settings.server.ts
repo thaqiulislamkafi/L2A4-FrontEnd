@@ -23,10 +23,7 @@ export async function getHomepageSettingsServer(): Promise<AppSetting[]> {
     }
 
     const response = await fetch(`${baseUrl}/app-settings/key/homepage`, {
-        next: {
-            revalidate: 300,
-            tags: ["homepage-settings"],
-        },
+        cache: "no-store",
     });
 
     if (!response.ok) {

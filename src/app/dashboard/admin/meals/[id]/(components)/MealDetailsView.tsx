@@ -3,16 +3,20 @@
 import Image from "next/image";
 import {
   ArrowLeft,
+  Crown,
   Pencil,
   CalendarDays,
   CheckCircle2,
   Clock3,
+  Eye,
+  EyeOff,
   Mail,
   MapPin,
   MessageSquare,
   Package,
   Phone,
   Trash2,
+  LoaderCircle,
   Star,
   Tag,
   UserRound,
@@ -29,6 +33,10 @@ interface MealDetailsViewProps {
   onBack: () => void;
   onUpdate: () => void;
   onDelete: () => void;
+  onMarkHero: () => void;
+  onPublishChange: () => void;
+  isMarkingHero: boolean;
+  isPublishing: boolean;
   isDeleting: boolean;
 }
 
@@ -82,6 +90,10 @@ export default function MealDetailsView({
   onBack,
   onUpdate,
   onDelete,
+  onMarkHero,
+  onPublishChange,
+  isMarkingHero,
+  isPublishing,
   isDeleting,
 }: MealDetailsViewProps) {
   const analytics = meal.mealAnalytics?.[0];
@@ -109,6 +121,42 @@ export default function MealDetailsView({
           </p>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2">
+          <Button
+            type="button"
+            onClick={onPublishChange}
+            disabled={isPublishing}
+            className={`h-9 gap-2 rounded-lg px-3 font-semibold text-white ${
+              meal.isPublished
+                ? "bg-slate-600 hover:bg-slate-700"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
+          >
+            {isPublishing ? (
+              <LoaderCircle className="size-4 animate-spin" />
+            ) : meal.isPublished ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
+            <span className="hidden sm:inline">
+              {meal.isPublished ? "Unpublish" : "Publish"}
+            </span>
+          </Button>
+          <Button
+            type="button"
+            onClick={onMarkHero}
+            disabled={meal.isHeroContent || isMarkingHero}
+            className="h-9 gap-2 rounded-lg bg-amber-500 px-3 font-semibold text-white hover:bg-amber-600"
+          >
+            {isMarkingHero ? (
+              <LoaderCircle className="size-4 animate-spin" />
+            ) : (
+              <Crown className="size-4" />
+            )}
+            <span className="hidden sm:inline">
+              {meal.isHeroContent ? "Hero Content" : "Mark Hero"}
+            </span>
+          </Button>
           <Button
             type="button"
             onClick={onUpdate}

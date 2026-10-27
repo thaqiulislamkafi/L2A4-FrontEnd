@@ -1,6 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
+import Link from "next/link";
+import { Home } from "lucide-react";
 
 import {SidebarProvider,SidebarInset,} from "@/components/ui/sidebar";
 import DashboardSidebar from "./DashboardSidebar";
@@ -25,6 +27,14 @@ export default function DashboardLayout({
           {children}
         </main>
       </SidebarInset>
+      <Link
+        href="/"
+        aria-label="Go to homepage"
+        title="Go to homepage"
+        className="fixed bottom-6 right-6 z-50 flex size-12 items-center justify-center rounded-full bg-orange-500 text-primary-foreground shadow-lg transition-colors hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <Home className="size-5" aria-hidden="true" />
+      </Link>
     </SidebarProvider>
   );
 }
