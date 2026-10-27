@@ -21,10 +21,7 @@ export async function getDashboardStatsServer(): Promise<HomepageStats> {
     }
 
     const response = await fetch(`${baseUrl}/dashboard-stats/stats`, {
-        next: {
-            revalidate: 300,
-            tags: ["homepage-statistics"],
-        },
+        cache: "no-store",
     });
 
     if (!response.ok) {
