@@ -1,18 +1,28 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft, CalendarDays, Clock3, Hash, PackageCheck } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock3, Hash, LoaderCircle, PackageCheck, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 
-import { Order } from "@/types/order.type";
+import type { Order, OrderStatus } from "@/types/order.type";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface OrderDetailsHeaderProps {
   order: Order;
   onBack: () => void;
+  onUpdateStatus: (status: OrderStatus) => void;
+  isUpdatingStatus: boolean;
 }
+
+const ACTION_STATUSES: OrderStatus[] = ["APPROVED", "PROCESSING", "COMPLETED", "DELIVERED", "DECLINED"];
 
 const statusStyles: Record<Order["status"], string> = {
   PENDING: "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-900/50 dark:bg-yellow-950/30 dark:text-yellow-400",
@@ -24,7 +34,12 @@ const statusStyles: Record<Order["status"], string> = {
   DECLINED: "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-400",
 };
 
-export default function OrderDetailsHeader({ order, onBack }: OrderDetailsHeaderProps) {
+export default function OrderDetailsHeader({
+  order,
+  onBack,
+  onUpdateStatus,
+  isUpdatingStatus,
+}: OrderDetailsHeaderProps) {
   return (
     <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -50,6 +65,38 @@ export default function OrderDetailsHeader({ order, onBack }: OrderDetailsHeader
             </div>
           </div>
         </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isUpdatingStatus}
+                className="w-full rounded-lg border-orange-200 text-orange-700 hover:bg-orange-50 hover:text-orange-800 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/40 sm:w-auto"
+              />
+            }
+          >
+            {isUpdatingStatus ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <RefreshCw />
+            )}
+            {isUpdatingStatus ? "Updating..." : "Update status"}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
+            {ACTION_STATUSES.map((status) => (
+              <DropdownMenuItem
+                key={status}
+                disabled={order.status === status || isUpdatingStatus}
+                onClick={() => onUpdateStatus(status)}
+                className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300"
+              >
+                Set {status}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-orange-200/70 bg-orange-50/40 px-4 py-3 dark:border-orange-900/40 dark:bg-orange-950/20">

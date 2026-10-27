@@ -61,6 +61,8 @@ export default function UpdateMealDialog({ meal, open, onOpenChange }: UpdateMea
         queryClient.invalidateQueries({ queryKey: ["admin-meals"] }),
         queryClient.invalidateQueries({ queryKey: ["provider-meals"] }),
         queryClient.invalidateQueries({ queryKey: ["admin-meal", meal?.id] }),
+        queryClient.invalidateQueries({ queryKey: ["provider-meal"] }),
+        queryClient.invalidateQueries({ queryKey: ["meal", meal?.id] }),
       ]);
     },
     onError: () => {

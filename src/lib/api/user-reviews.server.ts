@@ -16,10 +16,7 @@ async function fetchHomepageData<T>(path: string): Promise<T> {
     }
 
     const response = await fetch(`${baseUrl}${path}`, {
-        next: {
-            revalidate: 300,
-            tags: ["homepage-reviews"],
-        },
+        cache: "no-store",
     });
 
     if (!response.ok) {

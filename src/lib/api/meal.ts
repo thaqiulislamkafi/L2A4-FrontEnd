@@ -1,4 +1,9 @@
-import { HeroMeal, Meal, PublishedMealsResponse } from "@/types/meal.type";
+import {
+  HeroMeal,
+  Meal,
+  MealDetailsType,
+  PublishedMealsResponse,
+} from "@/types/meal.type";
 import axiosInstance from "../axios";
 import { MealDetailsResponse } from "@/types/meal.type";
 
@@ -107,6 +112,40 @@ export const getMealById = async (
 
   return data;
 
+};
+
+export interface MarkMealHeroResponse {
+  success: boolean;
+  message: string;
+  data: Pick<MealDetailsType, "id" | "isHeroContent" | "updatedAt">;
+}
+
+export const markMealAsHeroContent = async (
+  id: string
+): Promise<MarkMealHeroResponse> => {
+  const { data } = await axiosInstance.put<MarkMealHeroResponse>(
+    `/meals/mark/hero-content/${id}`
+  );
+
+  return data;
+};
+
+export interface SetMealPublishedResponse {
+  success: boolean;
+  message: string;
+  data: Pick<MealDetailsType, "id" | "isPublished" | "updatedAt">;
+}
+
+export const setMealPublished = async (
+  id: string,
+  isPublished: boolean
+): Promise<SetMealPublishedResponse> => {
+  const { data } = await axiosInstance.put<SetMealPublishedResponse>(
+    `/meals/publish/${id}`,
+    { isPublished }
+  );
+
+  return data;
 };
 
 export const deleteMeal = async (id: string) => {

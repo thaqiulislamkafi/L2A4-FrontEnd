@@ -2,15 +2,10 @@
 
 import * as React from "react";
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MoreHorizontal, PackageSearch } from "lucide-react";
+import { PackageSearch } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { toast } from "@/components/ui/toast";
-import { updateOrderStatus } from "@/lib/api/order";
 import type { Order, OrderStatus } from "@/types/order.type";
 import { useRouter } from "next/navigation";
 
@@ -18,8 +13,6 @@ interface ProviderOrdersTableProps {
   orders: Order[];
   isFetching?: boolean;
 }
-
-const ACTION_STATUSES: OrderStatus[] = ["APPROVED", "PROCESSING", "COMPLETED", "DELIVERED", "DECLINED"];
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en-BD", {
@@ -52,21 +45,6 @@ const statusStyles: Record<OrderStatus, string> = {
 export default function ProviderOrdersTable({ orders, isFetching = false }: ProviderOrdersTableProps) {
 
   const router = useRouter();
-
-  const queryClient = useQueryClient();
-
-  const updateMutation = useMutation({
-    mutationFn: ({ order, status }: { order: Order; status: OrderStatus }) =>
-      updateOrderStatus(order.id, { status }),
-    onSuccess: async () => {
-      toast.add({ title: "Order Status Updated", description: "The order status has been updated successfully.", type: "success" });
-      await queryClient.invalidateQueries({ queryKey: ["provider-orders"] });
-    },
-    onError: (error: unknown) => {
-      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
-      toast.add({ title: "Status Update Failed", description: message || "Unable to update the order status. Please try again.", type: "error" });
-    },
-  });
 
   const handleRowClick = (order: Order) => {
     router.push(`/dashboard/provider/orders/${order.id}`);
@@ -116,31 +94,7 @@ export default function ProviderOrdersTable({ orders, isFetching = false }: Prov
       header: "Ordered At",
       cell: ({ row }) => <span className="whitespace-nowrap text-sm font-medium text-orange-800/75 dark:text-orange-200/75">{formatDate(row.original.createdAt)}</span>,
     },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button type="button" variant="ghost" size="icon" aria-label={`Actions for order ${row.original.id}`} />}>
-            <MoreHorizontal className="size-4 text-orange-600 dark:text-orange-400" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40 rounded-xl border-orange-200 bg-white p-1.5 dark:border-orange-900/50 dark:bg-orange-950">
-            {ACTION_STATUSES.map((status) => (
-              <DropdownMenuItem
-                key={status}
-                disabled={row.original.status === status || updateMutation.isPending}
-                onClick={() => updateMutation.mutate({ order: row.original, status })}
-                className="cursor-pointer rounded-lg font-medium text-orange-800 focus:bg-orange-100 focus:text-orange-700 dark:text-orange-200 dark:focus:bg-orange-950/60 dark:focus:text-orange-300"
-              >
-                Set {status}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-      enableSorting: false,
-    },
-  ], [updateMutation]);
+  ], []);
 
   const table = useReactTable({ data: orders, columns, getCoreRowModel: getCoreRowModel() });
 
