@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {ArrowRight,ChefHat,Heart,Sparkles,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -41,10 +41,10 @@ const ContactCTA = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <Badge className="rounded-full border-white/20 bg-white/15 px-4 py-2 text-white backdrop-blur-sm hover:bg-white/20">
+              <HeaderBadge className="rounded-full border-white/20 bg-white/15 px-4 py-2 text-white backdrop-blur-sm hover:bg-white/20">
                 <Sparkles className="mr-2 h-4 w-4" />
                 FoodHub Community
-              </Badge>
+              </HeaderBadge>
 
               <h2 className="mx-auto mt-6 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                 Have Something to Share?
@@ -62,8 +62,8 @@ const ContactCTA = () => {
                   size="lg"
                   className="group h-12 rounded-xl bg-white px-7 font-semibold text-orange-600 shadow-lg hover:bg-orange-50"
                 >
-                  <Link href="/meals">
-                    Explore Meals
+                  <Link href="/meals" className="flex items-center">
+                    <p>Explore Meals</p>
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </Button>

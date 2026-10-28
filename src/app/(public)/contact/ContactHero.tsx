@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 
 const ContactHero = () => {
   return (
@@ -54,13 +54,13 @@ const ContactHero = () => {
           className="mx-auto max-w-3xl text-center"
         >
           {/* Badge */}
-          <Badge
+          <HeaderBadge
             variant="outline"
             className="mb-7 rounded-full border-orange-200 bg-orange-50/80 px-4 py-2 text-sm font-medium text-orange-700 shadow-sm backdrop-blur-sm dark:border-orange-900/50 dark:bg-orange-950/30 dark:text-orange-400"
           >
             <MessageCircle className="mr-2 h-4 w-4" />
             We would Love to Hear From You
-          </Badge>
+          </HeaderBadge>
 
           {/* Heading */}
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-white">

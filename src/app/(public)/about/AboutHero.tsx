@@ -160,8 +160,8 @@ const AboutHero = () => {
                 size="lg"
                 className="group h-12 rounded-xl bg-orange-600 px-6 font-semibold text-white shadow-lg shadow-orange-600/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-600/30"
               >
-                <Link href="/explore-meals">
-                  Explore Meals
+                <Link href="/explore-meals" className="flex items-center gap-2">
+                  <p>Explore Meals</p>
 
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>

@@ -9,7 +9,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -89,13 +89,13 @@ export default function MissionVision() {
           transition={{ duration: 0.6 }}
           className="mx-auto mb-14 max-w-3xl text-center"
         >
-          <Badge
+          <HeaderBadge
             variant="outline"
             className="border-orange-200 bg-orange-50 px-4 py-2 text-orange-600 shadow-sm dark:border-orange-900 dark:bg-orange-950/30 dark:text-orange-400"
           >
             <Sparkles className="mr-2 h-4 w-4" />
             What Drives Us
-          </Badge>
+          </HeaderBadge>
 
           <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
             Our Mission &{" "}

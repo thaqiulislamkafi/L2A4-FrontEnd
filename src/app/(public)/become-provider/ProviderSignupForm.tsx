@@ -25,7 +25,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -187,13 +187,13 @@ export default function ProviderSignupForm() {
           transition={{ duration: 0.6 }}
           className="mx-auto mb-12 max-w-2xl text-center"
         >
-          <Badge
+          <HeaderBadge
             variant="outline"
             className="gap-2 rounded-full border-orange-200 bg-orange-50 px-4 py-2 text-orange-700 dark:border-orange-800 dark:bg-orange-950/30 dark:text-orange-400"
           >
             <ShieldCheck className="h-4 w-4" />
             Provider Registration
-          </Badge>
+          </HeaderBadge>
 
           <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl dark:text-white">
             Start Your{" "}
