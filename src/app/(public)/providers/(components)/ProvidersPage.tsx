@@ -3,26 +3,29 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { AlertCircle, ChevronLeft, ChevronRight, RotateCcw, Search, UsersRound, UtensilsCrossed } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, RotateCcw, Search, UsersRound, UtensilsCrossed } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
+import { Label } from "@/components/ui/label";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import ProviderCard from "./ProviderCard";
 import { getProviders } from "@/lib/api/user";
 import ProvidersError from "../error";
 import ProvidersLoading from "../loading";
+import { ProviderLoadingSpinner } from "@/components/ui/spinner";
 
-const LIMIT = 10;
+const LIMIT = 6;
 
 const ProvidersPage = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
 
-  const { data, isLoading, isError, refetch,error } = useQuery({
-    queryKey: ["providers", currentPage, search],
-    queryFn: () => getProviders({ page: currentPage, limit: LIMIT, search }),
+  const normalizedSearch = search.trim();
+  const { data, isLoading, isFetching, isError, refetch,error } = useQuery({
+    queryKey: ["providers", currentPage, normalizedSearch],
+    queryFn: () => getProviders({ page: currentPage, limit: LIMIT, search: normalizedSearch }),
   });
 
   const providers = data?.data ?? [];
@@ -41,35 +44,52 @@ const ProvidersPage = () => {
 
   const getPaginationItems = () => {
     const pages: (number | "ellipsis")[] = [];
-    const start = Math.max(1, currentPage - 1);
-    const end = Math.min(totalPages, currentPage + 1);
 
-    if (start > 1) {
-      pages.push(1);
-      if (start > 2) pages.push("ellipsis");
+    if (totalPages <= 7) {
+      for (let page = 1; page <= totalPages; page++) {
+        pages.push(page);
+      }
+
+      return pages;
     }
 
-    for (let page = start; page <= end; page++) {
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push("ellipsis");
+    }
+
+    const startPage = Math.max(2, currentPage - 1);
+    const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let page = startPage; page <= endPage; page++) {
       pages.push(page);
     }
 
-    if (end < totalPages) {
-      if (end < totalPages - 1) pages.push("ellipsis");
-      pages.push(totalPages);
+    if (currentPage < totalPages - 2) {
+      pages.push("ellipsis");
     }
+
+    pages.push(totalPages);
 
     return pages;
   };
 
-  if(!providers && isError && !isLoading) {
-    return <ProvidersError onRetry={() => void refetch()} error={error} />;
+  if (isError) {
+    return <ProvidersError onRetry={refetch} error={error} />;
   }
 
-  if(isLoading) {
-    return <ProvidersLoading count={6} />;
+  if (isLoading) {
+    return <ProvidersLoading />;
   }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
+
     <section className="min-h-screen max-w-6xl mx-auto py-12 dark:from-orange-950/10 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="mb-9">
@@ -94,108 +114,157 @@ const ProvidersPage = () => {
           </div>
         </motion.div>
 
-        <Card className="mb-8 rounded-2xl border-orange-100/80 bg-background/90 p-4 shadow-sm dark:border-orange-900/40 sm:p-5">
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={search} onChange={(event) => handleSearch(event.target.value)} placeholder="Search providers by name..." aria-label="Search providers by name" className="h-12 rounded-xl border-muted bg-background pl-10 transition-colors focus-visible:border-orange-400 focus-visible:ring-orange-400/20" />
+        <div className="mx-auto mb-14 max-w-6xl">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="relative min-w-0 flex-1">
+              <Label htmlFor="provider-search" className="sr-only">Search providers</Label>
+              <Search className="pointer-events-none absolute left-5 top-1/2 z-10 size-5 -translate-y-1/2 text-orange-500" />
+              <Input
+                id="provider-search"
+                type="text"
+                value={search}
+                onChange={(event) => handleSearch(event.target.value)}
+                placeholder="Search providers by name..."
+                className="h-14 w-full rounded-2xl border-orange-100 pl-14 pr-5 text-[15px] shadow-sm transition-all duration-300 placeholder:text-muted-foreground hover:border-orange-200 focus-visible:border-orange-500 focus-visible:ring-2 focus-visible:ring-orange-500/10 dark:border-orange-950/50 dark:bg-orange-950/5 dark:hover:border-orange-900"
+              />
             </div>
-            <Button type="button" variant="outline" onClick={handleReset} disabled={!search} className="h-12 gap-2 rounded-xl border-orange-200 px-5 text-orange-700 transition-colors hover:bg-orange-50 hover:text-orange-800 dark:border-orange-900 dark:text-orange-300 dark:hover:bg-orange-950/40">
-              <RotateCcw className="size-4" />
-              Reset
-            </Button>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground sm:text-sm">
-            <span>{search ? `Search results for "${search}"` : "Browse all available providers"}</span>
-            <span>Page {currentPage} of {totalPages}</span>
-          </div>
-        </Card>
-
-        {isError ? (
-          <Card className="rounded-2xl border-red-200 p-8 text-center dark:border-red-900/50 sm:p-12">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400">
-              <AlertCircle className="size-7" />
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400">
+                <Search className="size-5" />
+              </div>
+              <div className="whitespace-nowrap">
+                <Label className="text-xs text-muted-foreground">Search Results</Label>
+                <p className="text-lg font-bold text-foreground">
+                  {totalProviders}{" "}
+                  <span className="font-medium text-muted-foreground">
+                    Provider{totalProviders !== 1 && "s"}
+                  </span>
+                </p>
+              </div>
+              {normalizedSearch && (
+                <span className="hidden text-sm text-muted-foreground lg:inline">
+                  for &quot;{normalizedSearch}&quot;
+                </span>
+              )}
             </div>
-            <h2 className="mt-4 text-xl font-bold">Unable to load providers</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Something went wrong while retrieving provider information. Please try again.</p>
-            <Button onClick={() => void refetch()} className="mt-5 gap-2 bg-orange-500 text-white hover:bg-orange-600">
-              <RotateCcw className="size-4" />
-              Try Again
-            </Button>
-          </Card>
-        ) : isLoading ? (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Card key={index} className="animate-pulse rounded-2xl border-orange-100/70 p-5 dark:border-orange-900/30 sm:p-6">
-                <div className="flex gap-4">
-                  <div className="size-16 shrink-0 rounded-2xl bg-muted sm:size-[76px]" />
-                  <div className="flex-1 space-y-3 pt-1">
-                    <div className="h-5 w-2/3 rounded bg-muted" />
-                    <div className="h-4 w-full max-w-52 rounded bg-muted" />
-                    <div className="h-5 w-24 rounded-full bg-muted" />
-                  </div>
-                </div>
-                <div className="my-5 h-px bg-muted" />
-                <div className="space-y-4">
-                  <div className="h-4 w-1/2 rounded bg-muted" />
-                  <div className="h-4 w-4/5 rounded bg-muted" />
-                  <div className="h-4 w-2/3 rounded bg-muted" />
-                </div>
-              </Card>
-            ))}
-          </div>
-        ) : providers.length === 0 ? (
-          <Card className="rounded-2xl border-orange-100/80 p-8 text-center dark:border-orange-900/40 sm:p-12">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300">
-              <UsersRound className="size-8" />
-            </div>
-            <h2 className="mt-5 text-2xl font-bold">No Providers Found</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">We couldn&apos;t find any providers matching your search. Try a different name or reset your search.</p>
-            <Button onClick={handleReset} className="mt-5 gap-2 rounded-xl bg-orange-500 text-white hover:bg-orange-600">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleReset}
+              disabled={!search}
+              className="h-14 shrink-0 rounded-2xl border-orange-200 bg-orange-50 px-5 font-semibold text-orange-700 shadow-sm transition-all duration-300 hover:border-orange-500 hover:bg-orange-600 hover:text-white hover:shadow-lg hover:shadow-orange-600/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-900 dark:bg-orange-950/5 dark:text-orange-400 dark:hover:bg-orange-600 dark:hover:text-white"
+            >
               <RotateCcw className="size-4" />
               Reset Search
             </Button>
-          </Card>
-        ) : (
-          <>
-            <motion.div layout className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
-              {providers.map((provider, index) => (
-                <ProviderCard key={provider.id} provider={provider} index={index} />
-              ))}
-            </motion.div>
+          </div>
+        </div>
 
-            {totalPages > 1 && (
-              <div className="mt-10 flex flex-col items-center gap-4 border-t border-orange-100 pt-7 dark:border-orange-900/40">
-                <p className="text-center text-sm text-muted-foreground">Showing page <span className="font-semibold text-foreground">{currentPage}</span> of <span className="font-semibold text-foreground">{totalPages}</span></p>
-                <Pagination>
-                  <PaginationContent className="flex-wrap gap-1.5">
-                    <PaginationItem>
-                      <Button variant="outline" size="icon" aria-label="Previous page" disabled={currentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} className="size-9 rounded-lg border-orange-200 hover:bg-orange-50 disabled:opacity-40 dark:border-orange-900 dark:hover:bg-orange-950/40">
-                        <ChevronLeft className="size-4" />
-                      </Button>
-                    </PaginationItem>
-                    {getPaginationItems().map((page, index) => (
-                      <PaginationItem key={`${page}-${index}`}>
-                        {page === "ellipsis" ? (
-                          <span className="px-2 text-muted-foreground">…</span>
-                        ) : (
-                          <PaginationLink isActive={currentPage === page} onClick={() => setCurrentPage(page)} className={currentPage === page ? "size-9 cursor-pointer rounded-lg border-orange-500 bg-orange-500 text-white hover:bg-orange-600 hover:text-white" : "size-9 cursor-pointer rounded-lg hover:border-orange-200 hover:bg-orange-50 dark:hover:bg-orange-950/40"}>
-                            {page}
+        {
+          isFetching ? <ProviderLoadingSpinner/>
+          
+            : providers.length === 0 ? (
+              <Card className="rounded-2xl border-orange-100/80 p-8 text-center dark:border-orange-900/40 sm:p-12">
+                <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300">
+                  <UsersRound className="size-8" />
+                </div>
+                <h2 className="mt-5 text-2xl font-bold">No Providers Found</h2>
+                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">We couldn&apos;t find any providers matching your search. Try a different name or reset your search.</p>
+                <Button onClick={handleReset} className="mt-5 gap-2 rounded-xl bg-orange-500 text-white hover:bg-orange-600">
+                  <RotateCcw className="size-4" />
+                  Reset Search
+                </Button>
+              </Card>
+            ) : (
+              <>
+                <motion.div layout className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
+                  {providers.map((provider, index) => (
+                    <ProviderCard key={provider.id} provider={provider} index={index} />
+                  ))}
+                </motion.div>
+
+                {totalPages > 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mt-16 flex flex-col items-center gap-4"
+                  >
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            size="default"
+                            aria-label="Go to previous page"
+                            aria-disabled={currentPage === 1}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              if (currentPage > 1) handlePageChange(currentPage - 1);
+                            }}
+                            className={`gap-1 rounded-xl border ${currentPage === 1
+                              ? "pointer-events-none opacity-40"
+                              : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
+                              }`}
+                          >
+                            <ChevronLeft className="size-4" />
+                            <span className="hidden sm:block">Previous</span>
                           </PaginationLink>
-                        )}
-                      </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                      <Button variant="outline" size="icon" aria-label="Next page" disabled={currentPage === totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} className="size-9 rounded-lg border-orange-200 hover:bg-orange-50 disabled:opacity-40 dark:border-orange-900 dark:hover:bg-orange-950/40">
-                        <ChevronRight className="size-4" />
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
+                        </PaginationItem>
+                        {getPaginationItems().map((page, index) => (
+                          <PaginationItem key={`${page}-${index}`}>
+                            {page === "ellipsis" ? (
+                              <PaginationEllipsis className="text-primary" />
+                            ) : (
+                              <PaginationLink
+                                href="#"
+                                aria-label={`Go to page ${page}`}
+                                isActive={currentPage === page}
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  handlePageChange(page);
+                                }}
+                                className={currentPage === page
+                                  ? "rounded-xl border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground"
+                                  : "rounded-xl text-primary hover:bg-primary/10 hover:text-primary"
+                                }
+                              >
+                                {page}
+                              </PaginationLink>
+                            )}
+                          </PaginationItem>
+                        ))}
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            size="default"
+                            aria-label="Go to next page"
+                            aria-disabled={currentPage === totalPages}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              if (currentPage < totalPages) handlePageChange(currentPage + 1);
+                            }}
+                            className={`gap-1 rounded-xl border ${currentPage === totalPages
+                              ? "pointer-events-none opacity-40"
+                              : "border-primary/20 text-primary hover:bg-primary/10 hover:text-primary"
+                              }`}
+                          >
+                            <span className="hidden sm:block">Next</span>
+                            <ChevronRight className="size-4" />
+                          </PaginationLink>
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                    <Badge
+                      variant="outline"
+                      className="border-primary/20 bg-primary/5 px-4 py-1.5 text-primary"
+                    >
+                      Page {currentPage} of {totalPages}
+                    </Badge>
+                  </motion.div>
+                )}
+              </>
             )}
-          </>
-        )}
       </div>
     </section>
   );

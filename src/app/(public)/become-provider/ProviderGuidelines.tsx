@@ -1,19 +1,10 @@
 "use client";
 
-import {
-  BadgeCheck,
-  CheckCircle2,
-  Clock3,
-  FileCheck2,
-  HeartHandshake,
-  Lightbulb,
-  ShieldCheck,
-  Sparkles,
-  UtensilsCrossed,
+import {BadgeCheck,CheckCircle2,Clock3,FileCheck2,HeartHandshake,Lightbulb,ShieldCheck,Sparkles,UtensilsCrossed,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Badge } from "@/components/ui/badge";
+import {  HeaderBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -92,13 +83,13 @@ export default function ProviderGuidelines() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-3xl text-center"
         >
-          <Badge
+          <HeaderBadge
             variant="outline"
             className="border-orange-200 bg-orange-50 px-4 py-2 text-orange-600 shadow-sm dark:border-orange-900 dark:bg-orange-950/30 dark:text-orange-400"
           >
             <Sparkles className="mr-2 h-4 w-4" />
             Provider Guidelines
-          </Badge>
+          </HeaderBadge>
 
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
             Everything You Need to Become a{" "}
@@ -170,10 +161,10 @@ export default function ProviderGuidelines() {
           className="mx-auto mt-14 max-w-5xl"
         >
           <Card className="overflow-hidden border-orange-200 bg-white shadow-lg shadow-orange-600/5 dark:border-orange-900 dark:bg-slate-900">
-            <div className="grid lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="grid lg:grid-cols-[0.85fr_1.15fr] p-6">
               {/* Left */}
 
-              <div className="relative overflow-hidden bg-linear-to-br from-orange-600 to-amber-500 p-8 text-white sm:p-10">
+              <div className="relative overflow-hidden bg-linear-to-br rounded-xl from-orange-600 to-amber-500 p-6 text-white ">
                 <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
 
                 <div className="relative">

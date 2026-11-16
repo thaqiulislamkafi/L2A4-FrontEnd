@@ -73,7 +73,7 @@ const MealCard = ({ meal }: MealCardProps) => {
                     Content
                 ========================= */}
 
-                <CardContent className="p-6">
+                <CardContent className="px-6">
 
                     {/* Meal Name */}
 
@@ -83,26 +83,19 @@ const MealCard = ({ meal }: MealCardProps) => {
 
                     {/* Description */}
 
-                    <p className="mt-3 line-clamp-2 min-h-12 text-sm leading-relaxed text-muted-foreground">
+                    <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-relaxed text-muted-foreground">
                         {meal.description}
                     </p>
 
                     {/* Tags */}
 
-                    <div className="mt-5 flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
 
                         <Badge
                             variant="secondary"
                             className="border border-orange-100 bg-orange-50 text-orange-700 hover:bg-orange-100 dark:border-orange-900/50 dark:bg-orange-950/30 dark:text-orange-400"
                         >
                             {meal.cuisine_rel.cuisine_type_name}
-                        </Badge>
-
-                        <Badge
-                            variant="outline"
-                            className="border-orange-200 text-orange-700 dark:border-orange-900 dark:text-orange-400"
-                        >
-                            {meal.category_rel.category_name}
                         </Badge>
 
                         <Badge
@@ -116,7 +109,7 @@ const MealCard = ({ meal }: MealCardProps) => {
 
                     {/* Availability */}
 
-                    <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+                    <div className="mt-3 flex items-center justify-between border-t pt-3">
 
                         <div>
                             <Label className="text-xs text-muted-foreground">
@@ -145,7 +138,7 @@ const MealCard = ({ meal }: MealCardProps) => {
                     Footer
                 ========================= */}
 
-                <CardFooter className="p-6 pt-0">
+                <CardFooter className="p-6 py-4">
 
                     <Button
 

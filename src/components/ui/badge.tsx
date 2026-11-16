@@ -58,7 +58,7 @@ function HeaderBadge({
     <Badge
       variant="outline"
       className={cn(
-        "h-auto rounded-full border-orange-200 bg-orange-100 px-4 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100",
+        "h-auto rounded-full border-orange-200 bg-orange-100 px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100",
         className
       )}
       {...props}
