@@ -32,6 +32,7 @@ import { Spinner } from "@/components/ui/spinner";
 import ProviderImageUpload from "./ProviderImageUpload";
 
 import {
+  createProvider,
   uploadUserImage,
   userSignup,
 } from "@/lib/api/auth";
@@ -54,7 +55,7 @@ export default function ProviderSignupForm() {
    * Provider signup mutation
    */
   const signupMutation = useMutation({
-    mutationFn: userSignup,
+    mutationFn: createProvider,
 
     onSuccess: (response) => {
       toast.add({

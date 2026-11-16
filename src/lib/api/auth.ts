@@ -37,6 +37,7 @@ export interface SignupData {
   address?: string | null;
 }
 
+
 /**
  * 
  * @param data role: "provider" as const,
@@ -55,6 +56,24 @@ export const userSignup = async (data: SignupData) => {
       password: data.password,
       role: data.role,
       image: data.image ?? null,
+    }
+  );
+
+  return response.data;
+};
+
+export const createProvider = async (data: SignupData) => {
+  const response = await axiosInstance.post(
+    "/auth-manage/create-provider",
+    {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+      image: data.image ?? null,
+      contact: data.contact ?? null,
+      age: data.age ?? null,
+      address: data.address ?? null,
     }
   );
 

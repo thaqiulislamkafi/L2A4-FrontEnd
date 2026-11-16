@@ -1,19 +1,10 @@
 "use client";
 
-import {
-  BadgeCheck,
-  CheckCircle2,
-  Clock3,
-  FileCheck2,
-  HeartHandshake,
-  Lightbulb,
-  ShieldCheck,
-  Sparkles,
-  UtensilsCrossed,
+import {BadgeCheck,CheckCircle2,Clock3,FileCheck2,HeartHandshake,Lightbulb,ShieldCheck,Sparkles,UtensilsCrossed,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Badge, HeaderBadge } from "@/components/ui/badge";
+import {  HeaderBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
