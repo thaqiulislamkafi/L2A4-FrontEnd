@@ -16,6 +16,7 @@ interface ProviderCardProps {
 }
 
 const ProviderCard = ({ provider, index }: ProviderCardProps) => {
+  
   const [imageError, setImageError] = useState(false);
   const initials = provider.name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
   const isActive = provider.status.toLowerCase() === "active";
@@ -24,11 +25,12 @@ const ProviderCard = ({ provider, index }: ProviderCardProps) => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: Math.min(index * 0.06, 0.3) }} whileHover={{ y: -4 }} className="h-full">
-      <Card className="group relative h-full overflow-hidden rounded-2xl border border-orange-100/80 bg-background p-5 shadow-sm transition-all duration-300 hover:border-orange-300 hover:shadow-lg hover:shadow-orange-500/10 sm:p-6">
-        <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-orange-300 via-orange-500 to-amber-400 opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+
+      <Card className="group relative h-full overflow-hidden rounded-2xl bg-transparent p-5 shadow-sm transition-all duration-300 hover:border-orange-300 hover:shadow-lg hover:shadow-orange-500/10 sm:p-6">
 
         <div className="flex items-start gap-4">
           <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-orange-100 bg-orange-100 text-lg font-bold text-orange-700 shadow-sm sm:size-[76px]">
+            
             {provider.image && !imageError ? (
               <Image src={provider.image} width={100} height={100} alt={provider.name} onError={() => setImageError(true)} className="size-full object-cover" />
             ) : (
@@ -38,6 +40,7 @@ const ProviderCard = ({ provider, index }: ProviderCardProps) => {
 
           <div className="min-w-0 flex-1 pt-1">
             <h3 className="truncate text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-orange-600 sm:text-xl">{provider.name}</h3>
+            
             <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
               <Mail className="size-3.5 shrink-0 text-orange-500" />
               <span className="truncate">{provider.email}</span>
@@ -55,7 +58,7 @@ const ProviderCard = ({ provider, index }: ProviderCardProps) => {
           </div>
         </div>
 
-        <div className="my-5 h-px bg-border/70" />
+        <div className="my-1 h-px bg-border/70" />
 
         <div className="space-y-3.5">
           <div className="flex items-start gap-3 text-sm">
@@ -81,7 +84,7 @@ const ProviderCard = ({ provider, index }: ProviderCardProps) => {
             {provider.banReason}
           </div>
         )}
-        <div className="mt-5 border-t border-orange-100 pt-4 dark:border-orange-900/40">
+        <div className="mt-2 border-t border-orange-100 pt-4 dark:border-orange-900/40">
           <Button className="group/button w-full gap-2 rounded-xl bg-orange-500 font-semibold text-white transition-all duration-300 hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/20">
             <Link href={`explore-meals/provider/${provider.id}`} className="flex w-full items-center justify-center gap-2">
             <p> View Provider Meals</p>

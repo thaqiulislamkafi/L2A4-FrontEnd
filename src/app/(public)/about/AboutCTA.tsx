@@ -11,7 +11,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export default function AboutCTA() {
@@ -105,10 +105,10 @@ export default function AboutCTA() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Badge className="border-white/20 bg-white/15 px-4 py-2 text-white shadow-sm backdrop-blur-md hover:bg-white/20">
+              <HeaderBadge className="border-white/20 bg-white/15 px-4 py-2 text-white shadow-sm backdrop-blur-md hover:bg-white/20">
                 <Sparkles className="mr-2 h-4 w-4" />
                 Your Next Great Meal Awaits
-              </Badge>
+              </HeaderBadge>
             </motion.div>
 
             <h2 className="mt-6 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">

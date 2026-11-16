@@ -26,6 +26,22 @@ function PrimaryMealSpinner() {
   );
 }
 
+function ProviderLoadingSpinner() {
+  return (
+    <section className="relative overflow-hidden bg-linear-to-br from-orange-50 via-white to-orange-100">
+      <div className="mx-auto flex min-h-162.5 max-w-7xl items-center justify-center px-4">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner className="size-10 text-orange-600" />
+
+          <p className="text-sm font-medium text-orange-700">
+            Loading Providers...
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function GlobalSpinner() {
   return (
     <main className={`${geist.className} flex min-h-screen items-center justify-center bg-orange-100/10 backdrop-blur-2xl`}>
@@ -54,4 +70,4 @@ function DashboardSpinner() {
   );
 }
 
-export { Spinner, PrimaryMealSpinner, GlobalSpinner, DashboardSpinner }
+export { Spinner, PrimaryMealSpinner,ProviderLoadingSpinner, GlobalSpinner, DashboardSpinner }

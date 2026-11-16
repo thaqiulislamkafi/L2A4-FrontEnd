@@ -5,6 +5,7 @@ import { ArrowRight, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function CartEmpty() {
   return (
@@ -23,10 +24,12 @@ export default function CartEmpty() {
             Discover delicious meals from FoodHub and add your favorites to your cart.
           </p>
 
-          <Button type="button" className="mt-6 rounded-xl bg-orange-500 px-6 font-bold text-white hover:bg-orange-600">
-            Explore Meals
-            <ArrowRight className="size-4" />
-          </Button>
+          <Link href="/explore-meals">
+            <Button type="button" className="flex justify-center items-center gap-2 mt-6 rounded-xl bg-orange-500 px-6 font-bold text-white hover:bg-orange-600">
+              <p>Explore Meals</p>
+              <ArrowRight className="size-4" />
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </motion.div>

@@ -5,7 +5,7 @@ import {ArrowRight,BadgeCheck,ChefHat,Heart,Sparkles,Utensils,
 } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, HeaderBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -52,13 +52,13 @@ export default function BecomeProviderHero() {
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             {/* Badge */}
-            <Badge
+            <HeaderBadge
               variant="outline"
               className="mb-6 gap-2 rounded-full border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 shadow-sm dark:border-orange-800 dark:bg-orange-950/30 dark:text-orange-400"
             >
               <Sparkles className="h-4 w-4" />
               Join the FoodHub Community
-            </Badge>
+            </HeaderBadge>
 
             {/* Heading */}
             <h1 className="max-w-3xl text-4xl font-black tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-white">
